@@ -1,0 +1,1548 @@
+<!doctype html>
+<html lang="et">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valgusandur – interaktiivne selgitus</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f0f4f8;
+        color: #1a202c;
+        padding: 24px 16px 56px;
+      }
+      a {
+        color: #2b6cb0;
+      }
+      h1 {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+        color: #2d3748;
+      }
+      h2.section-heading {
+        text-align: center;
+        font-size: 1.2rem;
+        margin: 36px 0 10px;
+        color: #2d3748;
+      }
+      .subtitle {
+        text-align: center;
+        color: #718096;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+      .backlink {
+        text-align: center;
+        font-size: 0.82rem;
+        margin-bottom: 20px;
+      }
+      .explanation {
+        max-width: 960px;
+        margin: 0 auto 20px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 22px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        line-height: 1.7;
+        font-size: 0.93rem;
+      }
+      .explanation h3 {
+        font-size: 0.95rem;
+        margin-bottom: 5px;
+        color: #2b6cb0;
+      }
+      .explanation p + p,
+      .explanation p + ol,
+      .explanation ol + p,
+      .explanation p + ul {
+        margin-top: 8px;
+      }
+      .explanation ol,
+      .explanation ul {
+        padding-left: 22px;
+      }
+      .formula {
+        display: block;
+        text-align: center;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #2d3748;
+        background: #f7fafc;
+        border-radius: 8px;
+        padding: 8px;
+        margin: 10px 0;
+        font-family: "Cambria Math", Cambria, Georgia, serif;
+      }
+      .note {
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin-top: 10px;
+        font-size: 0.88rem;
+        line-height: 1.6;
+      }
+      .note.warn {
+        background: #fffaf0;
+        border: 1px solid #fbd38d;
+      }
+      .note.tip {
+        background: #f0fff4;
+        border: 1px solid #9ae6b4;
+      }
+
+      .scroll-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .panel {
+        display: inline-flex;
+        min-width: 100%;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        padding: 18px 10px 14px;
+        align-items: flex-start;
+        justify-content: center;
+      }
+      .section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 4px 10px;
+        flex-shrink: 0;
+      }
+      .section-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #4a5568;
+        text-align: center;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .section-hint {
+        font-size: 0.72rem;
+        color: #a0aec0;
+        text-align: center;
+        margin-top: 4px;
+        max-width: 200px;
+      }
+      .divider {
+        width: 1px;
+        background: #e2e8f0;
+        align-self: stretch;
+        margin: 16px 0;
+        flex-shrink: 0;
+      }
+      .value-banner {
+        max-width: 960px;
+        margin: 12px auto 0;
+        text-align: center;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: #2d3748;
+        padding: 10px 20px;
+        background: #ebf8ff;
+        border-radius: 10px;
+        border: 1px solid #bee3f8;
+        line-height: 1.6;
+      }
+      .value-banner .lx {
+        color: #b7791f;
+      }
+      .value-banner .i {
+        color: #9b2c2c;
+      }
+      .value-banner .v {
+        color: #2b6cb0;
+      }
+      .value-banner .ar {
+        color: #276749;
+      }
+      .sat-flag {
+        color: #c05621;
+        font-size: 0.85rem;
+      }
+
+      /* ── light control ── */
+      .light-ctl {
+        width: 210px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .light-ctl input[type="range"] {
+        width: 100%;
+        accent-color: #d69e2e;
+      }
+      .presets {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+      }
+      .presets button,
+      .r-buttons button {
+        font-family: inherit;
+        font-size: 0.7rem;
+        padding: 3px 7px;
+        border: 1px solid #cbd5e0;
+        background: #f7fafc;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #2d3748;
+      }
+      .presets button:hover,
+      .r-buttons button:hover {
+        background: #edf2f7;
+      }
+      .r-buttons button.active {
+        background: #2b6cb0;
+        border-color: #2b6cb0;
+        color: #fff;
+      }
+      .lux-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #b7791f;
+      }
+
+      .big-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #9b2c2c;
+        margin-top: 10px;
+      }
+      .bar {
+        width: 200px;
+        height: 12px;
+        background: #edf2f7;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-top: 6px;
+      }
+      .bar > div {
+        height: 100%;
+        width: 0;
+        background: #9b2c2c;
+        transition: width 0.1s;
+      }
+      .bar.green > div {
+        background: #38a169;
+      }
+
+      /* ── switch ── */
+      .switch {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 8px;
+        font-size: 0.78rem;
+        color: #4a5568;
+        cursor: pointer;
+        user-select: none;
+      }
+      .switch input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      }
+      .switch .track {
+        width: 32px;
+        height: 17px;
+        background: #cbd5e0;
+        border-radius: 9px;
+        position: relative;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      }
+      .switch .thumb {
+        width: 13px;
+        height: 13px;
+        background: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: left 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+      }
+      .switch input:checked ~ .track {
+        background: #2b6cb0;
+      }
+      .switch input:checked ~ .track .thumb {
+        left: 17px;
+      }
+      .switch input:focus-visible ~ .track {
+        outline: 2px solid #2b6cb0;
+        outline-offset: 2px;
+      }
+
+      /* ── serial monitor ── */
+      .serial {
+        width: 340px;
+        background: #1e2535;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 8px;
+        font-size: 0.7rem;
+      }
+      .serial .code-title,
+      .code-block .code-title {
+        background: #2d3748;
+        color: #a0aec0;
+        padding: 4px 10px;
+        font-size: 0.63rem;
+        letter-spacing: 0.04em;
+      }
+      .serial pre {
+        padding: 8px 10px;
+        color: #e2e8f0;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.66rem;
+        white-space: pre;
+        height: 118px;
+        overflow: hidden;
+        line-height: 1.5;
+      }
+
+      /* ── code ── */
+      .code-block {
+        background: #1e2535;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 10px;
+        width: 330px;
+        font-size: 0.68rem;
+        text-align: left;
+      }
+      .code-block pre {
+        padding: 8px 12px;
+        color: #e2e8f0;
+        line-height: 1.55;
+        white-space: pre;
+        overflow-x: auto;
+        font-family: Consolas, "Courier New", monospace;
+      }
+      .kw {
+        color: #63b3ed;
+      }
+      .fn {
+        color: #68d391;
+      }
+      .cm {
+        color: #718096;
+        font-style: italic;
+      }
+      .st {
+        color: #fbd38d;
+      }
+      .nb {
+        color: #f6ad55;
+      }
+      .code-toggle-btn {
+        margin-top: 8px;
+        padding: 5px 14px;
+        font-size: 0.72rem;
+        font-family: inherit;
+        background: #2d3748;
+        color: #a0aec0;
+        border: 1px solid #4a5568;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .code-toggle-btn:hover {
+        background: #3d4e63;
+        color: #e2e8f0;
+      }
+
+      /* ── calculator ── */
+      .calc {
+        width: 300px;
+        font-size: 0.82rem;
+        display: grid;
+        gap: 8px;
+      }
+      .calc label {
+        display: grid;
+        gap: 3px;
+        color: #4a5568;
+        font-weight: 600;
+      }
+      .calc input,
+      .calc select {
+        font-family: inherit;
+        font-size: 0.85rem;
+        padding: 5px 8px;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+      }
+      .calc-steps {
+        width: 330px;
+        font-size: 0.85rem;
+        line-height: 1.8;
+        background: #f7fafc;
+        border-radius: 10px;
+        padding: 10px 14px;
+      }
+      .calc-steps .res {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #2b6cb0;
+      }
+      .calc-steps button {
+        margin-top: 6px;
+        font-family: inherit;
+        font-size: 0.78rem;
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: none;
+        background: #2b6cb0;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .photo-slot {
+        width: 280px;
+        height: 200px;
+        border: 2px dashed #cbd5e0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #a0aec0;
+        font-size: 0.8rem;
+        padding: 12px;
+      }
+      table.vocab {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.88rem;
+      }
+      table.vocab th,
+      table.vocab td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 5px 8px;
+        text-align: left;
+      }
+      table.vocab th {
+        color: #4a5568;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      svg text {
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Valgusandur – fototransistor</h1>
+    <p class="subtitle">Interaktiivne õppematerjal · CTC GO fototransistor · takisti 10 kΩ</p>
+    <p class="backlink"><a href="../">← Kõik andurid</a></p>
+
+    <!-- ═══════════════ 1. MIS ON FOTOTRANSISTOR ═══════════════ -->
+    <div class="explanation">
+      <h3>Mis on fototransistor?</h3>
+      <p>
+        Fototransistor näeb välja nagu läbipaistev LED, aga töötab vastupidi: LED <em>teeb</em> valgust,
+        fototransistor <em>reageerib</em> valgusele. Tal on kaks jalga: <strong>pikk jalg on kollektor (+)</strong>
+        ja <strong>lühike jalg on emitter (−)</strong>.
+      </p>
+      <p>
+        Tavalisel transistoril avab voolu kolmas jalg ehk baas. Fototransistoril baasi jalga pole – tema
+        „baasiks“ on valgus. <strong>Mida rohkem valgust langeb kristallile, seda suurem vool läbib
+        fototransistori</strong> kollektorist emitterisse. Pimedas läbib teda vaid tühine pimevool.
+      </p>
+      <p>
+        Oluline: fototransistor <strong>ei muuda oma takistust</strong> nagu potentsiomeeter või fototakisti (LDR).
+        Valgus muudab <strong>voolu</strong>. Seda tuleb meeles pidada, kui valime takistit.
+        <em>Liiguta valguse liugurit ja vaata, kuidas vool muutub.</em>
+      </p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Valgus</div>
+          <svg id="sun1" width="150" height="130" viewBox="0 0 150 130" aria-hidden="true"></svg>
+          <div class="light-ctl" data-light-ctl></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Fototransistori sümbol</div>
+          <svg id="sym" width="230" height="240" viewBox="0 0 230 240" role="img"
+            aria-label="Fototransistori skeemitähis: valgusnooled baasi suunas, kollektor üleval, emitter all"></svg>
+          <div class="section-hint">Punased täpid näitavad voolu. Mida kiiremini need liiguvad, seda suurem vool.</div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Vool läbi fototransistori</div>
+          <div class="big-number" id="i-big">–</div>
+          <div class="bar" title="Logaritmiline skaala"><div id="i-bar"></div></div>
+          <div class="section-hint">Riba skaala on logaritmiline: iga samm on 10 korda suurem vool.</div>
+          <div class="section-hint" style="margin-top:12px;color:#718096">
+            Andmelehe järgi (HW5P-1): 10 luksi juures 50–70 µA.<br />Lehel kasutame lihtsustust ≈ 6 µA luksi kohta.
+            Väga eredas valguses vool enam nii kiiresti ei kasva (mudelis piir ~20 mA).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 2. MIKS TAKISTI ═══════════════ -->
+    <h2 class="section-heading">Miks on takisti vaja?</h2>
+    <div class="explanation">
+      <h3>Arduino mõõdab pinget, mitte voolu</h3>
+      <p>
+        <code>analogRead(A0)</code> mõõdab <strong>pinget</strong> pinil A0 (0–5 V → 0–1023). Fototransistor annab aga
+        <strong>voolu</strong>. Seega on vaja midagi, mis teisendab voolu pingeks. Selleks sobib kõige lihtsam
+        komponent – <strong>takisti</strong>. Ohmi seaduse järgi tekib takistil pinge:
+      </p>
+      <span class="formula">U<sub>A0</sub> = I · R</span>
+      <p>
+        Takisti ühendatakse emitteri ja <strong>GND</strong> vahele. Teda nimetatakse
+        <strong>allatõmbetakistiks</strong> (ingl. <em>pull-down</em>), sest pimedas, kui voolu peaaegu pole,
+        tõmbab ta pini A0 pinge alla 0 V juurde. Ilma temata on pin A0 <strong>„hõljuv“</strong>: ta pole
+        ühendatud ei 5 V ega GND-ga ja näit hüppab juhuslikult – sõltudes isegi sellest, kas sa puudutad juhet.
+      </p>
+      <p><em>Lülita takisti välja ja vaata, mis juhtub Serial Monitoris.</em></p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Valgus</div>
+          <div class="light-ctl" data-light-ctl></div>
+          <label class="switch">
+            <input type="checkbox" id="r-on" checked />
+            <span class="track"><span class="thumb"></span></span>
+            <span>Takisti 10 kΩ ühendatud</span>
+          </label>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Ühendus Arduinoga</div>
+          <svg id="circ" width="400" height="320" viewBox="0 0 400 320" role="img"
+            aria-label="Skeem: 5V kollektorisse, emitter pinile A0 ja läbi 10 kilooomise takisti GND-sse"></svg>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Arduino näit</div>
+          <div class="big-number" id="ar-big" style="color:#276749">–</div>
+          <div class="bar green"><div id="ar-bar"></div></div>
+          <div class="serial">
+            <div class="code-title">Serial Monitor · 9600 baud</div>
+            <pre id="serial-out"></pre>
+          </div>
+          <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
+          <div class="code-block" hidden>
+            <div class="code-title">Arduino IDE · näitekood</div>
+<pre><span class="cm">// Fototransistor: kollektor (pikk jalg) → 5V</span>
+<span class="cm">// emitter (lühike jalg) → A0 ja 10 kΩ → GND</span>
+<span class="kw">const int</span> ANDUR_PIN = A0;
+<span class="kw">const float</span> R = <span class="nb">10000.0</span>; <span class="cm">// takisti oomides</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="nb">9600</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> lugem = <span class="fn">analogRead</span>(ANDUR_PIN);
+  <span class="kw">float</span> pinge = lugem * (<span class="nb">5.0</span> / <span class="nb">1023.0</span>);
+  <span class="kw">float</span> vool_uA = pinge / R * <span class="nb">1000000.0</span>;
+
+  Serial.<span class="fn">print</span>(<span class="st">"analogRead: "</span>);
+  Serial.<span class="fn">print</span>(lugem);
+  Serial.<span class="fn">print</span>(<span class="st">"  Pinge: "</span>);
+  Serial.<span class="fn">print</span>(pinge, <span class="nb">2</span>);
+  Serial.<span class="fn">print</span>(<span class="st">" V  Vool: "</span>);
+  Serial.<span class="fn">print</span>(vool_uA, <span class="nb">0</span>);
+  Serial.<span class="fn">println</span>(<span class="st">" uA"</span>);
+  <span class="fn">delay</span>(<span class="nb">500</span>);
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="value-banner" id="banner2"></div>
+
+    <!-- ═══════════════ 3. TUNDLIKKUS ═══════════════ -->
+    <h2 class="section-heading">Takisti suurus = tundlikkus</h2>
+    <div class="explanation">
+      <h3>Suur takisti – tundlik, väike takisti – talub eredat valgust</h3>
+      <p>
+        Valemist <strong>U = I · R</strong> järeldub: sama valguse (sama voolu) juures annab
+        <strong>suurem takisti suurema pinge</strong>. Suure takistiga andur „näeb“ juba nõrka valgust – ta on
+        <strong>tundlikum</strong>.
+      </p>
+      <p>
+        Aga pinge ei saa kasvada lõpmatuseni. Toide on 5 V ja fototransistori enda peale jääb vähemalt
+        umbes 0,3 V. Seega ei tõuse pinge A0-l üle <strong>≈ 4,7 V</strong> (analogRead ≈ 960, mitte 1023!).
+        Kui see piir on käes, ütleme, et fototransistor on <strong>küllastunud</strong>: valgust võib lisanduda,
+        aga näit enam ei muutu. Andur on „pimestatud“.
+      </p>
+      <p>
+        <strong>Kasulik vahemik</strong> (graafikul sinine ala) näitab, millise valguse juures see takisti
+        valgustugevusi eristab. Vali eri takisteid ja vaata, kuidas vahemik nihkub.
+      </p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Valgus</div>
+          <div class="light-ctl" data-light-ctl></div>
+          <div class="section-title" style="margin-top:16px">Takisti R</div>
+          <div class="r-buttons presets" id="r-buttons" style="max-width:210px"></div>
+          <div class="section-hint" id="r-custom-hint"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">analogRead sõltuvalt valgusest</div>
+          <svg id="chart" width="560" height="340" viewBox="0 0 560 340" role="img"
+            aria-label="Graafik: analogRead valgustatuse funktsioonina eri takistitega"></svg>
+          <div class="section-hint" style="max-width:520px">
+            Hallid jooned on teised takistid. Rõhtteljel on logaritmiline skaala – iga jaotis on 10 korda eredam valgus.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="value-banner" id="banner3"></div>
+
+    <!-- ═══════════════ 4. KUIDAS VALIDA ═══════════════ -->
+    <h2 class="section-heading">Kuidas valida õiget takistit?</h2>
+    <div class="explanation">
+      <h3>Retsept neljas sammus</h3>
+      <ol>
+        <li>
+          <strong>Mõtle, kus andur töötab.</strong> Mis on kõige eredam valgus, mida ta peab veel eristama?
+          (Öölamp toas? Päikesepaneeli jälgija õues?)
+        </li>
+        <li>
+          <strong>Leia vool selle valguse juures:</strong> I<sub>max</sub> = k · E<sub>max</sub>, kus k on
+          fototransistori tundlikkus (andmelehelt või mõõtes, meie andur ≈ 6 µA/lx).
+        </li>
+        <li>
+          <strong>Arvuta takisti</strong> nii, et eredaimas valguses jääks pinge veidi alla küllastuse – näiteks
+          4,5 V: <strong>R = 4,5 V / I<sub>max</sub></strong>.
+        </li>
+        <li>
+          <strong>Vali lähim standardtakisti</strong> (E12-rida: 1,0 · 1,2 · 1,5 · 1,8 · 2,2 · 2,7 · 3,3 · 3,9 ·
+          4,7 · 5,6 · 6,8 · 8,2). Kahtluse korral vali <strong>väiksem</strong>, siis andur ei küllastu.
+        </li>
+      </ol>
+      <p>
+        <strong>Näide.</strong> Andur peab töötama klassiruumis (umbes 400 lx). I<sub>max</sub> = 6 µA/lx · 400 lx
+        = 2400 µA = 2,4 mA. R = 4,5 V / 0,0024 A ≈ 1875 Ω → valime <strong>1,8 kΩ</strong>.
+        Võrdluseks: meie 10 kΩ takisti küllastub juba umbes 80 luksi juures – klassi valguses näitab ta peaaegu
+        alati ≈ 960. Kas see on viga? Ei pruugi olla! Kui tahad teada ainult, <strong>kas tuba on pime</strong>
+        (öölamp), on tundlik 10 kΩ just õige valik.
+      </p>
+      <div class="note warn">
+        ⚠️ <strong>Arvud on ligikaudsed.</strong> Fototransistori vool sõltub valguse värvist (päike, LED-lamp,
+        hõõglamp), konkreetsest eksemplarist ja nurgast, mille all valgus langeb. Andmelehe väärtus on
+        lähtepunkt – lõpliku takisti vali katse põhjal.
+      </div>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Takisti kalkulaator</div>
+          <div class="calc">
+            <label>
+              Kõige eredam valgus, mida andur peab eristama
+              <select id="calc-preset">
+                <option value="10">Hämar tuba (~10 lx)</option>
+                <option value="50">Õhtune tuba (~50 lx)</option>
+                <option value="400" selected>Klassiruum (~400 lx)</option>
+                <option value="5000">Pilvine päev õues (~5000 lx)</option>
+                <option value="50000">Päike (~50 000 lx)</option>
+                <option value="custom">Muu väärtus…</option>
+              </select>
+            </label>
+            <label id="calc-lux-wrap" hidden>
+              Valgustatus (lx)
+              <input type="number" id="calc-lux" min="1" max="100000" value="400" />
+            </label>
+            <label>
+              Fototransistori tundlikkus k (µA/lx)
+              <input type="number" id="calc-k" min="0.1" max="100" step="0.1" value="6" />
+            </label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Arvutus</div>
+          <div class="calc-steps" id="calc-out"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 5. KATSE ═══════════════ -->
+    <h2 class="section-heading">Katse: mõõda oma anduri tundlikkus</h2>
+    <div class="explanation">
+      <p>
+        Lehe arvud tulevad andmelehest. Kui palju sinu fototransistor tegelikult annab? Seda saad ise mõõta.
+      </p>
+      <ol>
+        <li>Ühenda fototransistor 10 kΩ takistiga nagu ülal ja lae üles näitekood.</li>
+        <li>
+          Kata andur käega ja jälgi Serial Monitori. Seejärel avaga ja suuna andur eri valgusallikate poole.
+          Mõõda pinget ka multimeetriga takisti otstel – kas see klapib Arduino näiduga?
+        </li>
+        <li>
+          Kui pinge on ≈ 4,7 V, on andur küllastunud. Vaheta takisti 1 kΩ vastu ja korda mõõtmist.
+        </li>
+        <li>
+          Mõõda samal ajal valgustatust telefoni luksmeetri rakendusega (nt „Light Meter“). Arvuta
+          <strong>k = I / E</strong>. Kui palju erineb sinu tulemus 6 µA/lx-st?
+        </li>
+      </ol>
+      <div class="note tip">
+        💡 Telefoni luksmeeter ei ole täpne mõõteriist, aga suurusjärgu (10 lx vs 100 lx vs 1000 lx) näitab ta hästi.
+      </div>
+    </div>
+
+    <!-- ═══════════════ 6. PÄRISELUS ═══════════════ -->
+    <h2 class="section-heading">Fototransistor päriselus</h2>
+    <div class="explanation">
+      <h3>Kuidas eristada kollektorit ja emitterit?</h3>
+      <p>
+        <strong>Pikk jalg = kollektor (+)</strong>, ühenda 5 V-ga. <strong>Lühike jalg = emitter (−)</strong>, ühenda
+        A0 ja takistiga. Kui jalad on juba lühikeseks lõigatud, proovi lihtsalt: ühenda ja kata andur käega.
+        Kui näit valgusega ei muutu ja jääb nulli lähedale, pööra fototransistor ümber. Takisti piirab voolu,
+        nii et lühikese proovimisega ei lähe midagi katki.
+      </p>
+      <p>
+        Fototransistor on väga sarnane LED-iga. Kui komplektis on mõlemad, hoia neid eraldi karpides!
+      </p>
+    </div>
+    <div class="scroll-wrap">
+      <div class="panel" style="gap:16px">
+        <div class="section">
+          <div class="section-title">Fototransistor</div>
+          <div class="photo-slot">Foto lisandub:<br />CTC GO fototransistor, jalad märgitud</div>
+        </div>
+        <div class="section">
+          <div class="section-title">Ühendus Arduino UNO-ga</div>
+          <div class="photo-slot">Foto lisandub:<br />makettplaat, 10 kΩ takisti, juhtmed 5V / A0 / GND</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 7. TEINE NÄIDE: TERMISTOR ═══════════════ -->
+    <h2 class="section-heading">Teine näide: termistor</h2>
+    <div class="explanation">
+      <h3>Sama küsimus, teine andur</h3>
+      <p>
+        Termistor kuulub teise andurite perre: temperatuur muudab tema <strong>takistust</strong>, mitte voolu.
+        Kasutame <strong>NTC termistorit</strong> (sama mis telemeetria tutorialis 03): 25 °C juures 10 kΩ,
+        B-väärtus 3950 K. NTC tähendab, et <strong>soojemaks minnes takistus väheneb</strong>.
+      </p>
+      <p>
+        Takistuse muutusest pinge saamiseks ühendame termistori ja takisti <strong>pingejagurina</strong>:
+        5V → termistor → A0 → takisti R → GND. Pinge A0-l:
+      </p>
+      <span class="formula">U<sub>A0</sub> = 5 V · R / (R + R<sub>NTC</sub>)</span>
+      <p>
+        Soojemaks → R<sub>NTC</sub> väheneb → pinge A0-l <strong>kasvab</strong>. Küllastust siin pole, sest
+        pinge jääb alati 0 ja 5 V vahele. Takisti valik mõjutab aga <strong>tundlikkust</strong>: mitu
+        analogRead-i sammu muutub näit ühe kraadi kohta.
+      </p>
+      <p>
+        <strong>Reegel:</strong> pingejagur on kõige tundlikum seal, kus <strong>R = R<sub>NTC</sub></strong>.
+        Meie termistor on 10 kΩ just 25 °C juures, seega on 10 kΩ takisti parim toatemperatuuri mõõtmiseks.
+        Kui pead mõõtma vahemikku T<sub>min</sub>…T<sub>max</sub>, vali
+      </p>
+      <span class="formula">R = √( R<sub>NTC</sub>(T<sub>min</sub>) · R<sub>NTC</sub>(T<sub>max</sub>) )</span>
+      <p>
+        <strong>Näide:</strong> GreenPoweri mootori temperatuur 20…80 °C. R<sub>NTC</sub>(20 °C) ≈ 12,5 kΩ,
+        R<sub>NTC</sub>(80 °C) ≈ 1,27 kΩ → R = √(12,5 · 1,27) kΩ ≈ 4,0 kΩ → valime <strong>3,9 kΩ</strong>.
+        <em>Proovi kalkulaatoriga ja vaata graafikult, kuidas kõver nihkub.</em>
+      </p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Temperatuur</div>
+          <div class="light-ctl">
+            <div class="lux-label" id="t-label" style="color:#c53030"></div>
+            <input type="range" id="t-range" min="-20" max="100" step="0.5" value="22"
+              aria-label="Temperatuur" style="accent-color:#c53030" />
+            <div class="presets" id="t-presets"></div>
+          </div>
+          <div class="section-title" style="margin-top:16px">Takisti R</div>
+          <div class="r-buttons presets" id="tr-buttons" style="max-width:210px"></div>
+          <div class="section-title" style="margin-top:16px">Kalkulaator</div>
+          <div class="calc" style="width:210px">
+            <label><span>T<sub>min</sub> (°C)</span><input type="number" id="tc-min" value="20" style="width:100%" /></label>
+            <label><span>T<sub>max</sub> (°C)</span><input type="number" id="tc-max" value="80" style="width:100%" /></label>
+          </div>
+          <div class="section-hint" id="tc-out" style="color:#2d3748;max-width:210px;font-size:0.8rem"></div>
+          <button class="code-toggle-btn" id="tc-try" style="background:#2b6cb0;color:#fff;border:none">Proovi graafikul</button>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Pingejagur</div>
+          <svg id="tcirc" width="200" height="300" viewBox="0 0 200 300" role="img"
+            aria-label="Pingejagur: 5V, termistor, A0, takisti, GND"></svg>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">analogRead sõltuvalt temperatuurist</div>
+          <svg id="tchart" width="520" height="320" viewBox="0 0 520 320" role="img"
+            aria-label="Graafik: analogRead temperatuuri funktsioonina eri takistitega"></svg>
+          <div class="section-hint" style="max-width:480px">
+            Sinine ala: temperatuurid, kus see takisti on vähemalt pooltundlik oma parimast. Kõige järsem koht on
+            seal, kus R = R<sub>NTC</sub>.
+          </div>
+          <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
+          <div class="code-block" hidden>
+            <div class="code-title">Arduino IDE · termistor</div>
+<pre><span class="cm">// 5V → termistor → A0 → R → GND</span>
+<span class="kw">const int</span> TERM_PIN = A0;
+<span class="kw">const float</span> R_FIXED = <span class="nb">10000.0</span>; <span class="cm">// takisti R</span>
+<span class="kw">const float</span> R0 = <span class="nb">10000.0</span>;      <span class="cm">// NTC 25 °C juures</span>
+<span class="kw">const float</span> T0 = <span class="nb">298.15</span>;       <span class="cm">// 25 °C kelvinites</span>
+<span class="kw">const float</span> B  = <span class="nb">3950.0</span>;       <span class="cm">// andmelehelt!</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="nb">9600</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> lugem = <span class="fn">analogRead</span>(TERM_PIN);
+  <span class="kw">if</span> (lugem &lt; <span class="nb">1</span>) lugem = <span class="nb">1</span>; <span class="cm">// väldi nulliga jagamist</span>
+  <span class="kw">float</span> pinge = lugem * (<span class="nb">5.0</span> / <span class="nb">1023.0</span>);
+  <span class="kw">float</span> r_ntc = R_FIXED * (<span class="nb">5.0</span> / pinge - <span class="nb">1.0</span>);
+  <span class="kw">float</span> t_k = <span class="nb">1.0</span> / (<span class="nb">1.0</span> / T0 + <span class="fn">log</span>(r_ntc / R0) / B);
+  <span class="kw">float</span> t_c = t_k - <span class="nb">273.15</span>;
+
+  Serial.<span class="fn">print</span>(<span class="st">"analogRead: "</span>);
+  Serial.<span class="fn">print</span>(lugem);
+  Serial.<span class="fn">print</span>(<span class="st">"  R_NTC: "</span>);
+  Serial.<span class="fn">print</span>(r_ntc, <span class="nb">0</span>);
+  Serial.<span class="fn">print</span>(<span class="st">" oomi  T: "</span>);
+  Serial.<span class="fn">print</span>(t_c, <span class="nb">1</span>);
+  Serial.<span class="fn">println</span>(<span class="st">" C"</span>);
+  <span class="fn">delay</span>(<span class="nb">500</span>);
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="value-banner" id="banner-t"></div>
+
+    <div class="explanation" style="margin-top:20px">
+      <h3>Võrdlus: fototransistor ja termistor</h3>
+      <table class="vocab">
+        <tr><th></th><th>Fototransistor</th><th>NTC termistor</th></tr>
+        <tr><td><b>Mida füüsikaline suurus muudab</b></td><td>voolu</td><td>takistust</td></tr>
+        <tr><td><b>Lülitus</b></td><td>takisti emitterist GND-sse</td><td>pingejagur (termistor + takisti)</td></tr>
+        <tr><td><b>Valem</b></td><td>U = I · R</td><td>U = 5 V · R / (R + R<sub>NTC</sub>)</td></tr>
+        <tr><td><b>Liiga suur takisti</b></td><td>küllastub juba nõrgas valguses</td><td>tundlik ainult külmas</td></tr>
+        <tr><td><b>Liiga väike takisti</b></td><td>ei näe nõrka valgust</td><td>tundlik ainult kuumas; suurem vool soojendab termistorit ennast</td></tr>
+        <tr><td><b>Valiku reegel</b></td><td>R = 4,5 V / I<sub>max</sub></td><td>R = √(R<sub>NTC</sub>(T<sub>min</sub>) · R<sub>NTC</sub>(T<sub>max</sub>))</td></tr>
+      </table>
+      <p style="margin-top:10px">
+        Põhjalikum termistori juhend (kalibreerimine, B-võrrand):
+        <a href="https://github.com/vhkarendus/VHK_Telemeetria/blob/main/tutorialid/03%20Termistor%20Arduino%20tutorial.md">VHK Telemeetria · tutorial 03</a>.
+      </p>
+    </div>
+
+    <!-- ═══════════════ 8. KÜSIMUSED ═══════════════ -->
+    <h2 class="section-heading">Mõtle järele</h2>
+    <div class="explanation">
+      <ol>
+        <li>Miks ei jõua analogRead fototransistoriga kunagi 1023-ni?</li>
+        <li>Mis juhtub näiduga, kui asendad 10 kΩ takisti 1 kΩ takistiga? Millal on see parem valik?</li>
+        <li>Tahad teha öölambi, mis süttib, kui toas läheb pimedaks. Millise takisti valiksid ja miks?</li>
+        <li>Mis vahe on fototransistoril ja fototakistil (LDR) selles osas, mida valgus komponendis muudab?</li>
+        <li>Miks kõigub näit, kui allatõmbetakisti on lahti ühendatud?</li>
+        <li>Päikesepaneeli jälgija peab töötama otseses päikesevalguses. Arvuta talle sobiv takisti.</li>
+        <li>Miks on termistori puhul 10 kΩ takisti hea valik toas, aga mitte akupaki jälgimiseks 60 °C juures?</li>
+        <li>Fototransistoriga võib näit „kinni jääda“ 960 juurde, termistoriga mitte. Miks?</li>
+      </ol>
+    </div>
+
+    <h2 class="section-heading">Sõnastik</h2>
+    <div class="explanation">
+      <table class="vocab">
+        <tr><th>Inglise keeles</th><th>Eesti keeles</th></tr>
+        <tr><td>phototransistor</td><td>fototransistor</td></tr>
+        <tr><td>collector / emitter</td><td>kollektor / emitter</td></tr>
+        <tr><td>pull-down resistor</td><td>allatõmbetakisti</td></tr>
+        <tr><td>floating input</td><td>hõljuv sisend</td></tr>
+        <tr><td>illuminance (lux, lx)</td><td>valgustatus (luks, lx)</td></tr>
+        <tr><td>dark current</td><td>pimevool</td></tr>
+        <tr><td>saturation</td><td>küllastus</td></tr>
+        <tr><td>sensitivity</td><td>tundlikkus</td></tr>
+        <tr><td>datasheet</td><td>andmeleht</td></tr>
+        <tr><td>thermistor (NTC)</td><td>termistor (negatiivse temperatuuriteguriga)</td></tr>
+        <tr><td>voltage divider</td><td>pingejagur</td></tr>
+      </table>
+    </div>
+
+    <script>
+      /* ════════════════ MUDEL ════════════════
+         I  = I_pime + k · E          (vool, A)
+         U  = I · R, aga mitte üle U_max (küllastus, pehme üleminek)
+         analogRead = round(U / 5 · 1023)                         */
+      const VCC = 5.0;
+      const U_MAX = 4.7; // 5 V − U_CE(sat) 0,3 V (HW5P-1 andmeleht)
+      const I_DARK = 0.1e-6; // pimevool 100 nA
+      const K = 6e-6; // A/lx (andmeleht: 50–70 µA @ 10 lx)
+      const R_FIXED = 10000;
+      const R_LIST = [1000, 2200, 4700, 10000, 22000, 47000, 100000];
+      const PRESETS = [
+        ["Pime tuba", 1],
+        ["Hämar", 10],
+        ["Õhtune tuba", 50],
+        ["Klass", 400],
+        ["Pilves õues", 5000],
+        ["Päike", 50000],
+      ];
+
+      const state = { logE: Math.log10(50), rOn: true, R: 10000, customR: null };
+
+      const I_LIMIT = 20e-3; // tüüpiline max kollektorivool sarnastel fototransistoridel
+      // lineaarne kuni paar mA, väga eredas valguses pehme piir (mudeli lihtsustus)
+      function current(E) {
+        const lin = I_DARK + K * E;
+        return lin / Math.pow(1 + Math.pow(lin / I_LIMIT, 4), 0.25);
+      }
+      function voltage(E, R) {
+        const u = current(E) * R;
+        const n = 8; // pehme küllastus
+        return u / Math.pow(1 + Math.pow(u / U_MAX, n), 1 / n);
+      }
+      const adc = (u) => Math.round((u / VCC) * 1023);
+      const lux = () => Math.pow(10, state.logE);
+
+      function fmtI(i) {
+        const uA = i * 1e6;
+        if (uA >= 1000) return (uA / 1000).toFixed(2).replace(".", ",") + " mA";
+        if (uA >= 10) return Math.round(uA) + " µA";
+        return uA.toFixed(1).replace(".", ",") + " µA";
+      }
+      function fmtLux(E) {
+        if (E >= 10000) return Math.round(E).toLocaleString("et-EE") + " lx";
+        if (E >= 10) return Math.round(E) + " lx";
+        return E.toFixed(1).replace(".", ",") + " lx";
+      }
+      function fmtR(R) {
+        if (R >= 1000) {
+          const k = R / 1000;
+          return (Number.isInteger(k) ? k : k.toFixed(1)).toString().replace(".", ",") + " kΩ";
+        }
+        return Math.round(R) + " Ω";
+      }
+      const fmtV = (u) => u.toFixed(2).replace(".", ",") + " V";
+      const NS = "http://www.w3.org/2000/svg";
+      function el(tag, attrs, parent) {
+        const e = document.createElementNS(NS, tag);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        if (parent) parent.appendChild(e);
+        return e;
+      }
+
+      /* ════════════════ VALGUSE JUHTPULT (kõigis paneelides) ════════════════ */
+      const lightCtls = [];
+      document.querySelectorAll("[data-light-ctl]").forEach((box, idx) => {
+        const lab = document.createElement("div");
+        lab.className = "lux-label";
+        const rng = document.createElement("input");
+        rng.type = "range";
+        rng.min = 0;
+        rng.max = 5;
+        rng.step = 0.01;
+        rng.setAttribute("aria-label", "Valgustatus (logaritmiline)");
+        rng.addEventListener("input", () => {
+          state.logE = parseFloat(rng.value);
+          update();
+        });
+        const pr = document.createElement("div");
+        pr.className = "presets";
+        PRESETS.forEach(([name, E]) => {
+          const b = document.createElement("button");
+          b.textContent = name;
+          b.title = fmtLux(E);
+          b.onclick = () => {
+            state.logE = Math.log10(E);
+            update();
+          };
+          pr.appendChild(b);
+        });
+        box.append(lab, rng, pr);
+        lightCtls.push({ lab, rng });
+      });
+
+      /* ════════════════ PÄIKE ════════════════ */
+      const sun = document.getElementById("sun1");
+      const rays = el("g", { stroke: "#ecc94b", "stroke-width": 4, "stroke-linecap": "round" }, sun);
+      const rayEls = [];
+      for (let a = 0; a < 12; a++) rayEls.push(el("line", {}, rays));
+      const sunDisc = el("circle", { cx: 75, cy: 65, r: 24, stroke: "#d69e2e", "stroke-width": 2 }, sun);
+
+      function drawSun(f) {
+        // f: 0…1
+        const col = `hsl(45, ${40 + 55 * f}%, ${30 + 40 * f}%)`;
+        sunDisc.setAttribute("fill", col);
+        rays.setAttribute("opacity", 0.15 + 0.85 * f);
+        rayEls.forEach((ln, a) => {
+          const ang = (a / 12) * Math.PI * 2;
+          const r1 = 31,
+            r2 = 34 + 26 * f;
+          ln.setAttribute("x1", 75 + r1 * Math.cos(ang));
+          ln.setAttribute("y1", 65 + r1 * Math.sin(ang));
+          ln.setAttribute("x2", 75 + r2 * Math.cos(ang));
+          ln.setAttribute("y2", 65 + r2 * Math.sin(ang));
+        });
+      }
+
+      /* ════════════════ FOTOTRANSISTORI SÜMBOL ════════════════ */
+      // joonistab sümboli; tagastab objekti valgusnoolte ja voolutee jaoks
+      function drawPhototransistor(svg, cx, cy, r, opts = {}) {
+        const g = el("g", {}, svg);
+        el("circle", { cx, cy, r, fill: "#fff", stroke: "#2d3748", "stroke-width": 2 }, g);
+        const bx = cx - r * 0.25;
+        el("line", { x1: bx, y1: cy - r * 0.5, x2: bx, y2: cy + r * 0.5, stroke: "#2d3748", "stroke-width": 4 }, g);
+        const ex = cx + r * 0.35;
+        // kollektor
+        el("polyline", {
+          points: `${bx},${cy - r * 0.2} ${ex},${cy - r * 0.6} ${ex},${cy - r - (opts.lead || 30)}`,
+          fill: "none", stroke: "#2d3748", "stroke-width": 2,
+        }, g);
+        // emitter
+        el("polyline", {
+          points: `${bx},${cy + r * 0.2} ${ex},${cy + r * 0.6} ${ex},${cy + r + (opts.lead || 30)}`,
+          fill: "none", stroke: "#2d3748", "stroke-width": 2,
+        }, g);
+        // emitteri nool (väljapoole)
+        const ax = bx + (ex - bx) * 0.8, ay = cy + r * 0.2 + (r * 0.4) * 0.8;
+        const dx = ex - bx, dy = r * 0.4, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+        el("polygon", {
+          points: `${ax + ux * 6},${ay + uy * 6} ${ax - ux * 4 - uy * 5},${ay - uy * 4 + ux * 5} ${ax - ux * 4 + uy * 5},${ay - uy * 4 - ux * 5}`,
+          fill: "#2d3748",
+        }, g);
+        // valgusnooled
+        const light = el("g", { stroke: "#d69e2e", fill: "#d69e2e", "stroke-width": 2 }, g);
+        [[-0.15, 0], [0.2, 0]].forEach(([off]) => {
+          const tx = cx - r * 0.7, ty = cy - r * 0.55 + off * r * 2;
+          const sx = tx - r * 0.9, sy = ty - r * 0.75;
+          el("line", { x1: sx, y1: sy, x2: tx - 5, y2: ty - 4 }, light);
+          const vx = tx - sx, vy = ty - sy, l = Math.hypot(vx, vy), qx = vx / l, qy = vy / l;
+          el("polygon", {
+            points: `${tx},${ty} ${tx - qx * 9 - qy * 4},${ty - qy * 9 + qx * 4} ${tx - qx * 9 + qy * 4},${ty - qy * 9 - qx * 4}`,
+          }, light);
+        });
+        return { g, light, top: [ex, cy - r - (opts.lead || 30)], bottom: [ex, cy + r + (opts.lead || 30)], bx, ex };
+      }
+
+      const sym = document.getElementById("sym");
+      const symPT = drawPhototransistor(sym, 125, 120, 42, { lead: 40 });
+      el("text", { x: 158, y: 40, "font-size": 12, fill: "#2d3748", "font-weight": 700 }, sym).textContent = "Kollektor (+)";
+      el("text", { x: 158, y: 54, "font-size": 11, fill: "#718096" }, sym).textContent = "pikk jalg";
+      el("text", { x: 158, y: 200, "font-size": 12, fill: "#2d3748", "font-weight": 700 }, sym).textContent = "Emitter (−)";
+      el("text", { x: 158, y: 214, "font-size": 11, fill: "#718096" }, sym).textContent = "lühike jalg";
+      // voolutee täpid
+      const symFlow = el("polyline", {
+        points: `${symPT.ex},${120 - 42 - 40} ${symPT.ex},${120 - 42 * 0.6} ${symPT.bx + 3},${120 - 42 * 0.2} ${symPT.bx + 3},${120 + 42 * 0.2} ${symPT.ex},${120 + 42 * 0.6} ${symPT.ex},${120 + 42 + 40}`,
+        fill: "none", stroke: "#e53e3e", "stroke-width": 4, "stroke-linecap": "round", "stroke-dasharray": "0.1 14",
+      }, sym);
+
+      /* ════════════════ SKEEM ARDUINOGA ════════════════ */
+      const circ = document.getElementById("circ");
+      (function buildCircuit() {
+        // Arduino plokk
+        el("rect", { x: 14, y: 30, width: 112, height: 270, rx: 10, fill: "#2c7a7b", stroke: "#234e52", "stroke-width": 2 }, circ);
+        el("text", { x: 70, y: 56, "text-anchor": "middle", "font-size": 13, fill: "#fff", "font-weight": 700 }, circ).textContent = "Arduino";
+        el("text", { x: 70, y: 72, "text-anchor": "middle", "font-size": 13, fill: "#fff", "font-weight": 700 }, circ).textContent = "UNO";
+        [["5V", 90], ["A0", 200], ["GND", 280]].forEach(([n, y]) => {
+          el("rect", { x: 110, y: y - 7, width: 16, height: 14, fill: "#1a202c", rx: 2 }, circ);
+          el("text", { x: 104, y: y + 4, "text-anchor": "end", "font-size": 12, fill: "#fff", "font-weight": 700 }, circ).textContent = n;
+        });
+      })();
+      const W = { stroke: "#2d3748", "stroke-width": 2, fill: "none" };
+      const PX = 290; // fototransistori/takisti telg
+      // 5V juhe
+      el("polyline", { points: `126,90 ${PX},90 ${PX},100`, ...W }, circ);
+      el("text", { x: 200, y: 84, "text-anchor": "middle", "font-size": 11, fill: "#c53030" }, circ).textContent = "5 V";
+      // fototransistor (telg PX), keskkoht y=140
+      const cPT = drawPhototransistor(circ, PX - 12, 145, 26, { lead: 18 });
+      // ex = PX-12+26*0.35 ≈ PX-2.9 → nihutame grupi
+      cPT.g.setAttribute("transform", `translate(${PX - cPT.ex},0)`);
+      el("text", { x: PX + 32, y: 128, "font-size": 11, fill: "#718096" }, circ).textContent = "fototransistor";
+      // emitter → sõlm
+      el("line", { x1: PX, y1: 189, x2: PX, y2: 200, ...W }, circ);
+      // sõlm A0
+      el("line", { x1: 126, y1: 200, x2: PX, y2: 200, ...W }, circ);
+      el("circle", { cx: PX, cy: 200, r: 4, fill: "#2d3748" }, circ);
+      const vLabel = el("text", { x: PX + 12, y: 204, "font-size": 13, fill: "#2b6cb0", "font-weight": 700 }, circ);
+      // takisti haru
+      const rGroup = el("g", {}, circ);
+      el("line", { x1: PX, y1: 200, x2: PX, y2: 218, ...W }, rGroup);
+      const rWireTop = el("line", { x1: PX, y1: 218, x2: PX, y2: 224, ...W }, rGroup);
+      const rBody = el("rect", { x: PX - 9, y: 224, width: 18, height: 40, fill: "#fff", stroke: "#2d3748", "stroke-width": 2 }, rGroup);
+      el("line", { x1: PX, y1: 264, x2: PX, y2: 280, ...W }, rGroup);
+      el("line", { x1: 126, y1: 280, x2: PX, y2: 280, ...W }, circ);
+      el("text", { x: PX + 16, y: 248, "font-size": 12, fill: "#2d3748", "font-weight": 700 }, circ).textContent = "R = 10 kΩ";
+      el("text", { x: PX + 16, y: 262, "font-size": 10, fill: "#718096" }, circ).textContent = "allatõmbetakisti";
+      el("text", { x: 200, y: 296, "text-anchor": "middle", "font-size": 11, fill: "#2d3748" }, circ).textContent = "GND";
+      // katkestuse märk (kui takisti lahti)
+      const openMark = el("g", { visibility: "hidden" }, circ);
+      el("circle", { cx: PX, cy: 212, r: 3, fill: "#fff", stroke: "#c53030", "stroke-width": 2 }, openMark);
+      el("circle", { cx: PX, cy: 224, r: 3, fill: "#fff", stroke: "#c53030", "stroke-width": 2 }, openMark);
+      el("text", { x: PX - 14, y: 222, "text-anchor": "end", "font-size": 11, fill: "#c53030", "font-weight": 700 }, openMark).textContent = "lahti!";
+      // voolutee
+      const circFlow = el("polyline", {
+        points: `126,90 ${PX},90 ${PX},${145 - 26 * 0.6} ${PX - 10},${145 - 26 * 0.2} ${PX - 10},${145 + 26 * 0.2} ${PX},${145 + 26 * 0.6} ${PX},280 126,280`,
+        fill: "none", stroke: "#e53e3e", "stroke-width": 4, "stroke-linecap": "round", "stroke-dasharray": "0.1 14",
+      }, circ);
+
+      document.getElementById("r-on").addEventListener("change", (e) => {
+        state.rOn = e.target.checked;
+        serialLines.length = 0;
+        update();
+      });
+
+      /* ════════════════ GRAAFIK ════════════════ */
+      const chart = document.getElementById("chart");
+      const CH = { l: 52, r: 32, t: 34, b: 52, w: 560, h: 340 };
+      const xOf = (logE) => CH.l + (logE / 5) * (CH.w - CH.l - CH.r);
+      const yOf = (a) => CH.h - CH.b - (a / 1023) * (CH.h - CH.t - CH.b);
+      const chartStatic = el("g", {}, chart);
+      const bandRect = el("rect", { y: CH.t, height: CH.h - CH.t - CH.b, fill: "#bee3f8", opacity: 0.45 }, chart);
+      const curvesG = el("g", {}, chart);
+      const markerG = el("g", {}, chart);
+      (function drawAxes() {
+        for (let d = 0; d <= 5; d++) {
+          const x = xOf(d);
+          el("line", { x1: x, y1: CH.t, x2: x, y2: CH.h - CH.b, stroke: "#edf2f7" }, chartStatic);
+          el("text", { x, y: CH.h - CH.b + 16, "text-anchor": "middle", "font-size": 11, fill: "#4a5568" }, chartStatic).textContent =
+            Math.pow(10, d).toLocaleString("et-EE");
+        }
+        [0, 256, 512, 768, 1023].forEach((a) => {
+          const y = yOf(a);
+          el("line", { x1: CH.l, y1: y, x2: CH.w - CH.r, y2: y, stroke: "#edf2f7" }, chartStatic);
+          el("text", { x: CH.l - 6, y: y + 4, "text-anchor": "end", "font-size": 11, fill: "#4a5568" }, chartStatic).textContent = a;
+        });
+        el("text", { x: (CH.l + CH.w - CH.r) / 2, y: CH.h - 10, "text-anchor": "middle", "font-size": 12, fill: "#2d3748", "font-weight": 700 }, chartStatic).textContent = "Valgustatus (lx)";
+        el("text", { x: 14, y: (CH.t + CH.h - CH.b) / 2, "text-anchor": "middle", "font-size": 12, fill: "#2d3748", "font-weight": 700, transform: `rotate(-90 14 ${(CH.t + CH.h - CH.b) / 2})` }, chartStatic).textContent = "analogRead";
+        const ySat = yOf(adc(U_MAX));
+        el("line", { x1: CH.l, y1: ySat, x2: CH.w - CH.r, y2: ySat, stroke: "#c05621", "stroke-dasharray": "5 4" }, chartStatic);
+        el("text", { x: CH.w - CH.r - 4, y: ySat - 5, "text-anchor": "end", "font-size": 10.5, fill: "#c05621" }, chartStatic).textContent =
+          "küllastus ≈ 4,7 V (≈ " + adc(U_MAX) + ")";
+        // keskkonna sildid ülal
+        [["pime", 1], ["hämar", 10], ["klass", 400], ["pilves", 5000], ["päike", 50000]].forEach(([n, E]) => {
+          const x = xOf(Math.log10(E));
+          el("line", { x1: x, y1: CH.t - 4, x2: x, y2: CH.t + 2, stroke: "#a0aec0" }, chartStatic);
+          el("text", { x, y: CH.t - 8, "text-anchor": "middle", "font-size": 10, fill: "#a0aec0" }, chartStatic).textContent = n;
+        });
+        el("line", { x1: CH.l, y1: CH.t, x2: CH.l, y2: CH.h - CH.b, stroke: "#a0aec0" }, chartStatic);
+        el("line", { x1: CH.l, y1: CH.h - CH.b, x2: CH.w - CH.r, y2: CH.h - CH.b, stroke: "#a0aec0" }, chartStatic);
+      })();
+
+      function curvePath(R) {
+        let d = "";
+        for (let i = 0; i <= 200; i++) {
+          const le = (i / 200) * 5;
+          d += (i ? "L" : "M") + xOf(le).toFixed(1) + "," + yOf(adc(voltage(Math.pow(10, le), R))).toFixed(1);
+        }
+        return d;
+      }
+      // lux, mille juures pinge = u (pööratud mudel, kahendotsing)
+      function luxForVoltage(u, R) {
+        let lo = -3, hi = 7;
+        for (let i = 0; i < 60; i++) {
+          const m = (lo + hi) / 2;
+          if (voltage(Math.pow(10, m), R) < u) lo = m;
+          else hi = m;
+        }
+        return Math.pow(10, lo);
+      }
+      function usefulRange(R) {
+        return [luxForVoltage(0.25, R), luxForVoltage(4.4, R)];
+      }
+
+      function drawCurves() {
+        curvesG.innerHTML = "";
+        const all = R_LIST.slice();
+        if (state.customR && !all.includes(state.customR)) all.push(state.customR);
+        all.sort((a, b) => a - b).forEach((R, idx) => {
+          if (R === state.R) return;
+          el("path", { d: curvePath(R), fill: "none", stroke: "#cbd5e0", "stroke-width": 1.5 }, curvesG);
+          const lvlU = idx % 2 ? 1.6 : 3.4; // vahelduvad kõrgused, et sildid ei kattuks
+          const x = xOf(Math.log10(luxForVoltage(lvlU, R)));
+          if (x > CH.l + 10 && x < CH.w - CH.r - 30)
+            el("text", { x: x + 5, y: yOf(adc(lvlU)) + 4, "font-size": 10, fill: "#a0aec0" }, curvesG).textContent = fmtR(R);
+        });
+        el("path", { d: curvePath(state.R), fill: "none", stroke: "#2b6cb0", "stroke-width": 3 }, curvesG);
+        const x = xOf(Math.log10(luxForVoltage(2.5, state.R)));
+        const t = el("text", { x: x - 6, y: yOf(560), "text-anchor": "end", "font-size": 12, fill: "#2b6cb0", "font-weight": 700 }, curvesG);
+        t.textContent = fmtR(state.R);
+        const [a, b] = usefulRange(state.R);
+        const xa = Math.max(CH.l, xOf(Math.log10(a))), xb = Math.min(CH.w - CH.r, xOf(Math.log10(b)));
+        bandRect.setAttribute("x", xa);
+        bandRect.setAttribute("width", Math.max(0, xb - xa));
+      }
+
+      // takistinupud
+      const rBtnBox = document.getElementById("r-buttons");
+      function buildRButtons() {
+        rBtnBox.innerHTML = "";
+        const all = R_LIST.slice();
+        if (state.customR && !all.includes(state.customR)) all.push(state.customR);
+        all.sort((a, b) => a - b).forEach((R) => {
+          const b = document.createElement("button");
+          b.textContent = fmtR(R);
+          if (R === state.R) b.classList.add("active");
+          b.onclick = () => {
+            state.R = R;
+            buildRButtons();
+            drawCurves();
+            update();
+          };
+          rBtnBox.appendChild(b);
+        });
+        document.getElementById("r-custom-hint").textContent = state.customR
+          ? "Lisatud kalkulaatorist: " + fmtR(state.customR)
+          : "";
+      }
+
+      /* ════════════════ KALKULAATOR ════════════════ */
+      const E12 = [1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2];
+      function e12Below(R) {
+        let best = 10;
+        for (let dec = 1; dec <= 1e6; dec *= 10)
+          for (const m of E12) if (m * dec <= R + 1e-9) best = m * dec;
+        return Math.round(best);
+      }
+      const cPreset = document.getElementById("calc-preset");
+      const cLux = document.getElementById("calc-lux");
+      const cK = document.getElementById("calc-k");
+      function calc() {
+        const custom = cPreset.value === "custom";
+        document.getElementById("calc-lux-wrap").hidden = !custom;
+        const E = Math.max(0.1, parseFloat(custom ? cLux.value : cPreset.value) || 0);
+        const k = Math.max(0.01, parseFloat(cK.value) || 0);
+        const Imax = k * 1e-6 * E;
+        const Rexact = 4.5 / Imax;
+        const Rstd = e12Below(Rexact);
+        const fx = (n, d = 2) => n.toFixed(d).replace(".", ",");
+        let warn = "";
+        if (Imax > 10e-3)
+          warn = `<div class="note warn">⚠️ <b>Siin valem enam ei kehti.</b> Nii eredas valguses ei kasva fototransistori vool lõpmatuseni – sarnaste fototransistorite lubatud vool on tavaliselt kuni ~20 mA. Proovi takistit 220–470 Ω ja kontrolli katsega või vähenda anduri peale langevat valgust (hajuti, tume kile).</div>`;
+        document.getElementById("calc-out").innerHTML = `
+          1) I<sub>max</sub> = k · E = ${fx(k, 1)} µA/lx · ${Math.round(E).toLocaleString("et-EE")} lx = <b>${fmtI(Imax)}</b><br>
+          2) R = 4,5 V / I<sub>max</sub> = 4,5 / ${fx(Imax, 6)} A ≈ <b>${Math.round(Rexact).toLocaleString("et-EE")} Ω</b><br>
+          3) Lähim väiksem E12 väärtus: <span class="res">${warn ? "–" : fmtR(Rstd)}</span><br>
+          ${warn || `<button id="calc-try">Proovi seda takistit graafikul ↑</button>`}`;
+        if (warn) return;
+        document.getElementById("calc-try").onclick = () => {
+          state.customR = Rstd;
+          state.R = Rstd;
+          state.logE = Math.log10(Math.min(100000, Math.max(1, E)));
+          buildRButtons();
+          drawCurves();
+          update();
+          document.getElementById("chart").scrollIntoView({ behavior: "smooth", block: "center" });
+        };
+      }
+      [cPreset, cLux, cK].forEach((x) => x.addEventListener("input", calc));
+
+      /* ════════════════ SERIAL MONITOR ════════════════ */
+      const serialLines = [];
+      let floatV = 2.0;
+      function readA0() {
+        const E = lux();
+        if (state.rOn) {
+          const u = voltage(E, R_FIXED);
+          const noise = (Math.random() - 0.5) * 4; // väike ADC müra ±2
+          return Math.max(0, Math.min(1023, adc(u) + Math.round(noise)));
+        }
+        // hõljuv sisend: juhuslik kõikumine, valgusega kaldub üles
+        const bias = Math.min(1, Math.log10(E + 1) / 3);
+        floatV += (Math.random() - 0.5) * 1.6 + (bias * 4.4 - floatV) * 0.15;
+        floatV = Math.max(0, Math.min(5, floatV));
+        return adc(floatV);
+      }
+      function tickSerial() {
+        const a = readA0();
+        const u = (a * 5) / 1023;
+        const iuA = (u / R_FIXED) * 1e6;
+        serialLines.push(
+          `analogRead: ${String(a).padStart(4)}  Pinge: ${u.toFixed(2)} V  Vool: ${Math.round(iuA)} uA`
+        );
+        while (serialLines.length > 7) serialLines.shift();
+        document.getElementById("serial-out").textContent = serialLines.join("\n");
+        document.getElementById("ar-big").textContent = a;
+        document.getElementById("ar-bar").style.width = (a / 1023) * 100 + "%";
+      }
+      setInterval(tickSerial, 500);
+
+      /* ════════════════ VOOLU ANIMATSIOON ════════════════ */
+      let dashOff = 0,
+        lastT = performance.now();
+      function animate(t) {
+        const dt = (t - lastT) / 1000;
+        lastT = t;
+        const I = current(lux());
+        // kiirus log-skaalal: 0,1 µA → aeglane, 10 mA → kiire
+        const sp = Math.max(0, (Math.log10(I * 1e6) + 1.2) * 14);
+        dashOff -= sp * dt;
+        symFlow.setAttribute("stroke-dashoffset", dashOff);
+        symFlow.setAttribute("opacity", Math.min(1, 0.2 + sp / 40));
+        const Icirc = state.rOn ? Math.min(I, U_MAX / R_FIXED) : 0;
+        circFlow.setAttribute("visibility", Icirc > 0 ? "visible" : "hidden");
+        const sp2 = Icirc > 0 ? Math.max(0, (Math.log10(Icirc * 1e6) + 1.2) * 14) : 0;
+        circFlow.setAttribute("stroke-dashoffset", (dashOff / (sp || 1)) * sp2);
+        circFlow.setAttribute("opacity", Math.min(1, 0.2 + sp2 / 40));
+        requestAnimationFrame(animate);
+      }
+
+      /* ════════════════ UUENDUS ════════════════ */
+      function update() {
+        const E = lux();
+        const f = state.logE / 5;
+        lightCtls.forEach(({ lab, rng }) => {
+          rng.value = state.logE;
+          lab.textContent = "☀ " + fmtLux(E);
+        });
+        drawSun(f);
+        const I = current(E);
+        document.getElementById("i-big").textContent = fmtI(I);
+        document.getElementById("i-bar").style.width = Math.max(2, ((Math.log10(I * 1e6) + 1) / 5) * 100) + "%";
+        symPT.light.setAttribute("opacity", 0.15 + 0.85 * f);
+        cPT.light.setAttribute("opacity", 0.15 + 0.85 * f);
+
+        // paneel 2
+        rWireTop.setAttribute("visibility", state.rOn ? "visible" : "hidden");
+        openMark.setAttribute("visibility", state.rOn ? "hidden" : "visible");
+        rBody.setAttribute("stroke", state.rOn ? "#2d3748" : "#cbd5e0");
+        if (state.rOn) {
+          const u = voltage(E, R_FIXED);
+          vLabel.textContent = "A0: " + fmtV(u);
+          const sat = u > 4.4;
+          document.getElementById("banner2").innerHTML =
+            `Valgus <span class="lx">${fmtLux(E)}</span> &nbsp;|&nbsp; Vool <span class="i">${fmtI(Math.min(I, U_MAX / R_FIXED))}</span>` +
+            ` &nbsp;|&nbsp; Pinge A0 = I · 10 kΩ = <span class="v">${fmtV(u)}</span> &nbsp;|&nbsp; analogRead ≈ <span class="ar">${adc(u)}</span>` +
+            (sat ? ` <span class="sat-flag">⚠️ küllastunud</span>` : "");
+        } else {
+          vLabel.textContent = "A0: ???";
+          document.getElementById("banner2").innerHTML =
+            `Takisti on lahti: pin A0 <span class="sat-flag">hõljub</span> – näit on juhuslik ja ei näita valgust usaldusväärselt.`;
+        }
+
+        // paneel 3
+        const u3 = voltage(E, state.R);
+        const a3 = adc(u3);
+        markerG.innerHTML = "";
+        const mx = xOf(state.logE), my = yOf(a3);
+        el("line", { x1: mx, y1: CH.t, x2: mx, y2: CH.h - CH.b, stroke: "#d69e2e", "stroke-dasharray": "4 3" }, markerG);
+        el("circle", { cx: mx, cy: my, r: 6, fill: "#d69e2e", stroke: "#fff", "stroke-width": 2 }, markerG);
+        const [ra, rb] = usefulRange(state.R);
+        let status;
+        if (u3 > 4.4) status = `<span class="sat-flag">⚠️ küllastunud – liiga ere selle takisti jaoks</span>`;
+        else if (u3 < 0.25) status = `<span class="sat-flag">liiga pime – näit on peaaegu 0</span>`;
+        else status = `<span style="color:#276749">✓ kasulikus vahemikus</span>`;
+        document.getElementById("banner3").innerHTML =
+          `R = <span class="v">${fmtR(state.R)}</span>: kasulik vahemik ≈ ${fmtLux(ra)} … ${fmtLux(rb)}<br>` +
+          `Praegu <span class="lx">${fmtLux(E)}</span> → analogRead ≈ <span class="ar">${a3}</span> &nbsp; ${status}`;
+      }
+
+      function toggleCode(btn) {
+        const block = btn.nextElementSibling;
+        block.hidden = !block.hidden;
+        btn.textContent = block.hidden ? "Näita koodi" : "Peida kood";
+      }
+
+      buildRButtons();
+      drawCurves();
+      calc();
+      update();
+      tickSerial();
+      requestAnimationFrame(animate);
+    </script>
+      <script>
+      /* ════════════════ TERMISTOR (NTC 10 kΩ, B 3950) ════════════════ */
+      (function () {
+        const R0 = 10000, B = 3950, T0 = 298.15;
+        const TR_LIST = [1000, 2200, 3900, 4700, 10000, 22000, 47000, 100000];
+        const ts = { T: 22, R: 10000, custom: null };
+        const rNtc = (Tc) => R0 * Math.exp(B * (1 / (Tc + 273.15) - 1 / T0));
+        const uT = (Tc, R) => (VCC * R) / (R + rNtc(Tc));
+        const adcT = (Tc, R) => (uT(Tc, R) / VCC) * 1023;
+        const sens = (Tc, R) => (adcT(Tc + 0.05, R) - adcT(Tc - 0.05, R)) / 0.1; // sammu / °C
+        const bestT = (R) => 1 / (1 / T0 + Math.log(R / R0) / B) - 273.15;
+        const fmtT = (t) => t.toFixed(1).replace(".", ",") + " °C";
+
+        // ── juhtpult
+        const tRange = document.getElementById("t-range");
+        tRange.addEventListener("input", () => { ts.T = parseFloat(tRange.value); upd(); });
+        const tp = document.getElementById("t-presets");
+        [["Külmik", 4], ["Tuba", 22], ["Käes", 33], ["Mootor", 70], ["Keev vesi", 100]].forEach(([n, T]) => {
+          const b = document.createElement("button");
+          b.textContent = n; b.title = T + " °C";
+          b.onclick = () => { ts.T = T; upd(); };
+          tp.appendChild(b);
+        });
+        const trBox = document.getElementById("tr-buttons");
+        function buildBtns() {
+          trBox.innerHTML = "";
+          const all = TR_LIST.slice();
+          if (ts.custom && !all.includes(ts.custom)) all.push(ts.custom);
+          all.sort((a, b) => a - b).forEach((R) => {
+            const b = document.createElement("button");
+            b.textContent = fmtR(R);
+            if (R === ts.R) b.classList.add("active");
+            b.onclick = () => { ts.R = R; buildBtns(); drawCurves(); upd(); };
+            trBox.appendChild(b);
+          });
+        }
+
+        // ── skeem
+        const sv = document.getElementById("tcirc");
+        const Wt = { stroke: "#2d3748", "stroke-width": 2, fill: "none" };
+        el("text", { x: 100, y: 18, "text-anchor": "middle", "font-size": 12, fill: "#c53030", "font-weight": 700 }, sv).textContent = "5V";
+        el("line", { x1: 100, y1: 24, x2: 100, y2: 50, ...Wt }, sv);
+        el("rect", { x: 90, y: 50, width: 20, height: 50, fill: "#fff5f5", stroke: "#2d3748", "stroke-width": 2 }, sv);
+        el("polyline", { points: "78,108 90,96 122,46", ...Wt }, sv);
+        el("text", { x: 76, y: 72, "text-anchor": "end", "font-size": 12, fill: "#c53030", "font-weight": 700 }, sv).textContent = "−t°";
+        const rnLab = el("text", { x: 118, y: 80, "font-size": 11, fill: "#2d3748" }, sv);
+        el("line", { x1: 100, y1: 100, x2: 100, y2: 190, ...Wt }, sv);
+        el("circle", { cx: 100, cy: 145, r: 4, fill: "#2d3748" }, sv);
+        el("line", { x1: 100, y1: 145, x2: 40, y2: 145, ...Wt }, sv);
+        el("text", { x: 34, y: 149, "text-anchor": "end", "font-size": 12, "font-weight": 700, fill: "#2d3748" }, sv).textContent = "A0";
+        const uLab = el("text", { x: 108, y: 140, "font-size": 12, fill: "#2b6cb0", "font-weight": 700 }, sv);
+        el("rect", { x: 91, y: 190, width: 18, height: 45, fill: "#fff", stroke: "#2d3748", "stroke-width": 2 }, sv);
+        const rLab = el("text", { x: 118, y: 216, "font-size": 11, fill: "#2d3748", "font-weight": 700 }, sv);
+        el("line", { x1: 100, y1: 235, x2: 100, y2: 268, ...Wt }, sv);
+        el("text", { x: 100, y: 284, "text-anchor": "middle", "font-size": 12, fill: "#2d3748" }, sv).textContent = "GND";
+        el("text", { x: 118, y: 66, "font-size": 10, fill: "#718096" }, sv).textContent = "NTC termistor";
+
+        // ── graafik
+        const svg = document.getElementById("tchart");
+        const C = { l: 50, r: 16, t: 18, b: 46, w: 520, h: 320, tmin: -20, tmax: 100 };
+        const xT = (t) => C.l + ((t - C.tmin) / (C.tmax - C.tmin)) * (C.w - C.l - C.r);
+        const yA = (a) => C.h - C.b - (a / 1023) * (C.h - C.t - C.b);
+        const stat = el("g", {}, svg);
+        const band = el("rect", { y: C.t, height: C.h - C.t - C.b, fill: "#bee3f8", opacity: 0.45 }, svg);
+        const curves = el("g", {}, svg);
+        const mark = el("g", {}, svg);
+        for (let t = -20; t <= 100; t += 20) {
+          const x = xT(t);
+          el("line", { x1: x, y1: C.t, x2: x, y2: C.h - C.b, stroke: "#edf2f7" }, stat);
+          el("text", { x, y: C.h - C.b + 16, "text-anchor": "middle", "font-size": 11, fill: "#4a5568" }, stat).textContent = t;
+        }
+        [0, 256, 512, 768, 1023].forEach((a) => {
+          const y = yA(a);
+          el("line", { x1: C.l, y1: y, x2: C.w - C.r, y2: y, stroke: "#edf2f7" }, stat);
+          el("text", { x: C.l - 6, y: y + 4, "text-anchor": "end", "font-size": 11, fill: "#4a5568" }, stat).textContent = a;
+        });
+        el("text", { x: (C.l + C.w - C.r) / 2, y: C.h - 8, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: "#2d3748" }, stat).textContent = "Temperatuur (°C)";
+        const my = (C.t + C.h - C.b) / 2;
+        el("text", { x: 14, y: my, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: "#2d3748", transform: `rotate(-90 14 ${my})` }, stat).textContent = "analogRead";
+        el("line", { x1: C.l, y1: C.t, x2: C.l, y2: C.h - C.b, stroke: "#a0aec0" }, stat);
+        el("line", { x1: C.l, y1: C.h - C.b, x2: C.w - C.r, y2: C.h - C.b, stroke: "#a0aec0" }, stat);
+
+        const path = (R) => {
+          let d = "";
+          for (let i = 0; i <= 120; i++) {
+            const t = C.tmin + i;
+            d += (i ? "L" : "M") + xT(t).toFixed(1) + "," + yA(adcT(t, R)).toFixed(1);
+          }
+          return d;
+        };
+        function drawCurves() {
+          curves.innerHTML = "";
+          const all = TR_LIST.slice();
+          if (ts.custom && !all.includes(ts.custom)) all.push(ts.custom);
+          all.forEach((R) => {
+            if (R !== ts.R) el("path", { d: path(R), fill: "none", stroke: "#cbd5e0", "stroke-width": 1.5 }, curves);
+          });
+          el("path", { d: path(ts.R), fill: "none", stroke: "#2b6cb0", "stroke-width": 3 }, curves);
+          // pooltundlikkuse ala
+          const tb = bestT(ts.R), smax = sens(tb, ts.R);
+          let a = null, b = null;
+          for (let t = C.tmin; t <= C.tmax; t += 0.5) {
+            if (sens(t, ts.R) >= smax / 2) { if (a === null) a = t; b = t; }
+          }
+          if (a === null) { band.setAttribute("width", 0); return; }
+          band.setAttribute("x", xT(a));
+          band.setAttribute("width", xT(b) - xT(a));
+          if (tb > C.tmin && tb < C.tmax) {
+            el("line", { x1: xT(tb), y1: C.t, x2: xT(tb), y2: C.h - C.b, stroke: "#2b6cb0", "stroke-dasharray": "2 4" }, curves);
+            el("text", { x: xT(tb) + 4, y: C.t + 12, "font-size": 10.5, fill: "#2b6cb0" }, curves).textContent = "R = R_NTC";
+          }
+        }
+
+        // ── kalkulaator
+        const E12 = [1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2];
+        function e12Near(R) {
+          let best = 10, bd = Infinity;
+          for (let dec = 1; dec <= 1e6; dec *= 10)
+            for (const m of E12) {
+              const d = Math.abs(Math.log(m * dec / R));
+              if (d < bd) { bd = d; best = m * dec; }
+            }
+          return Math.round(best);
+        }
+        let calcR = null;
+        function calcT() {
+          const a = parseFloat(document.getElementById("tc-min").value);
+          const b = parseFloat(document.getElementById("tc-max").value);
+          const out = document.getElementById("tc-out");
+          if (!isFinite(a) || !isFinite(b) || a >= b || a < -55 || b > 150) {
+            out.textContent = "Sisesta T_min < T_max (−55 … 150 °C)."; calcR = null; return;
+          }
+          const ra = rNtc(a), rb = rNtc(b), R = Math.sqrt(ra * rb);
+          calcR = e12Near(R);
+          out.innerHTML = `R<sub>NTC</sub>: ${fmtR(ra)} … ${fmtR(rb)}<br>√(…) ≈ ${fmtR(Math.round(R))} → <b style="color:#2b6cb0">${fmtR(calcR)}</b>`;
+        }
+        ["tc-min", "tc-max"].forEach((id) => document.getElementById(id).addEventListener("input", calcT));
+        document.getElementById("tc-try").onclick = () => {
+          if (!calcR) return;
+          ts.custom = TR_LIST.includes(calcR) ? null : calcR;
+          ts.R = calcR;
+          buildBtns(); drawCurves(); upd();
+        };
+
+        function upd() {
+          tRange.value = ts.T;
+          document.getElementById("t-label").textContent = "🌡 " + fmtT(ts.T);
+          const rn = rNtc(ts.T), u = uT(ts.T, ts.R), a = Math.round(adcT(ts.T, ts.R)), s = sens(ts.T, ts.R);
+          rnLab.textContent = "R_NTC = " + fmtR(rn);
+          uLab.textContent = fmtV(u);
+          rLab.textContent = "R = " + fmtR(ts.R);
+          mark.innerHTML = "";
+          el("line", { x1: xT(ts.T), y1: C.t, x2: xT(ts.T), y2: C.h - C.b, stroke: "#c53030", "stroke-dasharray": "4 3" }, mark);
+          el("circle", { cx: xT(ts.T), cy: yA(a), r: 6, fill: "#c53030", stroke: "#fff", "stroke-width": 2 }, mark);
+          const step = s > 0.01 ? (1 / s).toFixed(2).replace(".", ",") : "–";
+          document.getElementById("banner-t").innerHTML =
+            `T = <span style="color:#c53030">${fmtT(ts.T)}</span> &nbsp;|&nbsp; R<sub>NTC</sub> = ${fmtR(rn)} &nbsp;|&nbsp; ` +
+            `U<sub>A0</sub> = <span class="v">${fmtV(u)}</span> &nbsp;|&nbsp; analogRead ≈ <span class="ar">${a}</span><br>` +
+            `Tundlikkus: <b>${s.toFixed(1).replace(".", ",")} sammu/°C</b> (üks samm ≈ ${step} °C) &nbsp;·&nbsp; ` +
+            `R = ${fmtR(ts.R)} on kõige tundlikum ≈ ${fmtT(bestT(ts.R))} juures`;
+        }
+
+        buildBtns(); drawCurves(); calcT(); upd();
+      })();
+    </script>
+  </body>
+</html>

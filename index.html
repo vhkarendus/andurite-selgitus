@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="et">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Andurid – interaktiivsed selgitused</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f0f4f8;
+        color: #1a202c;
+        padding: 24px 16px 56px;
+      }
+      h1 {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+        color: #2d3748;
+      }
+      h2.section-heading {
+        text-align: center;
+        font-size: 1.2rem;
+        margin: 36px 0 10px;
+        color: #2d3748;
+      }
+      .subtitle {
+        text-align: center;
+        color: #718096;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+      }
+      .explanation {
+        max-width: 960px;
+        margin: 0 auto 20px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 22px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        line-height: 1.7;
+        font-size: 0.93rem;
+      }
+      .explanation h3 {
+        font-size: 0.95rem;
+        margin-bottom: 5px;
+        color: #2b6cb0;
+      }
+      .explanation p + p {
+        margin-top: 8px;
+      }
+      .scroll-wrap {
+        overflow-x: auto;
+        max-width: 1100px;
+        margin: 0 auto 20px;
+      }
+      .panel {
+        display: inline-flex;
+        min-width: 100%;
+        justify-content: center;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        padding: 18px 10px 14px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.86rem;
+      }
+      th,
+      td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 7px 8px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        color: #4a5568;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 1px 7px;
+        border-radius: 5px;
+      }
+      .t-r {
+        background: #fefcbf;
+        color: #744210;
+      }
+      .t-i {
+        background: #fed7d7;
+        color: #9b2c2c;
+      }
+      .t-u {
+        background: #c6f6d5;
+        color: #22543d;
+      }
+      .families {
+        max-width: 960px;
+        margin: 0 auto 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+        gap: 14px;
+      }
+      .family {
+        background: #fff;
+        border-radius: 12px;
+        padding: 14px 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        font-size: 0.88rem;
+        line-height: 1.6;
+        border-top: 5px solid;
+      }
+      .family h3 {
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+      }
+      .family svg {
+        display: block;
+        margin: 8px auto;
+      }
+      .pages {
+        max-width: 960px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+      .page-link {
+        display: block;
+        background: #fff;
+        border-radius: 12px;
+        padding: 14px 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        text-decoration: none;
+        color: #2d3748;
+        border: 2px solid transparent;
+        font-size: 0.86rem;
+        line-height: 1.5;
+      }
+      a.page-link:hover {
+        border-color: #2b6cb0;
+      }
+      .page-link strong {
+        display: block;
+        font-size: 1rem;
+        color: #2b6cb0;
+        margin-bottom: 4px;
+      }
+      .page-link.soon {
+        opacity: 0.55;
+      }
+      .page-link.soon strong {
+        color: #718096;
+      }
+      svg text {
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Andurid – kuidas Arduino maailma tunnetab</h1>
+    <p class="subtitle">Interaktiivsed õppematerjalid · VHK inseneeria</p>
+
+    <div class="explanation">
+      <h3>Mis on andur?</h3>
+      <p>
+        Andur (ingl. <em>sensor</em>) on komponent, mis <strong>reageerib mingile füüsikalisele suurusele</strong> –
+        valgusele, temperatuurile, magnetväljale, jõule, kaugusele – ja muudab selle tõttu oma
+        <strong>elektrilist omadust</strong>.
+      </p>
+      <p>
+        Arduino analoogpin oskab aga mõõta ainult üht asja: <strong>pinget</strong> (0–5 V → analogRead 0–1023).
+        Seetõttu on iga anduri ühendamisel sama küsimus: <strong>kuidas teha anduri muutusest pinge?</strong>
+        Väga sageli on vastus lihtne – <strong>üks õigesti valitud takisti</strong>.
+      </p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <svg width="900" height="170" viewBox="0 0 900 170" role="img"
+          aria-label="Ahel: füüsikaline suurus, andur, takisti teisendab pingeks, Arduino ADC, programm">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#4a5568" />
+            </marker>
+          </defs>
+          <g font-size="12" text-anchor="middle">
+            <rect x="10" y="40" width="150" height="90" rx="12" fill="#fefcbf" stroke="#d69e2e" />
+            <text x="85" y="66" font-weight="700" font-size="13">Füüsikaline suurus</text>
+            <text x="85" y="88">valgus, temperatuur,</text>
+            <text x="85" y="106">magnetväli, jõud …</text>
+
+            <rect x="195" y="40" width="150" height="90" rx="12" fill="#fff5f5" stroke="#e53e3e" />
+            <text x="270" y="66" font-weight="700" font-size="13">Andur</text>
+            <text x="270" y="88">muutub tema</text>
+            <text x="270" y="106">takistus, vool või pinge</text>
+
+            <rect x="380" y="40" width="160" height="90" rx="12" fill="#ebf8ff" stroke="#2b6cb0" stroke-width="2.5" />
+            <text x="460" y="66" font-weight="700" font-size="13" fill="#2b6cb0">Takisti / lülitus</text>
+            <text x="460" y="88">teisendab muutuse</text>
+            <text x="460" y="106">pingeks 0–5 V</text>
+
+            <rect x="575" y="40" width="150" height="90" rx="12" fill="#e6fffa" stroke="#2c7a7b" />
+            <text x="650" y="66" font-weight="700" font-size="13">Arduino ADC</text>
+            <text x="650" y="88">analogRead(A0)</text>
+            <text x="650" y="106">0 … 1023</text>
+
+            <rect x="760" y="40" width="130" height="90" rx="12" fill="#f0fff4" stroke="#38a169" />
+            <text x="825" y="66" font-weight="700" font-size="13">Sinu programm</text>
+            <text x="825" y="88">teisendab ühikuteks</text>
+            <text x="825" y="106">ja otsustab</text>
+          </g>
+          <g stroke="#4a5568" stroke-width="2" marker-end="url(#arr)">
+            <line x1="160" y1="85" x2="193" y2="85" />
+            <line x1="345" y1="85" x2="378" y2="85" />
+            <line x1="540" y1="85" x2="573" y2="85" />
+            <line x1="725" y1="85" x2="758" y2="85" />
+          </g>
+          <text x="460" y="156" text-anchor="middle" font-size="12" fill="#2b6cb0" font-weight="700">
+            ↑ sellest sammust need materjalid räägivad
+          </text>
+        </svg>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Kolm andurite peret</h2>
+    <div class="families">
+      <div class="family" style="border-color:#d69e2e">
+        <h3><span class="tag t-r">Takistus muutub</span></h3>
+        <p>
+          Termistor, fototakisti (LDR), jõuandur (FSR), painutusandur. Andur on nagu „isereguleeruv“ takisti.
+        </p>
+        <svg width="150" height="120" viewBox="0 0 150 120" aria-hidden="true">
+          <g stroke="#2d3748" stroke-width="2" fill="none">
+            <line x1="40" y1="8" x2="40" y2="22" /><rect x="32" y="22" width="16" height="30" fill="#fefcbf" />
+            <line x1="26" y1="56" x2="54" y2="18" /><line x1="40" y1="52" x2="40" y2="72" />
+            <rect x="32" y="72" width="16" height="30" /><line x1="40" y1="102" x2="40" y2="114" />
+            <line x1="40" y1="62" x2="90" y2="62" />
+          </g>
+          <text x="58" y="12" font-size="11">5V</text><text x="58" y="117" font-size="11">GND</text>
+          <text x="94" y="66" font-size="11" font-weight="700">A0</text>
+          <text x="54" y="40" font-size="10">andur</text><text x="54" y="92" font-size="10">R</text>
+        </svg>
+        <p><strong>Lülitus: pingejagur.</strong> Takisti valik: R ≈ anduri takistus mõõtevahemiku keskel.</p>
+      </div>
+      <div class="family" style="border-color:#e53e3e">
+        <h3><span class="tag t-i">Vool muutub</span></h3>
+        <p>Fototransistor, fotodiood. Valgus tekitab või avab voolu.</p>
+        <svg width="150" height="120" viewBox="0 0 150 120" aria-hidden="true">
+          <g stroke="#2d3748" stroke-width="2" fill="none">
+            <line x1="40" y1="8" x2="40" y2="30" /><circle cx="40" cy="42" r="12" fill="#fff5f5" />
+            <line x1="40" y1="54" x2="40" y2="72" />
+            <rect x="32" y="72" width="16" height="30" /><line x1="40" y1="102" x2="40" y2="114" />
+            <line x1="40" y1="62" x2="90" y2="62" />
+          </g>
+          <g stroke="#d69e2e" stroke-width="2"><line x1="8" y1="24" x2="24" y2="36" /><line x1="8" y1="36" x2="24" y2="46" /></g>
+          <text x="58" y="12" font-size="11">5V</text><text x="58" y="117" font-size="11">GND</text>
+          <text x="94" y="66" font-size="11" font-weight="700">A0</text>
+          <text x="58" y="46" font-size="10">andur</text><text x="54" y="92" font-size="10">R</text>
+        </svg>
+        <p><strong>Lülitus: takisti GND-sse</strong> (U = I · R). Takisti määrab tundlikkuse.</p>
+      </div>
+      <div class="family" style="border-color:#38a169">
+        <h3><span class="tag t-u">Annab ise pinge</span></h3>
+        <p>
+          Analoog-Halli andur (magnetväli), TMP36 (temperatuur), valmis andurimoodulid. Andurisse on juba
+          sisse ehitatud lülitus.
+        </p>
+        <svg width="150" height="120" viewBox="0 0 150 120" aria-hidden="true">
+          <g stroke="#2d3748" stroke-width="2" fill="none">
+            <rect x="20" y="36" width="50" height="50" rx="6" fill="#f0fff4" />
+            <line x1="30" y1="8" x2="30" y2="36" /><line x1="30" y1="86" x2="30" y2="114" />
+            <line x1="70" y1="61" x2="100" y2="61" />
+          </g>
+          <text x="45" y="66" font-size="10" text-anchor="middle">andur</text>
+          <text x="38" y="14" font-size="11">5V</text><text x="38" y="112" font-size="11">GND</text>
+          <text x="104" y="65" font-size="11" font-weight="700">A0</text>
+        </svg>
+        <p><strong>Lülitus: otse pinile.</strong> Takistit pole vaja – loe andmelehelt, mis pinge mida tähendab.</p>
+      </div>
+    </div>
+
+    <div class="explanation">
+      <h3>Näiteid andurite kohta</h3>
+      <table>
+        <tr><th>Andur</th><th>Mõõdab</th><th>Mis muutub</th><th>Kuidas Arduino seda loeb</th></tr>
+        <tr><td>Potentsiomeeter</td><td>asend (pööre)</td><td><span class="tag t-r">takistuse jaotus</span></td><td>on ise pingejagur</td></tr>
+        <tr><td>Fototransistor</td><td>valgus</td><td><span class="tag t-i">vool</span></td><td>takisti GND-sse</td></tr>
+        <tr><td>Fototakisti (LDR)</td><td>valgus</td><td><span class="tag t-r">takistus</span></td><td>pingejagur</td></tr>
+        <tr><td>NTC termistor</td><td>temperatuur</td><td><span class="tag t-r">takistus</span></td><td>pingejagur</td></tr>
+        <tr><td>TMP36</td><td>temperatuur</td><td><span class="tag t-u">pinge</span></td><td>otse analoogpinile</td></tr>
+        <tr><td>Halli andur (analoog)</td><td>magnetväli</td><td><span class="tag t-u">pinge</span></td><td>otse analoogpinile</td></tr>
+        <tr><td>Jõuandur (FSR)</td><td>surve, jõud</td><td><span class="tag t-r">takistus</span></td><td>pingejagur</td></tr>
+      </table>
+    </div>
+
+    <h2 class="section-heading">Materjalid</h2>
+    <div class="pages">
+      <a class="page-link" href="https://vhkarendus.github.io/Potentsiomeetri-selgitus/">
+        <strong>Potentsiomeeter →</strong>Kuidas takistus jaguneb ja miks potentsiomeeter on pingejagur.
+      </a>
+      <a class="page-link" href="valgusandur/">
+        <strong>Valgusandur →</strong>Fototransistor, allatõmbetakisti, tundlikkus ja takisti valimine.
+      </a>
+      <div class="page-link soon">
+        <strong>Temperatuuriandur</strong>Termistor pingejaguris. Tulekul.
+      </div>
+    </div>
+  </body>
+</html>
