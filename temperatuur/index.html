@@ -589,6 +589,19 @@
         font-family: Consolas, "Courier New", monospace;
         font-size: 0.88em;
       }
+      /* stabiilne paigutus: muutuv tekst ei tohi liigutada liugureid */
+      .value-banner {
+        min-height: 4.8em;
+      }
+      @media (max-width: 700px) {
+        .value-banner {
+          min-height: 8.6em;
+        }
+      }
+      .cal-result {
+        min-height: 150px;
+        align-content: start;
+      }
     </style>
   </head>
   <body>

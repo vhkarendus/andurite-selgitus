@@ -536,6 +536,19 @@
       svg text {
         font-family: "Segoe UI", Arial, sans-serif;
       }
+      /* stabiilne paigutus: muutuv tekst ei tohi liigutada liugureid */
+      .value-banner {
+        min-height: 4.8em;
+      }
+      @media (max-width: 700px) {
+        .value-banner {
+          min-height: 8.6em;
+        }
+      }
+      .cal-result {
+        min-height: 150px;
+        align-content: start;
+      }
     </style>
   </head>
   <body>
@@ -725,7 +738,7 @@
 
     <div class="scroll-wrap">
       <div class="panel">
-        <div class="section">
+        <div class="section" style="width:240px">
           <div class="section-title">Valgus</div>
           <div class="light-ctl" data-light-ctl></div>
           <div class="section-title" style="margin-top:14px">Kalibreerimine</div>
@@ -736,16 +749,16 @@
           <div class="section-hint" id="cal-meas" style="color:#2d3748;font-size:0.8rem;max-width:220px"></div>
         </div>
         <div class="divider"></div>
-        <div class="section">
+        <div class="section" style="width:250px">
           <div class="section-title">Tulemus</div>
           <div class="cal-result" id="cal-result"></div>
           <div class="pct-bar"><div id="pct-fill"></div><span id="pct-txt"></span></div>
         </div>
         <div class="divider"></div>
-        <div class="section">
+        <div class="section" style="width:380px">
           <div class="section-title">Öölamp</div>
           <svg id="lamp" width="120" height="150" viewBox="0 0 120 150" aria-label="Öölamp"></svg>
-          <div class="section-hint" id="lamp-txt"></div>
+          <div class="section-hint" id="lamp-txt" style="min-height:2.6em;max-width:220px"></div>
           <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
           <div class="code-block" hidden style="width:360px">
             <div class="code-title">Arduino IDE · valgustase ja öölamp</div>
