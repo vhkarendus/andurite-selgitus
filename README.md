@@ -23,14 +23,14 @@ Sarja esimene osa on [Potentsiomeetri selgitus](https://vhkarendus.github.io/Pot
 - Näidete tabel
 
 ### Valgusandur
+**Põhiosa (lihtne):**
 1. **Mis on fototransistor?** Valguse liugur, sümbol voolu animatsiooniga, voolu näit.
-2. **Miks on takisti vaja?** Skeem Arduinoga; lülitiga saab allatõmbetakisti lahti ühendada ja näha hõljuvat sisendit Serial Monitori simulatsioonis. Näitekood nupu taga.
-3. **Takisti suurus = tundlikkus.** Graafik `analogRead` vs valgustatus (log-skaala) takistitele 1 kΩ … 100 kΩ, kasulik vahemik ja küllastus.
-4. **Kuidas valida takistit?** Retsept + kalkulaator (E12-rida), tulemust saab graafikul proovida.
-5. **Katse:** oma anduri tundlikkuse mõõtmine.
-6. **Päriselus:** kollektor/emitter (fotod lisanduvad).
-7. **Teine näide: termistor** (NTC 10 kΩ, B 3950, nagu VHK_Telemeetria tutorial 03): pingejagur, tundlikkus sammudes kraadi kohta, reegel R = √(R_NTC(T_min) · R_NTC(T_max)), kalkulaator, kood ja võrdlustabel fototransistoriga.
-8. Mõtlemisküsimused ja sõnastik.
+2. **Miks on takisti vaja?** Skeem Arduinoga, allatõmbetakisti lüliti (hõljuv sisend), Serial Monitor ja lihtne kood ainult `analogRead`-iga.
+3. **Takisti suurus = tundlikkus.** Graafik `analogRead` vs valgustatus eri takistitega, küllastus ≈ 960, lihtne reegel (näit kogu aeg ~960 → väiksem takisti, kogu aeg ~0 → suurem).
+4. **Valgustase `map()`-iga:** „pime“ ja „ere“ salvestamine, `map()` + `constrain()` → 0–100 %, öölamp (< 20 %), kood genereeritakse salvestatud väärtustest.
+5. **Päriselus** (fotod lisanduvad) ja lihtsad mõtlemisküsimused.
+
+**Süvenemiseks** (avatav plokk): andmeleht ja mudel (HW5P-1, k ≈ 6 µA/lx, miks küllastus on 960), takisti arvutamine R = 4,5 V / I_max + kalkulaator, katse k mõõtmiseks luksmeetriga, võrdlustabel termistoriga (link temperatuurilehele), küsimused edasijõudnutele.
 
 ### Temperatuuriandur
 **Põhiosa (lihtne):**

@@ -444,6 +444,95 @@
       [hidden] {
         display: none !important;
       }
+      details.advanced {
+        max-width: 1100px;
+        margin: 40px auto 0;
+        border: 2px solid #bee3f8;
+        border-radius: 16px;
+        background: #f7fbff;
+        padding: 6px 12px 24px;
+      }
+      details.advanced > summary {
+        cursor: pointer;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #2b6cb0;
+        padding: 12px 8px;
+        text-align: center;
+        list-style-position: inside;
+      }
+      details.advanced[open] > summary {
+        border-bottom: 1px solid #bee3f8;
+        margin-bottom: 10px;
+      }
+      .cal-btns {
+        display: grid;
+        gap: 6px;
+        width: 210px;
+      }
+      .cal-btns button {
+        font-family: inherit;
+        font-size: 0.82rem;
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e0;
+        background: #f7fafc;
+        cursor: pointer;
+      }
+      .cal-btns button:hover {
+        background: #edf2f7;
+      }
+      .cal-result {
+        width: 220px;
+        display: grid;
+        grid-template-columns: auto auto;
+        align-items: baseline;
+        gap: 4px 12px;
+        font-size: 0.85rem;
+        color: #4a5568;
+      }
+      .cal-result .big {
+        font-size: 1.5rem;
+        font-weight: 800;
+        text-align: right;
+      }
+      .cal-note {
+        grid-column: 1 / -1;
+        font-size: 0.78rem;
+        margin-top: 6px;
+        color: #c05621;
+      }
+      .pct-bar {
+        position: relative;
+        width: 220px;
+        height: 22px;
+        background: #edf2f7;
+        border-radius: 11px;
+        overflow: hidden;
+        margin-top: 14px;
+      }
+      .pct-bar > div {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #4a5568, #ecc94b);
+        transition: width 0.15s;
+      }
+      .pct-bar > span {
+        position: absolute;
+        inset: 0;
+        text-align: center;
+        font-size: 0.78rem;
+        font-weight: 700;
+        line-height: 22px;
+        color: #1a202c;
+      }
+      code {
+        background: #edf2f7;
+        border-radius: 4px;
+        padding: 0 4px;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.88em;
+      }
       svg text {
         font-family: "Segoe UI", Arial, sans-serif;
       }
@@ -452,7 +541,7 @@
   <body>
     <h1>Valgusandur – fototransistor</h1>
     <p class="subtitle">Interaktiivne õppematerjal · CTC GO fototransistor · takisti 10 kΩ</p>
-    <p class="backlink"><a href="../">← Kõik andurid</a></p>
+    <p class="backlink"><a href="../">← Kõik andurid</a> · <a href="../temperatuur/">Temperatuuriandur</a></p>
 
     <!-- ═══════════════ 1. MIS ON FOTOTRANSISTOR ═══════════════ -->
     <div class="explanation">
@@ -463,9 +552,8 @@
         ja <strong>lühike jalg on emitter (−)</strong>.
       </p>
       <p>
-        Tavalisel transistoril avab voolu kolmas jalg ehk baas. Fototransistoril baasi jalga pole – tema
-        „baasiks“ on valgus. <strong>Mida rohkem valgust langeb kristallile, seda suurem vool läbib
-        fototransistori</strong> kollektorist emitterisse. Pimedas läbib teda vaid tühine pimevool.
+        <strong>Mida rohkem valgust langeb fototransistorile, seda suurem vool temast läbi läheb.</strong>
+        Pimedas voolu peaaegu ei ole.
       </p>
       <p>
         Oluline: fototransistor <strong>ei muuda oma takistust</strong> nagu potentsiomeeter või fototakisti (LDR).
@@ -495,8 +583,7 @@
           <div class="bar" title="Logaritmiline skaala"><div id="i-bar"></div></div>
           <div class="section-hint">Riba skaala on logaritmiline: iga samm on 10 korda suurem vool.</div>
           <div class="section-hint" style="margin-top:12px;color:#718096">
-            Andmelehe järgi (HW5P-1): 10 luksi juures 50–70 µA.<br />Lehel kasutame lihtsustust ≈ 6 µA luksi kohta.
-            Väga eredas valguses vool enam nii kiiresti ei kasva (mudelis piir ~20 mA).
+            Valgust mõõdetakse luksides (lx): pime tuba ≈ 1 lx, klass ≈ 400 lx, päike ≈ 50 000 lx.
           </div>
         </div>
       </div>
@@ -550,27 +637,16 @@
           <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
           <div class="code-block" hidden>
             <div class="code-title">Arduino IDE · näitekood</div>
-<pre><span class="cm">// Fototransistor: kollektor (pikk jalg) → 5V</span>
+<pre><span class="cm">// kollektor (pikk jalg) → 5V</span>
 <span class="cm">// emitter (lühike jalg) → A0 ja 10 kΩ → GND</span>
-<span class="kw">const int</span> ANDUR_PIN = A0;
-<span class="kw">const float</span> R = <span class="nb">10000.0</span>; <span class="cm">// takisti oomides</span>
-
 <span class="kw">void</span> <span class="fn">setup</span>() {
   Serial.<span class="fn">begin</span>(<span class="nb">9600</span>);
 }
 
 <span class="kw">void</span> <span class="fn">loop</span>() {
-  <span class="kw">int</span> lugem = <span class="fn">analogRead</span>(ANDUR_PIN);
-  <span class="kw">float</span> pinge = lugem * (<span class="nb">5.0</span> / <span class="nb">1023.0</span>);
-  <span class="kw">float</span> vool_uA = pinge / R * <span class="nb">1000000.0</span>;
-
+  <span class="kw">int</span> lugem = <span class="fn">analogRead</span>(A0);
   Serial.<span class="fn">print</span>(<span class="st">"analogRead: "</span>);
-  Serial.<span class="fn">print</span>(lugem);
-  Serial.<span class="fn">print</span>(<span class="st">"  Pinge: "</span>);
-  Serial.<span class="fn">print</span>(pinge, <span class="nb">2</span>);
-  Serial.<span class="fn">print</span>(<span class="st">" V  Vool: "</span>);
-  Serial.<span class="fn">print</span>(vool_uA, <span class="nb">0</span>);
-  Serial.<span class="fn">println</span>(<span class="st">" uA"</span>);
+  Serial.<span class="fn">println</span>(lugem);
   <span class="fn">delay</span>(<span class="nb">500</span>);
 }</pre>
           </div>
@@ -584,19 +660,23 @@
     <div class="explanation">
       <h3>Suur takisti – tundlik, väike takisti – talub eredat valgust</h3>
       <p>
-        Valemist <strong>U = I · R</strong> järeldub: sama valguse (sama voolu) juures annab
-        <strong>suurem takisti suurema pinge</strong>. Suure takistiga andur „näeb“ juba nõrka valgust – ta on
-        <strong>tundlikum</strong>.
+        <strong>U = I · R</strong>: sama valguse juures annab <strong>suurem takisti suurema pinge</strong>. Suure
+        takistiga andur „näeb“ juba nõrka valgust – ta on <strong>tundlikum</strong>.
       </p>
       <p>
-        Aga pinge ei saa kasvada lõpmatuseni. Toide on 5 V ja fototransistori enda peale jääb vähemalt
-        umbes 0,3 V. Seega ei tõuse pinge A0-l üle <strong>≈ 4,7 V</strong> (analogRead ≈ 960, mitte 1023!).
-        Kui see piir on käes, ütleme, et fototransistor on <strong>küllastunud</strong>: valgust võib lisanduda,
-        aga näit enam ei muutu. Andur on „pimestatud“.
+        Aga pinge ei saa tõusta üle 5 V. Tegelikult jääb näit pidama umbes <strong>960 juures</strong> (mitte 1023).
+        Siis on andur <strong>küllastunud</strong> ehk „pimestatud“: valgust võib lisanduda, aga näit enam ei muutu.
       </p>
       <p>
-        <strong>Kasulik vahemik</strong> (graafikul sinine ala) näitab, millise valguse juures see takisti
-        valgustugevusi eristab. Vali eri takisteid ja vaata, kuidas vahemik nihkub.
+        <strong>Lihtne reegel:</strong>
+      </p>
+      <ul>
+        <li>Näit on kogu aeg <strong>umbes 960</strong> → takisti on liiga suur, vali <strong>väiksem</strong>.</li>
+        <li>Näit on kogu aeg <strong>nulli lähedal</strong> → takisti on liiga väike, vali <strong>suurem</strong>.</li>
+        <li>Pimeduse tuvastamiseks (öölamp) sobib 10 kΩ, klassi valguse jaoks pigem 1–2,2 kΩ.</li>
+      </ul>
+      <p>
+        <em>Sinine ala graafikul näitab, millise valguse juures valitud takisti hästi töötab. Proovi eri takisteid.</em>
       </p>
     </div>
 
@@ -622,8 +702,139 @@
     </div>
     <div class="value-banner" id="banner3"></div>
 
+    <!-- ═══════════════ 4. VALGUSTASE map()-iga ═══════════════ -->
+    <h2 class="section-heading">analogRead → valgustase: map()</h2>
+    <div class="explanation">
+      <h3>Pime = 0 %, ere = 100 %</h3>
+      <p>
+        Number 0–1023 ei ütle inimesele palju. Teeme sellest <strong>valgustaseme protsentides</strong>. Selleks
+        mõõdame kaks väärtust:
+      </p>
+      <ol>
+        <li><strong>Pime:</strong> kata andur käega ja kirjuta üles analogRead.</li>
+        <li><strong>Ere:</strong> suuna andur kõige eredama valguse poole, mida tahad mõõta, ja kirjuta üles analogRead.</li>
+      </ol>
+      <p>Funktsioon <code>map()</code> muudab kõik vahepealsed väärtused protsentideks:</p>
+      <span class="formula" style="font-family:Consolas,'Courier New',monospace;font-size:0.95rem">valgus = map(lugem, PIME, ERE, 0, 100);</span>
+      <p>
+        Kui valgus on veel eredam või veel pimedam kui mõõtmisel, annaks map() üle 100 või alla 0. Seepärast lisame
+        <code>constrain(valgus, 0, 100)</code>, mis hoiab tulemuse 0 ja 100 vahel.
+        <em>Salvesta oma „pime“ ja „ere“ ning liiguta valgust. Öölamp süttib, kui valgust on alla 20 %.</em>
+      </p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Valgus</div>
+          <div class="light-ctl" data-light-ctl></div>
+          <div class="section-title" style="margin-top:14px">Kalibreerimine</div>
+          <div class="cal-btns">
+            <button id="cal-dark">🌑 Salvesta „pime“</button>
+            <button id="cal-bright">☀ Salvesta „ere“</button>
+          </div>
+          <div class="section-hint" id="cal-meas" style="color:#2d3748;font-size:0.8rem;max-width:220px"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Tulemus</div>
+          <div class="cal-result" id="cal-result"></div>
+          <div class="pct-bar"><div id="pct-fill"></div><span id="pct-txt"></span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Öölamp</div>
+          <svg id="lamp" width="120" height="150" viewBox="0 0 120 150" aria-label="Öölamp"></svg>
+          <div class="section-hint" id="lamp-txt"></div>
+          <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
+          <div class="code-block" hidden style="width:360px">
+            <div class="code-title">Arduino IDE · valgustase ja öölamp</div>
+<pre id="cal-code"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="explanation" style="margin-top:20px">
+      <div class="note tip" style="margin-top:0">
+        💡 Protsendid ei ole luksid. 50 % tähendab ainult seda, et näit on sinu „pimeda“ ja „ereda“ mõõtmise vahel
+        poole peal. Öölambi või „kas tuli põleb?“ tüüpi ülesannete jaoks on see täiesti piisav.
+      </div>
+      <div class="note warn">
+        ⚠️ Kui „ere“ mõõtmisel on näit umbes 960, on andur küllastunud. Siis ei erista ta eredamat valgust
+        enam üldse. Vali väiksem takisti ja kalibreeri uuesti.
+      </div>
+    </div>
+
+    <!-- ═══════════════ 6. PÄRISELUS ═══════════════ -->
+    <h2 class="section-heading">Fototransistor päriselus</h2>
+    <div class="explanation">
+      <h3>Kuidas eristada kollektorit ja emitterit?</h3>
+      <p>
+        <strong>Pikk jalg = kollektor (+)</strong>, ühenda 5 V-ga. <strong>Lühike jalg = emitter (−)</strong>, ühenda
+        A0 ja takistiga. Kui jalad on juba lühikeseks lõigatud, proovi lihtsalt: ühenda ja kata andur käega.
+        Kui näit valgusega ei muutu ja jääb nulli lähedale, pööra fototransistor ümber. Takisti piirab voolu,
+        nii et lühikese proovimisega ei lähe midagi katki.
+      </p>
+      <p>
+        Fototransistor on väga sarnane LED-iga. Kui komplektis on mõlemad, hoia neid eraldi karpides!
+      </p>
+    </div>
+    <div class="scroll-wrap">
+      <div class="panel" style="gap:16px">
+        <div class="section">
+          <div class="section-title">Fototransistor</div>
+          <div class="photo-slot">Foto lisandub:<br />CTC GO fototransistor, jalad märgitud</div>
+        </div>
+        <div class="section">
+          <div class="section-title">Ühendus Arduino UNO-ga</div>
+          <div class="photo-slot">Foto lisandub:<br />makettplaat, 10 kΩ takisti, juhtmed 5V / A0 / GND</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 6. KÜSIMUSED ═══════════════ -->
+    <h2 class="section-heading">Mõtle järele</h2>
+    <div class="explanation">
+      <ol>
+        <li>Miks on takisti vaja? Mis juhtub näiduga, kui takisti on lahti?</li>
+        <li>Kas analogRead kasvab või väheneb, kui andurile rohkem valgust paista? Miks?</li>
+        <li>Sinu andur näitab klassis kogu aeg umbes 960. Mis on valesti ja kuidas seda parandada?</li>
+        <li>Tahad teha öölambi, mis süttib, kui toas läheb pimedaks. Millise takisti valiksid?</li>
+        <li>Mida teeb <code>constrain()</code> ja miks see on map() järel vajalik?</li>
+        <li>Kalibreerisid „pime“ ja „ere“ toas. Mida näitab andur päikese käes?</li>
+      </ol>
+    </div>
+
+    <!-- ═══════════════ SÜVENEMISEKS ═══════════════ -->
+    <details class="advanced" id="suvenemiseks">
+      <summary>🔬 Süvenemiseks: andmeleht, küllastus, takisti arvutamine ja katse</summary>
+
+      <h2 class="section-heading">Andmeleht ja mudel</h2>
+      <div class="explanation">
+        <p>
+          Tavalisel transistoril avab voolu kolmas jalg ehk baas. Fototransistoril baasi jalga pole – tema
+          „baasiks“ on valgus, mis langeb kristallile. Pimedas läbib teda vaid tühine <strong>pimevool</strong>
+          (umbes 0,1 µA).
+        </p>
+        <p>
+          Lehe arvud on võetud Arduino komplektides levinud fototransistori <strong>HW5P-1</strong> andmelehelt:
+          10 luksi juures annab ta 50–70 µA. Lehel kasutame lihtsustust <strong>k ≈ 6 µA luksi kohta</strong>:
+        </p>
+        <span class="formula">I ≈ k · E &nbsp;&nbsp; → &nbsp;&nbsp; U<sub>A0</sub> = I · R = k · E · R</span>
+        <p>
+          <strong>Miks küllastus on 960, mitte 1023?</strong> Toide on 5 V ja ka täiesti avatud fototransistori peale
+          jääb umbes 0,3 V (andmelehel U<sub>CE(sat)</sub>). Seega ei tõuse pinge A0-l üle ≈ 4,7 V:
+          4,7 / 5 · 1023 ≈ 960.
+        </p>
+        <p>
+          Graafiku rõhttelg on <strong>logaritmiline</strong>: iga jaotis on 10 korda eredam valgus. Ilma selleta ei
+          mahuks pime tuba (1 lx) ja päike (50 000 lx) samale graafikule. Väga eredas valguses ei kasva vool enam
+          lineaarselt (mudelis on pehme piir ~20 mA).
+        </p>
+      </div>
+
     <!-- ═══════════════ 4. KUIDAS VALIDA ═══════════════ -->
-    <h2 class="section-heading">Kuidas valida õiget takistit?</h2>
+    <h2 class="section-heading">Kuidas takistit arvutada?</h2>
     <div class="explanation">
       <h3>Retsept neljas sammus</h3>
       <ol>
@@ -717,142 +928,8 @@
       </div>
     </div>
 
-    <!-- ═══════════════ 6. PÄRISELUS ═══════════════ -->
-    <h2 class="section-heading">Fototransistor päriselus</h2>
+    <h2 class="section-heading">Võrdlus termistoriga</h2>
     <div class="explanation">
-      <h3>Kuidas eristada kollektorit ja emitterit?</h3>
-      <p>
-        <strong>Pikk jalg = kollektor (+)</strong>, ühenda 5 V-ga. <strong>Lühike jalg = emitter (−)</strong>, ühenda
-        A0 ja takistiga. Kui jalad on juba lühikeseks lõigatud, proovi lihtsalt: ühenda ja kata andur käega.
-        Kui näit valgusega ei muutu ja jääb nulli lähedale, pööra fototransistor ümber. Takisti piirab voolu,
-        nii et lühikese proovimisega ei lähe midagi katki.
-      </p>
-      <p>
-        Fototransistor on väga sarnane LED-iga. Kui komplektis on mõlemad, hoia neid eraldi karpides!
-      </p>
-    </div>
-    <div class="scroll-wrap">
-      <div class="panel" style="gap:16px">
-        <div class="section">
-          <div class="section-title">Fototransistor</div>
-          <div class="photo-slot">Foto lisandub:<br />CTC GO fototransistor, jalad märgitud</div>
-        </div>
-        <div class="section">
-          <div class="section-title">Ühendus Arduino UNO-ga</div>
-          <div class="photo-slot">Foto lisandub:<br />makettplaat, 10 kΩ takisti, juhtmed 5V / A0 / GND</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════ 7. TEINE NÄIDE: TERMISTOR ═══════════════ -->
-    <h2 class="section-heading">Teine näide: termistor</h2>
-    <div class="explanation">
-      <h3>Sama küsimus, teine andur</h3>
-      <p class="note tip" style="margin:0 0 10px">
-        🌡 Siin on lühike näide. Põhjalikum selgitus koos isekuumenemise, samm-sammult arvutuse ja kalibreerimisega on
-        <a href="../temperatuur/"><strong>temperatuurianduri lehel →</strong></a>
-      </p>
-      <p>
-        Termistor kuulub teise andurite perre: temperatuur muudab tema <strong>takistust</strong>, mitte voolu.
-        Kasutame <strong>NTC termistorit</strong> (sama mis telemeetria tutorialis 03): 25 °C juures 10 kΩ,
-        B-väärtus 3950 K. NTC tähendab, et <strong>soojemaks minnes takistus väheneb</strong>.
-      </p>
-      <p>
-        Takistuse muutusest pinge saamiseks ühendame termistori ja takisti <strong>pingejagurina</strong>:
-        5V → termistor → A0 → takisti R → GND. Pinge A0-l:
-      </p>
-      <span class="formula">U<sub>A0</sub> = 5 V · R / (R + R<sub>NTC</sub>)</span>
-      <p>
-        Soojemaks → R<sub>NTC</sub> väheneb → pinge A0-l <strong>kasvab</strong>. Küllastust siin pole, sest
-        pinge jääb alati 0 ja 5 V vahele. Takisti valik mõjutab aga <strong>tundlikkust</strong>: mitu
-        analogRead-i sammu muutub näit ühe kraadi kohta.
-      </p>
-      <p>
-        <strong>Reegel:</strong> pingejagur on kõige tundlikum seal, kus <strong>R = R<sub>NTC</sub></strong>.
-        Meie termistor on 10 kΩ just 25 °C juures, seega on 10 kΩ takisti parim toatemperatuuri mõõtmiseks.
-        Kui pead mõõtma vahemikku T<sub>min</sub>…T<sub>max</sub>, vali
-      </p>
-      <span class="formula">R = √( R<sub>NTC</sub>(T<sub>min</sub>) · R<sub>NTC</sub>(T<sub>max</sub>) )</span>
-      <p>
-        <strong>Näide:</strong> GreenPoweri mootori temperatuur 20…80 °C. R<sub>NTC</sub>(20 °C) ≈ 12,5 kΩ,
-        R<sub>NTC</sub>(80 °C) ≈ 1,27 kΩ → R = √(12,5 · 1,27) kΩ ≈ 4,0 kΩ → valime <strong>3,9 kΩ</strong>.
-        <em>Proovi kalkulaatoriga ja vaata graafikult, kuidas kõver nihkub.</em>
-      </p>
-    </div>
-
-    <div class="scroll-wrap">
-      <div class="panel">
-        <div class="section">
-          <div class="section-title">Temperatuur</div>
-          <div class="light-ctl">
-            <div class="lux-label" id="t-label" style="color:#c53030"></div>
-            <input type="range" id="t-range" min="-20" max="100" step="0.5" value="22"
-              aria-label="Temperatuur" style="accent-color:#c53030" />
-            <div class="presets" id="t-presets"></div>
-          </div>
-          <div class="section-title" style="margin-top:16px">Takisti R</div>
-          <div class="r-buttons presets" id="tr-buttons" style="max-width:210px"></div>
-          <div class="section-title" style="margin-top:16px">Kalkulaator</div>
-          <div class="calc" style="width:210px">
-            <label><span>T<sub>min</sub> (°C)</span><input type="number" id="tc-min" value="20" style="width:100%" /></label>
-            <label><span>T<sub>max</sub> (°C)</span><input type="number" id="tc-max" value="80" style="width:100%" /></label>
-          </div>
-          <div class="section-hint" id="tc-out" style="color:#2d3748;max-width:210px;font-size:0.8rem"></div>
-          <button class="code-toggle-btn" id="tc-try" style="background:#2b6cb0;color:#fff;border:none">Proovi graafikul</button>
-        </div>
-        <div class="divider"></div>
-        <div class="section">
-          <div class="section-title">Pingejagur</div>
-          <svg id="tcirc" width="200" height="300" viewBox="0 0 200 300" role="img"
-            aria-label="Pingejagur: 5V, termistor, A0, takisti, GND"></svg>
-        </div>
-        <div class="divider"></div>
-        <div class="section">
-          <div class="section-title">analogRead sõltuvalt temperatuurist</div>
-          <svg id="tchart" width="520" height="320" viewBox="0 0 520 320" role="img"
-            aria-label="Graafik: analogRead temperatuuri funktsioonina eri takistitega"></svg>
-          <div class="section-hint" style="max-width:480px">
-            Sinine ala: temperatuurid, kus see takisti on vähemalt pooltundlik oma parimast. Kõige järsem koht on
-            seal, kus R = R<sub>NTC</sub>.
-          </div>
-          <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
-          <div class="code-block" hidden>
-            <div class="code-title">Arduino IDE · termistor</div>
-<pre><span class="cm">// 5V → termistor → A0 → R → GND</span>
-<span class="kw">const int</span> TERM_PIN = A0;
-<span class="kw">const float</span> R_FIXED = <span class="nb">10000.0</span>; <span class="cm">// takisti R</span>
-<span class="kw">const float</span> R0 = <span class="nb">10000.0</span>;      <span class="cm">// NTC 25 °C juures</span>
-<span class="kw">const float</span> T0 = <span class="nb">298.15</span>;       <span class="cm">// 25 °C kelvinites</span>
-<span class="kw">const float</span> B  = <span class="nb">3950.0</span>;       <span class="cm">// andmelehelt!</span>
-
-<span class="kw">void</span> <span class="fn">setup</span>() {
-  Serial.<span class="fn">begin</span>(<span class="nb">9600</span>);
-}
-
-<span class="kw">void</span> <span class="fn">loop</span>() {
-  <span class="kw">int</span> lugem = <span class="fn">analogRead</span>(TERM_PIN);
-  <span class="kw">if</span> (lugem &lt; <span class="nb">1</span>) lugem = <span class="nb">1</span>; <span class="cm">// väldi nulliga jagamist</span>
-  <span class="kw">float</span> pinge = lugem * (<span class="nb">5.0</span> / <span class="nb">1023.0</span>);
-  <span class="kw">float</span> r_ntc = R_FIXED * (<span class="nb">5.0</span> / pinge - <span class="nb">1.0</span>);
-  <span class="kw">float</span> t_k = <span class="nb">1.0</span> / (<span class="nb">1.0</span> / T0 + <span class="fn">log</span>(r_ntc / R0) / B);
-  <span class="kw">float</span> t_c = t_k - <span class="nb">273.15</span>;
-
-  Serial.<span class="fn">print</span>(<span class="st">"analogRead: "</span>);
-  Serial.<span class="fn">print</span>(lugem);
-  Serial.<span class="fn">print</span>(<span class="st">"  R_NTC: "</span>);
-  Serial.<span class="fn">print</span>(r_ntc, <span class="nb">0</span>);
-  Serial.<span class="fn">print</span>(<span class="st">" oomi  T: "</span>);
-  Serial.<span class="fn">print</span>(t_c, <span class="nb">1</span>);
-  Serial.<span class="fn">println</span>(<span class="st">" C"</span>);
-  <span class="fn">delay</span>(<span class="nb">500</span>);
-}</pre>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="value-banner" id="banner-t"></div>
-
-    <div class="explanation" style="margin-top:20px">
       <h3>Võrdlus: fototransistor ja termistor</h3>
       <table class="vocab">
         <tr><th></th><th>Fototransistor</th><th>NTC termistor</th></tr>
@@ -864,25 +941,21 @@
         <tr><td><b>Valiku reegel</b></td><td>R = 4,5 V / I<sub>max</sub></td><td>R = √(R<sub>NTC</sub>(T<sub>min</sub>) · R<sub>NTC</sub>(T<sub>max</sub>))</td></tr>
       </table>
       <p style="margin-top:10px">
-        Põhjalikum termistori juhend (kalibreerimine, B-võrrand):
+        Termistorist lähemalt: <a href="../temperatuur/"><strong>temperatuurianduri leht →</strong></a> ja
         <a href="https://github.com/vhkarendus/VHK_Telemeetria/blob/main/tutorialid/03%20Termistor%20Arduino%20tutorial.md">VHK Telemeetria · tutorial 03</a>.
       </p>
     </div>
 
-    <!-- ═══════════════ 8. KÜSIMUSED ═══════════════ -->
-    <h2 class="section-heading">Mõtle järele</h2>
-    <div class="explanation">
-      <ol>
-        <li>Miks ei jõua analogRead fototransistoriga kunagi 1023-ni?</li>
-        <li>Mis juhtub näiduga, kui asendad 10 kΩ takisti 1 kΩ takistiga? Millal on see parem valik?</li>
-        <li>Tahad teha öölambi, mis süttib, kui toas läheb pimedaks. Millise takisti valiksid ja miks?</li>
-        <li>Mis vahe on fototransistoril ja fototakistil (LDR) selles osas, mida valgus komponendis muudab?</li>
-        <li>Miks kõigub näit, kui allatõmbetakisti on lahti ühendatud?</li>
-        <li>Päikesepaneeli jälgija peab töötama otseses päikesevalguses. Arvuta talle sobiv takisti.</li>
-        <li>Miks on termistori puhul 10 kΩ takisti hea valik toas, aga mitte akupaki jälgimiseks 60 °C juures?</li>
-        <li>Fototransistoriga võib näit „kinni jääda“ 960 juurde, termistoriga mitte. Miks?</li>
-      </ol>
-    </div>
+      <h2 class="section-heading">Mõtle järele (edasijõudnutele)</h2>
+      <div class="explanation">
+        <ol>
+          <li>Mis vahe on fototransistoril ja fototakistil (LDR) selles osas, mida valgus komponendis muudab?</li>
+          <li>Päikesepaneeli jälgija peab töötama otseses päikesevalguses. Arvuta talle sobiv takisti. Mis probleem tekib?</li>
+          <li>Miks kõigub näit hõljuva sisendiga juhuslikult, isegi kui valgus ei muutu?</li>
+          <li>Fototransistoriga võib näit „kinni jääda“ 960 juurde, termistoriga mitte. Miks?</li>
+        </ol>
+      </div>
+    </details>
 
     <h2 class="section-heading">Sõnastik</h2>
     <div class="explanation">
@@ -897,6 +970,7 @@
         <tr><td>saturation</td><td>küllastus</td></tr>
         <tr><td>sensitivity</td><td>tundlikkus</td></tr>
         <tr><td>datasheet</td><td>andmeleht</td></tr>
+        <tr><td>calibration</td><td>kalibreerimine</td></tr>
         <tr><td>thermistor (NTC)</td><td>termistor (negatiivse temperatuuriteguriga)</td></tr>
         <tr><td>voltage divider</td><td>pingejagur</td></tr>
       </table>
@@ -1290,9 +1364,7 @@
         const a = readA0();
         const u = (a * 5) / 1023;
         const iuA = (u / R_FIXED) * 1e6;
-        serialLines.push(
-          `analogRead: ${String(a).padStart(4)}  Pinge: ${u.toFixed(2)} V  Vool: ${Math.round(iuA)} uA`
-        );
+        serialLines.push(`analogRead: ${a}`);
         while (serialLines.length > 7) serialLines.shift();
         document.getElementById("serial-out").textContent = serialLines.join("\n");
         document.getElementById("ar-big").textContent = a;
@@ -1318,6 +1390,74 @@
         circFlow.setAttribute("stroke-dashoffset", (dashOff / (sp || 1)) * sp2);
         circFlow.setAttribute("opacity", Math.min(1, 0.2 + sp2 / 40));
         requestAnimationFrame(animate);
+      }
+
+
+      /* ════════════════ VALGUSTASE map()-iga + ÖÖLAMP ════════════════ */
+      const arduinoMap = (x, a, b, c, d) => Math.trunc(((x - a) * (d - c)) / (b - a)) + c;
+      const cal = { dark: null, bright: null };
+      const lampSvg = document.getElementById("lamp");
+      el("path", { d: "M40,95 Q30,60 60,30 Q90,60 80,95 Z", fill: "#edf2f7", stroke: "#2d3748", "stroke-width": 2 }, lampSvg);
+      const glow = el("circle", { cx: 60, cy: 62, r: 44, fill: "#fefcbf", opacity: 0 }, lampSvg);
+      const bulb = el("path", { d: "M44,92 Q36,62 60,38 Q84,62 76,92 Z", fill: "#e2e8f0" }, lampSvg);
+      el("rect", { x: 44, y: 95, width: 32, height: 14, rx: 3, fill: "#718096" }, lampSvg);
+      el("rect", { x: 30, y: 112, width: 60, height: 10, rx: 3, fill: "#4a5568" }, lampSvg);
+      lampSvg.insertBefore(glow, lampSvg.firstChild);
+      function calReadNow() { return adc(voltage(lux(), state.R)); }
+      document.getElementById("cal-dark").onclick = () => { cal.dark = calReadNow(); calUpdate(); };
+      document.getElementById("cal-bright").onclick = () => { cal.bright = calReadNow(); calUpdate(); };
+      function calUpdate() {
+        const meas = document.getElementById("cal-meas");
+        if (cal.R !== state.R) { cal.dark = null; cal.bright = null; cal.R = state.R; } // uus takisti → kalibreeri uuesti
+        if (cal.dark === null) cal.dark = adc(voltage(1, state.R));
+        if (cal.bright === null) cal.bright = adc(voltage(50, state.R));
+        meas.innerHTML = `Takisti ${fmtR(state.R)} (valitud ülal)<br>PIME = <b>${cal.dark}</b> &nbsp; ERE = <b>${cal.bright}</b>`;
+        const lugem = calReadNow();
+        const out = document.getElementById("cal-result");
+        let pct = null, warn = "";
+        if (cal.bright - cal.dark < 20) {
+          warn = `<div class="cal-note">⚠️ „Pime“ ja „ere“ on liiga lähedal (või vales järjekorras). Salvesta „pime“ pimedas ja „ere“ valges.</div>`;
+        } else {
+          const raw = arduinoMap(lugem, cal.dark, cal.bright, 0, 100);
+          pct = Math.max(0, Math.min(100, raw));
+          if (raw !== pct) warn = `<div class="cal-note">map() andis ${raw} → constrain() teeb sellest ${pct}</div>`;
+          if (cal.bright >= 940) warn += `<div class="cal-note">⚠️ „Ere“ = ${cal.bright}: andur oli küllastunud. Vali väiksem takisti ja kalibreeri uuesti.</div>`;
+        }
+        out.innerHTML = `<div>analogRead</div><div class="big" style="color:#276749">${lugem}</div>
+          <div>Valgus</div><div class="big" style="color:#b7791f">${pct === null ? "–" : pct + " %"}</div>${warn}`;
+        document.getElementById("pct-fill").style.width = (pct || 0) + "%";
+        document.getElementById("pct-txt").textContent = pct === null ? "" : pct + " %";
+        const on = pct !== null && pct < 20;
+        glow.setAttribute("opacity", on ? 0.9 : 0);
+        bulb.setAttribute("fill", on ? "#f6e05e" : "#e2e8f0");
+        document.getElementById("lamp-txt").textContent = on ? "Pime – lamp põleb (valgus < 20 %)" : "Piisavalt valge – lamp ei põle";
+        document.getElementById("cal-code").innerHTML =
+`<span class="cm">// Sinu kalibreerimise mõõtmised:</span>
+<span class="kw">const int</span> PIME = <span class="nb">${cal.dark}</span>;   <span class="cm">// analogRead, kui andur on kaetud</span>
+<span class="kw">const int</span> ERE  = <span class="nb">${cal.bright}</span>;  <span class="cm">// analogRead eredas valguses</span>
+<span class="kw">const int</span> LAMP = <span class="nb">13</span>;   <span class="cm">// LED pinil 13</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="nb">9600</span>);
+  <span class="fn">pinMode</span>(LAMP, OUTPUT);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> lugem = <span class="fn">analogRead</span>(A0);
+  <span class="kw">int</span> valgus = <span class="fn">map</span>(lugem, PIME, ERE, <span class="nb">0</span>, <span class="nb">100</span>);
+  valgus = <span class="fn">constrain</span>(valgus, <span class="nb">0</span>, <span class="nb">100</span>);
+
+  Serial.<span class="fn">print</span>(<span class="st">"Valgus: "</span>);
+  Serial.<span class="fn">print</span>(valgus);
+  Serial.<span class="fn">println</span>(<span class="st">" %"</span>);
+
+  <span class="kw">if</span> (valgus &lt; <span class="nb">20</span>) {
+    <span class="fn">digitalWrite</span>(LAMP, HIGH);  <span class="cm">// pime → lamp põlema</span>
+  } <span class="kw">else</span> {
+    <span class="fn">digitalWrite</span>(LAMP, LOW);
+  }
+  <span class="fn">delay</span>(<span class="nb">500</span>);
+}`;
       }
 
       /* ════════════════ UUENDUS ════════════════ */
@@ -1370,6 +1510,9 @@
           `Praegu <span class="lx">${fmtLux(E)}</span> → analogRead ≈ <span class="ar">${a3}</span> &nbsp; ${status}`;
       }
 
+      const _update = update;
+      update = function () { _update(); calUpdate(); };
+
       function toggleCode(btn) {
         const block = btn.nextElementSibling;
         block.hidden = !block.hidden;
@@ -1382,171 +1525,6 @@
       update();
       tickSerial();
       requestAnimationFrame(animate);
-    </script>
-      <script>
-      /* ════════════════ TERMISTOR (NTC 10 kΩ, B 3950) ════════════════ */
-      (function () {
-        const R0 = 10000, B = 3950, T0 = 298.15;
-        const TR_LIST = [1000, 2200, 3900, 4700, 10000, 22000, 47000, 100000];
-        const ts = { T: 22, R: 10000, custom: null };
-        const rNtc = (Tc) => R0 * Math.exp(B * (1 / (Tc + 273.15) - 1 / T0));
-        const uT = (Tc, R) => (VCC * R) / (R + rNtc(Tc));
-        const adcT = (Tc, R) => (uT(Tc, R) / VCC) * 1023;
-        const sens = (Tc, R) => (adcT(Tc + 0.05, R) - adcT(Tc - 0.05, R)) / 0.1; // sammu / °C
-        const bestT = (R) => 1 / (1 / T0 + Math.log(R / R0) / B) - 273.15;
-        const fmtT = (t) => t.toFixed(1).replace(".", ",") + " °C";
-
-        // ── juhtpult
-        const tRange = document.getElementById("t-range");
-        tRange.addEventListener("input", () => { ts.T = parseFloat(tRange.value); upd(); });
-        const tp = document.getElementById("t-presets");
-        [["Külmik", 4], ["Tuba", 22], ["Käes", 33], ["Mootor", 70], ["Keev vesi", 100]].forEach(([n, T]) => {
-          const b = document.createElement("button");
-          b.textContent = n; b.title = T + " °C";
-          b.onclick = () => { ts.T = T; upd(); };
-          tp.appendChild(b);
-        });
-        const trBox = document.getElementById("tr-buttons");
-        function buildBtns() {
-          trBox.innerHTML = "";
-          const all = TR_LIST.slice();
-          if (ts.custom && !all.includes(ts.custom)) all.push(ts.custom);
-          all.sort((a, b) => a - b).forEach((R) => {
-            const b = document.createElement("button");
-            b.textContent = fmtR(R);
-            if (R === ts.R) b.classList.add("active");
-            b.onclick = () => { ts.R = R; buildBtns(); drawCurves(); upd(); };
-            trBox.appendChild(b);
-          });
-        }
-
-        // ── skeem
-        const sv = document.getElementById("tcirc");
-        const Wt = { stroke: "#2d3748", "stroke-width": 2, fill: "none" };
-        el("text", { x: 100, y: 18, "text-anchor": "middle", "font-size": 12, fill: "#c53030", "font-weight": 700 }, sv).textContent = "5V";
-        el("line", { x1: 100, y1: 24, x2: 100, y2: 50, ...Wt }, sv);
-        el("rect", { x: 90, y: 50, width: 20, height: 50, fill: "#fff5f5", stroke: "#2d3748", "stroke-width": 2 }, sv);
-        el("polyline", { points: "78,108 90,96 122,46", ...Wt }, sv);
-        el("text", { x: 76, y: 72, "text-anchor": "end", "font-size": 12, fill: "#c53030", "font-weight": 700 }, sv).textContent = "−t°";
-        const rnLab = el("text", { x: 118, y: 80, "font-size": 11, fill: "#2d3748" }, sv);
-        el("line", { x1: 100, y1: 100, x2: 100, y2: 190, ...Wt }, sv);
-        el("circle", { cx: 100, cy: 145, r: 4, fill: "#2d3748" }, sv);
-        el("line", { x1: 100, y1: 145, x2: 40, y2: 145, ...Wt }, sv);
-        el("text", { x: 34, y: 149, "text-anchor": "end", "font-size": 12, "font-weight": 700, fill: "#2d3748" }, sv).textContent = "A0";
-        const uLab = el("text", { x: 108, y: 140, "font-size": 12, fill: "#2b6cb0", "font-weight": 700 }, sv);
-        el("rect", { x: 91, y: 190, width: 18, height: 45, fill: "#fff", stroke: "#2d3748", "stroke-width": 2 }, sv);
-        const rLab = el("text", { x: 118, y: 216, "font-size": 11, fill: "#2d3748", "font-weight": 700 }, sv);
-        el("line", { x1: 100, y1: 235, x2: 100, y2: 268, ...Wt }, sv);
-        el("text", { x: 100, y: 284, "text-anchor": "middle", "font-size": 12, fill: "#2d3748" }, sv).textContent = "GND";
-        el("text", { x: 118, y: 66, "font-size": 10, fill: "#718096" }, sv).textContent = "NTC termistor";
-
-        // ── graafik
-        const svg = document.getElementById("tchart");
-        const C = { l: 50, r: 16, t: 18, b: 46, w: 520, h: 320, tmin: -20, tmax: 100 };
-        const xT = (t) => C.l + ((t - C.tmin) / (C.tmax - C.tmin)) * (C.w - C.l - C.r);
-        const yA = (a) => C.h - C.b - (a / 1023) * (C.h - C.t - C.b);
-        const stat = el("g", {}, svg);
-        const band = el("rect", { y: C.t, height: C.h - C.t - C.b, fill: "#bee3f8", opacity: 0.45 }, svg);
-        const curves = el("g", {}, svg);
-        const mark = el("g", {}, svg);
-        for (let t = -20; t <= 100; t += 20) {
-          const x = xT(t);
-          el("line", { x1: x, y1: C.t, x2: x, y2: C.h - C.b, stroke: "#edf2f7" }, stat);
-          el("text", { x, y: C.h - C.b + 16, "text-anchor": "middle", "font-size": 11, fill: "#4a5568" }, stat).textContent = t;
-        }
-        [0, 256, 512, 768, 1023].forEach((a) => {
-          const y = yA(a);
-          el("line", { x1: C.l, y1: y, x2: C.w - C.r, y2: y, stroke: "#edf2f7" }, stat);
-          el("text", { x: C.l - 6, y: y + 4, "text-anchor": "end", "font-size": 11, fill: "#4a5568" }, stat).textContent = a;
-        });
-        el("text", { x: (C.l + C.w - C.r) / 2, y: C.h - 8, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: "#2d3748" }, stat).textContent = "Temperatuur (°C)";
-        const my = (C.t + C.h - C.b) / 2;
-        el("text", { x: 14, y: my, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: "#2d3748", transform: `rotate(-90 14 ${my})` }, stat).textContent = "analogRead";
-        el("line", { x1: C.l, y1: C.t, x2: C.l, y2: C.h - C.b, stroke: "#a0aec0" }, stat);
-        el("line", { x1: C.l, y1: C.h - C.b, x2: C.w - C.r, y2: C.h - C.b, stroke: "#a0aec0" }, stat);
-
-        const path = (R) => {
-          let d = "";
-          for (let i = 0; i <= 120; i++) {
-            const t = C.tmin + i;
-            d += (i ? "L" : "M") + xT(t).toFixed(1) + "," + yA(adcT(t, R)).toFixed(1);
-          }
-          return d;
-        };
-        function drawCurves() {
-          curves.innerHTML = "";
-          const all = TR_LIST.slice();
-          if (ts.custom && !all.includes(ts.custom)) all.push(ts.custom);
-          all.forEach((R) => {
-            if (R !== ts.R) el("path", { d: path(R), fill: "none", stroke: "#cbd5e0", "stroke-width": 1.5 }, curves);
-          });
-          el("path", { d: path(ts.R), fill: "none", stroke: "#2b6cb0", "stroke-width": 3 }, curves);
-          // pooltundlikkuse ala
-          const tb = bestT(ts.R), smax = sens(tb, ts.R);
-          let a = null, b = null;
-          for (let t = C.tmin; t <= C.tmax; t += 0.5) {
-            if (sens(t, ts.R) >= smax / 2) { if (a === null) a = t; b = t; }
-          }
-          if (a === null) { band.setAttribute("width", 0); return; }
-          band.setAttribute("x", xT(a));
-          band.setAttribute("width", xT(b) - xT(a));
-          if (tb > C.tmin && tb < C.tmax) {
-            el("line", { x1: xT(tb), y1: C.t, x2: xT(tb), y2: C.h - C.b, stroke: "#2b6cb0", "stroke-dasharray": "2 4" }, curves);
-            el("text", { x: xT(tb) + 4, y: C.t + 12, "font-size": 10.5, fill: "#2b6cb0" }, curves).textContent = "R = R_NTC";
-          }
-        }
-
-        // ── kalkulaator
-        const E12 = [1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2];
-        function e12Near(R) {
-          let best = 10, bd = Infinity;
-          for (let dec = 1; dec <= 1e6; dec *= 10)
-            for (const m of E12) {
-              const d = Math.abs(Math.log(m * dec / R));
-              if (d < bd) { bd = d; best = m * dec; }
-            }
-          return Math.round(best);
-        }
-        let calcR = null;
-        function calcT() {
-          const a = parseFloat(document.getElementById("tc-min").value);
-          const b = parseFloat(document.getElementById("tc-max").value);
-          const out = document.getElementById("tc-out");
-          if (!isFinite(a) || !isFinite(b) || a >= b || a < -55 || b > 150) {
-            out.textContent = "Sisesta T_min < T_max (−55 … 150 °C)."; calcR = null; return;
-          }
-          const ra = rNtc(a), rb = rNtc(b), R = Math.sqrt(ra * rb);
-          calcR = e12Near(R);
-          out.innerHTML = `R<sub>NTC</sub>: ${fmtR(ra)} … ${fmtR(rb)}<br>√(…) ≈ ${fmtR(Math.round(R))} → <b style="color:#2b6cb0">${fmtR(calcR)}</b>`;
-        }
-        ["tc-min", "tc-max"].forEach((id) => document.getElementById(id).addEventListener("input", calcT));
-        document.getElementById("tc-try").onclick = () => {
-          if (!calcR) return;
-          ts.custom = TR_LIST.includes(calcR) ? null : calcR;
-          ts.R = calcR;
-          buildBtns(); drawCurves(); upd();
-        };
-
-        function upd() {
-          tRange.value = ts.T;
-          document.getElementById("t-label").textContent = "🌡 " + fmtT(ts.T);
-          const rn = rNtc(ts.T), u = uT(ts.T, ts.R), a = Math.round(adcT(ts.T, ts.R)), s = sens(ts.T, ts.R);
-          rnLab.textContent = "R_NTC = " + fmtR(rn);
-          uLab.textContent = fmtV(u);
-          rLab.textContent = "R = " + fmtR(ts.R);
-          mark.innerHTML = "";
-          el("line", { x1: xT(ts.T), y1: C.t, x2: xT(ts.T), y2: C.h - C.b, stroke: "#c53030", "stroke-dasharray": "4 3" }, mark);
-          el("circle", { cx: xT(ts.T), cy: yA(a), r: 6, fill: "#c53030", stroke: "#fff", "stroke-width": 2 }, mark);
-          const step = s > 0.01 ? (1 / s).toFixed(2).replace(".", ",") : "–";
-          document.getElementById("banner-t").innerHTML =
-            `T = <span style="color:#c53030">${fmtT(ts.T)}</span> &nbsp;|&nbsp; R<sub>NTC</sub> = ${fmtR(rn)} &nbsp;|&nbsp; ` +
-            `U<sub>A0</sub> = <span class="v">${fmtV(u)}</span> &nbsp;|&nbsp; analogRead ≈ <span class="ar">${a}</span><br>` +
-            `Tundlikkus: <b>${s.toFixed(1).replace(".", ",")} sammu/°C</b> (üks samm ≈ ${step} °C) &nbsp;·&nbsp; ` +
-            `R = ${fmtR(ts.R)} on kõige tundlikum ≈ ${fmtT(bestT(ts.R))} juures`;
-        }
-
-        buildBtns(); drawCurves(); calcT(); upd();
-      })();
     </script>
   </body>
 </html>
