@@ -164,6 +164,174 @@
       svg text {
         font-family: "Segoe UI", Arial, sans-serif;
       }
+      .pj-panel {
+        align-items: flex-start;
+      }
+      .pj-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 4px 12px;
+        flex-shrink: 0;
+      }
+      .section-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #4a5568;
+        text-align: center;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .pj-divider {
+        width: 1px;
+        background: #e2e8f0;
+        align-self: stretch;
+        margin: 16px 0;
+        flex-shrink: 0;
+      }
+      .pj-ctl {
+        width: 220px;
+        display: grid;
+        gap: 4px;
+        font-size: 0.85rem;
+        color: #2d3748;
+      }
+      .pj-ctl input[type="range"] {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+      #pj-r1 {
+        accent-color: #dd6b20;
+      }
+      #pj-r2 {
+        accent-color: #2b6cb0;
+      }
+      .pj-val {
+        float: right;
+        font-weight: 700;
+      }
+      .pj-presets {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+        margin-top: 4px;
+      }
+      .pj-presets button {
+        font-family: inherit;
+        font-size: 0.72rem;
+        padding: 3px 8px;
+        border: 1px solid #cbd5e0;
+        background: #f7fafc;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .pj-presets button:hover {
+        background: #edf2f7;
+      }
+      .pj-switch {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 12px;
+        font-size: 0.78rem;
+        color: #4a5568;
+        cursor: pointer;
+        user-select: none;
+        max-width: 220px;
+      }
+      .pj-switch input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      }
+      .pj-switch .track {
+        width: 32px;
+        height: 17px;
+        background: #cbd5e0;
+        border-radius: 9px;
+        position: relative;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      }
+      .pj-switch .thumb {
+        width: 13px;
+        height: 13px;
+        background: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: left 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+      }
+      .pj-switch input:checked ~ .track {
+        background: #2b6cb0;
+      }
+      .pj-switch input:checked ~ .track .thumb {
+        left: 17px;
+      }
+      .pj-switch input:focus-visible ~ .track {
+        outline: 2px solid #2b6cb0;
+        outline-offset: 2px;
+      }
+      .pj-hint {
+        font-size: 0.72rem;
+        color: #a0aec0;
+        max-width: 220px;
+        text-align: center;
+        margin-top: 4px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .pj-table {
+        font-size: 0.86rem;
+        border-collapse: collapse;
+        width: 230px;
+      }
+      .pj-table td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 6px 6px;
+      }
+      .pj-table td:last-child {
+        text-align: right;
+        font-weight: 700;
+      }
+      .pj-banner {
+        max-width: 960px;
+        margin: 12px auto 0;
+        text-align: center;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: #2d3748;
+        padding: 10px 20px;
+        background: #ebf8ff;
+        border-radius: 10px;
+        border: 1px solid #bee3f8;
+        line-height: 1.6;
+      }
+      .formula {
+        display: block;
+        text-align: center;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #2d3748;
+        background: #f7fafc;
+        border-radius: 8px;
+        padding: 8px;
+        margin: 10px 0;
+        font-family: "Cambria Math", Cambria, Georgia, serif;
+      }
+      .explanation ul {
+        padding-left: 22px;
+      }
+      .explanation p + span.formula + p,
+      .explanation p + ul {
+        margin-top: 8px;
+      }
     </style>
   </head>
   <body>
@@ -180,7 +348,7 @@
       <p>
         Arduino analoogpin oskab aga mõõta ainult üht asja: <strong>pinget</strong> (0–5 V → analogRead 0–1023).
         Seetõttu on iga anduri ühendamisel sama küsimus: <strong>kuidas teha anduri muutusest pinge?</strong>
-        Väga sageli on vastus lihtne – <strong>üks õigesti valitud takisti</strong>.
+        Väga sageli on vastus lihtne – <strong>üks õigesti valitud takisti</strong>. Enamasti tähendab see <a href="#pingejagur"><strong>pingejagurit</strong></a>.
       </p>
     </div>
 
@@ -230,6 +398,81 @@
           </text>
         </svg>
       </div>
+    </div>
+
+    <!-- ═══════════════ PINGEJAGUR ═══════════════ -->
+    <h2 class="section-heading" id="pingejagur">Pingejagur – kõige tähtsam lülitus</h2>
+    <div class="explanation">
+      <h3>Kaks takistit jadas</h3>
+      <p>
+        Ühendame kaks takistit <strong>R₁</strong> ja <strong>R₂</strong> jadas 5V ja GND vahele. Mõlemast läbib
+        <strong>sama vool</strong> ja 5 V <strong>jaguneb</strong> nende vahel. Kumb takisti on suurem, sellele jääb
+        suurem osa pingest. Kui takistid on võrdsed, saab kumbki täpselt poole: 2,5 V.
+      </p>
+      <p>
+        Takistite vahelt (keskpunktist) mõõdame Arduinoga pinget – see on R₂ pinge:
+      </p>
+      <span class="formula">U<sub>A0</sub> = 5 V · R₂ / (R₁ + R₂)</span>
+      <p>
+        <strong>Võrdlus:</strong> kujuta ette 5 meetri kõrgust mäge, millest viib alla kaks nõlva. Järsem ja pikem nõlv
+        (suurem takisti) „võtab“ suurema osa kõrgusest. A0 mõõdab, kui kõrgel on kahe nõlva vaheline puhkekoht.
+      </p>
+      <p><em>Muuda takisteid ja vaata, kuidas pinge jaguneb.</em></p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel pj-panel">
+        <div class="pj-section">
+          <div class="section-title">Takistid</div>
+          <div class="pj-ctl">
+            <label for="pj-r1"><b>R₁</b> (ülemine) <span id="pj-r1-lab" class="pj-val"></span></label>
+            <input type="range" id="pj-r1" min="2" max="5" step="0.01" value="4" />
+            <label for="pj-r2"><b>R₂</b> (alumine) <span id="pj-r2-lab" class="pj-val"></span></label>
+            <input type="range" id="pj-r2" min="2" max="5" step="0.01" value="4" />
+          </div>
+          <div class="pj-presets">
+            <button data-r="10000,10000">Võrdsed</button>
+            <button data-r="30000,10000">R₁ suurem</button>
+            <button data-r="10000,30000">R₂ suurem</button>
+          </div>
+          <label class="pj-switch">
+            <input type="checkbox" id="pj-pot" />
+            <span class="track"><span class="thumb"></span></span>
+            <span>Potentsiomeeter: R₁ + R₂ = 10 kΩ</span>
+          </label>
+          <div class="pj-hint" id="pj-pot-hint" hidden>Liiguta R₁ liugurit – nii liigub potentsiomeetri liugur.</div>
+        </div>
+        <div class="pj-divider"></div>
+        <div class="pj-section">
+          <div class="section-title">Skeem ja pinge</div>
+          <svg id="pj-svg" width="330" height="320" viewBox="0 0 330 320" role="img"
+            aria-label="Pingejagur: 5V, R1, A0, R2, GND ja pingeriba"></svg>
+        </div>
+        <div class="pj-divider"></div>
+        <div class="pj-section">
+          <div class="section-title">Arvud</div>
+          <table class="pj-table" id="pj-table"></table>
+        </div>
+      </div>
+    </div>
+    <div class="pj-banner" id="pj-banner"></div>
+
+    <div class="explanation" style="margin-top:20px">
+      <h3>Kus pingejagurit kasutatakse?</h3>
+      <ul>
+        <li>
+          <strong>Potentsiomeeter</strong> on pingejagur ühes komponendis: liugur jagab takistusraja kaheks osaks R₁ ja R₂.
+          <a href="https://vhkarendus.github.io/Potentsiomeetri-selgitus/">Potentsiomeetri selgitus →</a>
+        </li>
+        <li>
+          <strong>Termistor, fototakisti (LDR), jõuandur:</strong> andur on üks pingejaguri takistitest. Kui andur
+          muudab takistust, muutub ka pinge A0-l. <a href="temperatuur/">Temperatuuriandur →</a>
+        </li>
+        <li>
+          <strong>Fototransistor</strong> töötab veidi teisiti (valgus muudab voolu, mitte takistust), aga takisti
+          GND poole teeb sama tööd: muudab anduri muutuse pingeks. <a href="valgusandur/">Valgusandur →</a>
+        </li>
+      </ul>
     </div>
 
     <h2 class="section-heading">Kolm andurite peret</h2>
@@ -291,7 +534,7 @@
 
     <div class="explanation">
       <h3>Näiteid andurite kohta</h3>
-      <table>
+      <div style="overflow-x:auto"><table>
         <tr><th>Andur</th><th>Mõõdab</th><th>Mis muutub</th><th>Kuidas Arduino seda loeb</th></tr>
         <tr><td>Potentsiomeeter</td><td>asend (pööre)</td><td><span class="tag t-r">takistuse jaotus</span></td><td>on ise pingejagur</td></tr>
         <tr><td>Fototransistor</td><td>valgus</td><td><span class="tag t-i">vool</span></td><td>takisti GND-sse</td></tr>
@@ -300,7 +543,7 @@
         <tr><td>TMP36</td><td>temperatuur</td><td><span class="tag t-u">pinge</span></td><td>otse analoogpinile</td></tr>
         <tr><td>Halli andur (analoog)</td><td>magnetväli</td><td><span class="tag t-u">pinge</span></td><td>otse analoogpinile</td></tr>
         <tr><td>Jõuandur (FSR)</td><td>surve, jõud</td><td><span class="tag t-r">takistus</span></td><td>pingejagur</td></tr>
-      </table>
+      </table></div>
     </div>
 
     <h2 class="section-heading">Materjalid</h2>
@@ -315,5 +558,133 @@
         <strong>Temperatuuriandur →</strong>NTC termistor pingejaguris, tundlikkus, isekuumenemine ja kalibreerimine.
       </a>
     </div>
+    <script>
+      /* ════════════════ PINGEJAGUR ════════════════
+         I = 5 / (R1 + R2), U1 = I·R1, U2 = I·R2 = U_A0, analogRead = round(U2 / 5 · 1023) */
+      (function () {
+        const NS = "http://www.w3.org/2000/svg";
+        const el = (tag, attrs, parent) => {
+          const e = document.createElementNS(NS, tag);
+          for (const k in attrs) e.setAttribute(k, attrs[k]);
+          if (parent) parent.appendChild(e);
+          return e;
+        };
+        const dec = (n, d) => n.toFixed(d).replace(".", ",");
+        const fmtR = (R) => {
+          if (R >= 1000) { const k = R / 1000; return (k >= 10 ? Math.round(k) : Math.round(k * 10) / 10).toString().replace(".", ",") + " kΩ"; }
+          return Math.round(R) + " Ω";
+        };
+        const s1 = document.getElementById("pj-r1"), s2 = document.getElementById("pj-r2"), pot = document.getElementById("pj-pot");
+        const st = { R1: 10000, R2: 10000, pot: false };
+        const ORANGE = "#dd6b20", BLUE = "#2b6cb0";
+
+        const svg = document.getElementById("pj-svg");
+        const W = { stroke: "#2d3748", "stroke-width": 2, fill: "none" };
+        const X = 90;
+        el("text", { x: X, y: 18, "text-anchor": "middle", "font-size": 13, "font-weight": 700, fill: "#c53030" }, svg).textContent = "5V";
+        const wTop = el("line", { x1: X, y1: 24, x2: X, ...W }, svg);
+        const wMid = el("line", { x1: X, x2: X, ...W }, svg);
+        const wBot = el("line", { x1: X, x2: X, y2: 296, ...W }, svg);
+        const r1 = el("rect", { x: X - 11, y: 50, width: 22, height: 70, fill: "#fffaf0", stroke: ORANGE, "stroke-width": 2.5 }, svg);
+        const potArrow = el("g", { visibility: "hidden" }, svg);
+        const r2 = el("rect", { x: X - 11, y: 200, width: 22, height: 70, fill: "#ebf8ff", stroke: BLUE, "stroke-width": 2.5 }, svg);
+        el("text", { x: X, y: 312, "text-anchor": "middle", "font-size": 12, fill: "#2d3748" }, svg).textContent = "GND";
+        el("circle", { cx: X, cy: 160, r: 4.5, fill: "#2d3748" }, svg);
+        el("line", { x1: X, y1: 160, x2: 26, y2: 160, ...W }, svg);
+        el("text", { x: 22, y: 164, "text-anchor": "end", "font-size": 12, "font-weight": 700, fill: "#2d3748" }, svg).textContent = "A0";
+        const l1 = el("text", { x: X - 20, y: 90, "text-anchor": "end", "font-size": 13, "font-weight": 700, fill: ORANGE }, svg);
+        const l2 = el("text", { x: X - 20, y: 240, "text-anchor": "end", "font-size": 13, "font-weight": 700, fill: BLUE }, svg);
+        l1.textContent = "R₁"; l2.textContent = "R₂";
+        const v1 = el("text", { x: X + 18, y: 90, "font-size": 11.5, fill: "#2d3748" }, svg);
+        const v2 = el("text", { x: X + 18, y: 240, "font-size": 11.5, fill: "#2d3748" }, svg);
+        // pingeriba
+        const BX = 230, BT = 30, BB = 290, BW = 34;
+        el("text", { x: BX + BW / 2, y: 18, "text-anchor": "middle", "font-size": 11, "font-weight": 700, fill: "#4a5568" }, svg).textContent = "Pinge";
+        const seg1 = el("rect", { x: BX, width: BW, fill: "#fbd38d", stroke: ORANGE }, svg);
+        const seg2 = el("rect", { x: BX, width: BW, fill: "#bee3f8", stroke: BLUE }, svg);
+        const t1 = el("text", { x: BX + BW / 2, "text-anchor": "middle", "font-size": 11, "font-weight": 700, fill: "#7b341e" }, svg);
+        const t2 = el("text", { x: BX + BW / 2, "text-anchor": "middle", "font-size": 11, "font-weight": 700, fill: "#1a365d" }, svg);
+        [[5, BT], [0, BB]].forEach(([v, y]) => {
+          el("text", { x: BX + BW + 6, y: y + 4, "font-size": 11, fill: "#4a5568" }, svg).textContent = v + " V";
+        });
+        const lvl = el("line", { x1: BX - 30, x2: BX - 2, stroke: BLUE, "stroke-width": 2 }, svg);
+        const lvlT = el("text", { x: BX - 34, "text-anchor": "end", "font-size": 11.5, "font-weight": 700, fill: BLUE }, svg);
+
+        const fromLog = (v) => Math.round(Math.pow(10, v) / 10) * 10;
+        function setSliders() {
+          s1.value = Math.log10(st.R1);
+          s2.value = Math.log10(st.R2);
+        }
+        s1.addEventListener("input", () => {
+          if (st.pot) { st.R1 = Math.round(Math.min(1, Math.max(0, (parseFloat(s1.value) - 2) / 3)) * 10000); st.R2 = 10000 - st.R1; }
+          else st.R1 = fromLog(parseFloat(s1.value));
+          update();
+        });
+        s2.addEventListener("input", () => {
+          if (st.pot) { st.R2 = Math.round(Math.min(1, Math.max(0, (parseFloat(s2.value) - 2) / 3)) * 10000); st.R1 = 10000 - st.R2; }
+          else st.R2 = fromLog(parseFloat(s2.value));
+          update();
+        });
+        document.querySelectorAll(".pj-presets button").forEach((b) => {
+          b.onclick = () => {
+            const [a, c] = b.dataset.r.split(",").map(Number);
+            if (st.pot) { const k = 10000 / (a + c); st.R1 = Math.round(a * k); st.R2 = 10000 - st.R1; }
+            else { st.R1 = a; st.R2 = c; }
+            update();
+          };
+        });
+        pot.addEventListener("change", () => {
+          st.pot = pot.checked;
+          document.getElementById("pj-pot-hint").hidden = !st.pot;
+          if (st.pot) { const k = 10000 / (st.R1 + st.R2); st.R1 = Math.round(st.R1 * k); st.R2 = 10000 - st.R1; }
+          update();
+        });
+
+        function update() {
+          const { R1, R2 } = st;
+          const I = 5 / (R1 + R2), U1 = I * R1, U2 = I * R2, a = Math.round((U2 / 5) * 1023);
+          if (st.pot) {
+            s1.value = 2 + (R1 / 10000) * 3;
+            s2.value = 2 + (R2 / 10000) * 3;
+          } else setSliders();
+          document.getElementById("pj-r1-lab").textContent = fmtR(R1);
+          document.getElementById("pj-r2-lab").textContent = fmtR(R2);
+          // takistite kõrgus näitab suurust (pot-režiimis ühine 140 px)
+          let h1, h2;
+          if (st.pot) { h1 = 20 + 120 * (R1 / 10000); h2 = 140 - h1; }
+          else {
+            const g = (R) => 30 + 40 * ((Math.log10(R) - 2) / 3);
+            h1 = g(R1); h2 = g(R2);
+          }
+          r1.setAttribute("y", 160 - 10 - h1); r1.setAttribute("height", h1);
+          r2.setAttribute("y", 170); r2.setAttribute("height", h2);
+          wTop.setAttribute("y2", 150 - h1);
+          wMid.setAttribute("y1", 150); wMid.setAttribute("y2", 170);
+          wBot.setAttribute("y1", 170 + h2);
+          v1.textContent = fmtR(R1) + " · " + dec(U1, 2) + " V";
+          v2.textContent = fmtR(R2) + " · " + dec(U2, 2) + " V";
+          l1.setAttribute("y", 160 - 10 - h1 / 2 + 4); v1.setAttribute("y", 160 - 10 - h1 / 2 + 4);
+          l2.setAttribute("y", 170 + h2 / 2 + 4); v2.setAttribute("y", 170 + h2 / 2 + 4);
+          // pingeriba
+          const H = BB - BT, yA = BB - (U2 / 5) * H;
+          seg1.setAttribute("y", BT); seg1.setAttribute("height", Math.max(0, yA - BT));
+          seg2.setAttribute("y", yA); seg2.setAttribute("height", Math.max(0, BB - yA));
+          t1.setAttribute("y", (BT + yA) / 2 + 4); t1.textContent = yA - BT > 16 ? dec(U1, 2) : "";
+          t2.setAttribute("y", (yA + BB) / 2 + 4); t2.textContent = BB - yA > 16 ? dec(U2, 2) : "";
+          lvl.setAttribute("y1", yA); lvl.setAttribute("y2", yA);
+          lvlT.setAttribute("y", yA + 4); lvlT.textContent = "A0 →";
+          document.getElementById("pj-table").innerHTML = `
+            <tr><td>Vool (sama mõlemas)</td><td>${I >= 1e-3 ? dec(I * 1000, 2) + " mA" : dec(I * 1e6, 0) + " µA"}</td></tr>
+            <tr><td style="color:${ORANGE}">Pinge R₁ peal</td><td>${dec(U1, 2)} V</td></tr>
+            <tr><td style="color:${BLUE}">Pinge R₂ peal = A0</td><td>${dec(U2, 2)} V</td></tr>
+            <tr><td>Kokku</td><td>5,00 V</td></tr>
+            <tr><td style="color:#276749">analogRead(A0)</td><td style="color:#276749;font-size:1.2rem">${a}</td></tr>`;
+          document.getElementById("pj-banner").innerHTML =
+            `U<sub>A0</sub> = 5 V · R₂ / (R₁ + R₂) = 5 V · ${fmtR(R2)} / (${fmtR(R1)} + ${fmtR(R2)}) = ` +
+            `<span style="color:${BLUE}">${dec(U2, 2)} V</span> &nbsp;→&nbsp; analogRead ≈ <span style="color:#276749">${a}</span>`;
+        }
+        update();
+      })();
+    </script>
   </body>
 </html>

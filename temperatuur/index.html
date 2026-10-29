@@ -534,6 +534,46 @@
         font-weight: 800;
         font-size: 1.05rem;
       }
+      details.advanced {
+        max-width: 1100px;
+        margin: 40px auto 0;
+        border: 2px solid #bee3f8;
+        border-radius: 16px;
+        background: #f7fbff;
+        padding: 6px 12px 24px;
+      }
+      details.advanced > summary {
+        cursor: pointer;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #2b6cb0;
+        padding: 12px 8px;
+        text-align: center;
+        list-style-position: inside;
+      }
+      details.advanced[open] > summary {
+        border-bottom: 1px solid #bee3f8;
+        margin-bottom: 10px;
+      }
+      .cal-result {
+        width: 220px;
+        display: grid;
+        grid-template-columns: auto auto;
+        align-items: baseline;
+        gap: 4px 12px;
+        font-size: 0.85rem;
+        color: #4a5568;
+      }
+      .cal-result .big {
+        font-size: 1.3rem;
+        font-weight: 800;
+        text-align: right;
+      }
+      .cal-note {
+        grid-column: 1 / -1;
+        font-size: 0.8rem;
+        margin-top: 6px;
+      }
       .code-block {
         width: 440px;
       }
@@ -553,39 +593,21 @@
   </head>
   <body>
     <h1>Temperatuuriandur – NTC termistor</h1>
-    <p class="subtitle">Interaktiivne õppematerjal · pingejagur · takisti valimine</p>
-    <p class="backlink"><a href="../">← Kõik andurid</a> · <a href="../valgusandur/">Valgusandur</a></p>
-
-    <div class="thermistor-pick">
-      <label for="ntc-select">Minu termistor:</label>
-      <select id="ntc-select">
-        <option value="0" selected>10 kΩ, B 3950 (tutorial 03)</option>
-        <option value="1">22 kΩ, B 3740 (Oomipood)</option>
-        <option value="2">3,3 kΩ, B 3977 (GreenPoweri auto)</option>
-      </select>
-      <span class="pick-hint">Kõik lehe arvutused ja graafikud kasutavad valitud termistorit.</span>
-    </div>
+    <p class="subtitle">Interaktiivne õppematerjal · termistor 10 kΩ · takisti 10 kΩ</p>
+    <p class="backlink"><a href="../">← Kõik andurid</a> · <a href="../#pingejagur">Mis on pingejagur?</a> · <a href="../valgusandur/">Valgusandur</a></p>
 
     <!-- ═══════════════ 1. MIS ON TERMISTOR ═══════════════ -->
     <div class="explanation">
       <h3>Mis on termistor?</h3>
       <p>
-        Termistor (<em>thermal resistor</em>) on takisti, mille <strong>takistus sõltub temperatuurist</strong>.
-        Kasutame <strong>NTC termistorit</strong> (<em>Negative Temperature Coefficient</em>):
-        <strong>mida soojem, seda väiksem takistus</strong>. On olemas ka PTC termistorid, mille takistus soojemaks
-        minnes kasvab, aga temperatuuri mõõtmiseks kasutatakse peamiselt NTC-d.
+        Termistor on takisti, mille <strong>takistus sõltub temperatuurist</strong>. Meie kasutame
+        <strong>NTC termistorit</strong>: <strong>mida soojem, seda väiksem takistus</strong>.
       </p>
-      <p>Termistori kirjeldavad andmelehel kaks arvu:</p>
-      <ul>
-        <li><strong>R₀</strong> – takistus 25 °C juures (nt 10 kΩ). See on termistori „nimi“.</li>
-        <li><strong>B-väärtus</strong> (kelvinites, nt 3950 K) – kui kiiresti takistus temperatuuriga muutub.</li>
-      </ul>
       <p>
-        Takistus ei muutu ühtlaselt: külmas muutub ta palju, kuumas vähe. See on <strong>mittelineaarne</strong>
-        seos. Seda kirjeldab B-võrrand:
+        Termistori „nimi“ on tema takistus 25 °C juures. Meie termistor on <strong>10 kΩ</strong>: 25 °C juures on
+        tema takistus 10 kΩ, külmemas rohkem ja soojemas vähem.
       </p>
-      <span class="formula">R<sub>NTC</sub> = R₀ · e<sup>B · (1/T − 1/T₀)</sup> &nbsp;&nbsp; (T kelvinites, T₀ = 298,15 K = 25 °C)</span>
-      <p><em>Liiguta temperatuuri liugurit ja vaata, kuidas takistus muutub. Lülita sisse logaritmiline skaala – kõver muutub peaaegu sirgeks.</em></p>
+      <p><em>Liiguta temperatuuri liugurit ja vaata, kuidas takistus muutub.</em></p>
     </div>
 
     <div class="scroll-wrap">
@@ -601,7 +623,7 @@
           <div class="big-number" id="rn-big">–</div>
           <div class="section-hint" id="rn-hint" style="max-width:220px"></div>
           <div class="section-hint" style="margin-top:14px;color:#718096;max-width:220px">
-            NTC termistoril pole polaarsust – jalgu võib ühendada kummapidi.
+            Termistoril pole polaarsust – jalgu võib ühendada kummapidi.
           </div>
         </div>
         <div class="divider"></div>
@@ -609,40 +631,32 @@
           <div class="section-title">Takistus sõltuvalt temperatuurist</div>
           <svg id="rchart" width="460" height="280" viewBox="0 0 460 280" role="img"
             aria-label="Graafik: termistori takistus temperatuuri funktsioonina"></svg>
-          <label class="switch">
-            <input type="checkbox" id="rlog" />
-            <span class="track"><span class="thumb"></span></span>
-            <span>Logaritmiline skaala</span>
-          </label>
+          <div class="section-hint" style="max-width:420px">
+            Kõver ei ole sirge: külmas muutub takistus palju, kuumas vähe.
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════ 2. MIKS TAKISTI ═══════════════ -->
-    <h2 class="section-heading">Miks on takisti vaja?</h2>
+    <!-- ═══════════════ 2. PINGEJAGUR ═══════════════ -->
+    <h2 class="section-heading">Kuidas Arduino seda mõõdab? Pingejagur</h2>
     <div class="explanation">
       <h3>Arduino mõõdab pinget, mitte takistust</h3>
       <p>
-        <code>analogRead(A0)</code> mõõdab <strong>pinget</strong> (0–5 V → 0–1023). Termistor muudab aga
-        <strong>takistust</strong>. Kui ühendad termistori lihtsalt 5 V ja A0 vahele, ei voola sellest peaaegu
-        mingit voolu (analoogsisend praktiliselt voolu ei võta). Takistusel pole siis pinget, millega „töötada“:
-        A0 näitab alati ≈ 5 V, olgu temperatuur milline tahes.
+        <code>analogRead(A0)</code> mõõdab <strong>pinget</strong> (0–5 V → 0–1023). Takistuse muutusest pinge
+        saamiseks ühendame termistori ja tavalise takisti R jadas – see on
+        <a href="../#pingejagur"><strong>pingejagur</strong></a>, sama mis potentsiomeetri sees:
+      </p>
+      <p style="text-align:center"><strong>5V → termistor → A0 → takisti R → GND</strong></p>
+      <p>
+        5 V jaguneb termistori ja takisti vahel: <strong>suuremale takistusele jääb suurem osa pingest</strong>.
+        Soojemaks → termistori takistus väheneb → termistorile jääb vähem pinget, takistile rohkem →
+        <strong>pinge A0-l kasvab ja analogRead suureneb</strong>.
       </p>
       <p>
-        Lahendus on <strong>pingejagur</strong>: termistori ja takisti R järjestikühendus. Mõlemast läbib sama vool
-        ja 5 V jaguneb nende vahel takistuste suhtes. Kumb on suurem, sellele jääb suurem osa pingest:
+        Ilma takistita ei saa pinge jaguneda: A0 näitab alati umbes 5 V, olgu temperatuur milline tahes.
+        <em>Lülita takisti välja ja vaata, mis juhtub.</em>
       </p>
-      <span class="formula">U<sub>A0</sub> = 5 V · R / (R + R<sub>NTC</sub>)</span>
-      <p>
-        Meie ühendus: <strong>5V → termistor → A0 → R → GND</strong> (nagu tutorialis 03). Soojemaks →
-        R<sub>NTC</sub> väheneb → termistorile jääb vähem pinget → <strong>pinge A0-l kasvab</strong>.
-      </p>
-      <div class="note tip">
-        💡 Kui vahetad termistori ja takisti kohad (5V → R → A0 → termistor → GND), kehtib
-        U<sub>A0</sub> = 5 V · R<sub>NTC</sub> / (R + R<sub>NTC</sub>) ja näit hoopis <strong>väheneb</strong>
-        soojemaks minnes. Mõlemad ühendused töötavad – peaasi, et kood kasutab õiget valemit.
-      </div>
-      <p style="margin-top:8px"><em>Lülita takisti välja ja vaata, mis juhtub Serial Monitoris.</em></p>
     </div>
 
     <div class="scroll-wrap">
@@ -671,30 +685,44 @@
             <div class="code-title">Serial Monitor · 9600 baud</div>
             <pre id="serial-out"></pre>
           </div>
+          <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
+          <div class="code-block" hidden>
+            <div class="code-title">Arduino IDE · näitekood</div>
+<pre><span class="cm">// 5V → termistor → A0 → takisti 10 kΩ → GND</span>
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="nb">9600</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> lugem = <span class="fn">analogRead</span>(A0);
+  Serial.<span class="fn">print</span>(<span class="st">"analogRead: "</span>);
+  Serial.<span class="fn">println</span>(lugem);
+  <span class="fn">delay</span>(<span class="nb">500</span>);
+}</pre>
+          </div>
         </div>
       </div>
     </div>
     <div class="value-banner" id="banner2"></div>
 
-    <!-- ═══════════════ 3. TUNDLIKKUS ═══════════════ -->
-    <h2 class="section-heading">Takisti suurus = tundlikkus</h2>
+    <!-- ═══════════════ 3. TAKISTI MÕJU ═══════════════ -->
+    <h2 class="section-heading">Kuidas takisti mõjutab näitu?</h2>
     <div class="explanation">
-      <h3>Kõige tundlikum umbes seal, kus R = R<sub>NTC</sub></h3>
+      <h3>Takisti valib, kus andur on kõige tundlikum</h3>
       <p>
-        Fototransistori puhul võis liiga suur takisti anduri küllastada. Pingejaguriga seda ohtu pole: pinge jääb alati
-        0 ja 5 V vahele. Takisti määrab aga, <strong>millises temperatuurivahemikus andur on tundlik</strong>.
-      </p>
-      <p>
-        <strong>Tundlikkus</strong> = mitu analogRead-i sammu muutub näit, kui temperatuur muutub 1 °C võrra.
-        Mida rohkem samme kraadi kohta, seda täpsemini Arduino temperatuuri eristab. Pingejagur on
-        <strong>kõige tundlikum ligikaudu seal, kus R = R<sub>NTC</sub></strong> (pinge on siis 2,5 V). Täpne tipp
-        on mõne kraadi võrra madalamal (sinine punktiirjoon vs graafiku tipp), sest külmas muutub termistori takistus kraadi kohta rohkem.
+        Vaata graafikut: mida järsem on joon, seda rohkem muutub analogRead ühe kraadi kohta – seda
+        <strong>tundlikum</strong> on andur. Joon on kõige järsem seal, kus <strong>takisti ≈ termistori
+        takistus</strong> (siis on A0-l umbes 2,5 V ja analogRead umbes 512).
       </p>
       <ul>
-        <li><strong>Liiga suur R</strong>: pinge on enamasti 5 V lähedal ja kõver lame – tundlik ainult külmas.</li>
-        <li><strong>Liiga väike R</strong>: pinge on enamasti 0 V lähedal – tundlik ainult kuumas.</li>
+        <li><strong>Liiga suur takisti</strong>: näit on enamasti 1023 lähedal ja joon lame – andur „ei märka“ muutusi.</li>
+        <li><strong>Liiga väike takisti</strong>: näit on enamasti 0 lähedal – sama probleem.</li>
       </ul>
-      <p><em>Vali eri takisteid ja vaata, kuidas tundlikkuse „küür“ alumisel graafikul nihkub.</em></p>
+      <p>
+        <strong>Lihtne reegel:</strong> vali takisti, mis on sama suur kui termistor sellel temperatuuril, mida tahad
+        kõige täpsemini mõõta. Toatemperatuuri jaoks: <strong>10 kΩ termistor → 10 kΩ takisti</strong>.
+        <em>Proovi eri takisteid.</em>
+      </p>
     </div>
 
     <div class="scroll-wrap">
@@ -709,217 +737,101 @@
         <div class="divider"></div>
         <div class="section">
           <div class="section-title">analogRead sõltuvalt temperatuurist</div>
-          <svg id="achart" width="540" height="250" viewBox="0 0 540 250" role="img"
+          <svg id="achart" width="540" height="280" viewBox="0 0 540 280" role="img"
             aria-label="Graafik: analogRead temperatuuri funktsioonina eri takistitega"></svg>
-          <div class="section-title" style="margin-top:10px">Tundlikkus (sammu / °C)</div>
-          <svg id="schart" width="540" height="210" viewBox="0 0 540 210" role="img"
-            aria-label="Graafik: tundlikkus temperatuuri funktsioonina"></svg>
           <div class="section-hint" style="max-width:500px">
-            Sinine ala: temperatuurid, kus see takisti on vähemalt pool nii tundlik kui oma parimas kohas.
-            Hallid jooned on teised takistid.
+            Sinine joon on valitud takisti, hallid jooned teised takistid.
           </div>
         </div>
       </div>
     </div>
     <div class="value-banner" id="banner3"></div>
 
-    <!-- ═══════════════ 4. KUIDAS VALIDA ═══════════════ -->
-    <h2 class="section-heading">Kuidas valida õiget takistit?</h2>
+    <!-- ═══════════════ 4. KALIBREERIMINE map() ═══════════════ -->
+    <h2 class="section-heading">analogRead → °C: kalibreerimine map()-iga</h2>
     <div class="explanation">
-      <h3>Retsept viies sammus</h3>
+      <h3>Kaks mõõtmist ja üks rida koodi</h3>
+      <p>
+        Arduino annab numbri 0–1023, aga meie tahame kraade. Lihtsaim viis on <strong>kalibreerida</strong>:
+        mõõdame analogRead-i kahel <strong>teadaoleval temperatuuril</strong> ja laseme funktsioonil
+        <code>map()</code> ülejäänu välja arvutada.
+      </p>
       <ol>
-        <li><strong>Mõtle, mida mõõdad.</strong> Mis on madalaim ja kõrgeim temperatuur, mida andur peab eristama? (Toaõhk 15…30 °C? Mootor 20…80 °C?)</li>
-        <li><strong>Leia termistori takistus</strong> mõlemas otsas: andmelehe tabelist või B-võrrandist.</li>
-        <li><strong>Arvuta geomeetriline keskmine:</strong></li>
+        <li><strong>Punkt 1 – jäävesi (0 °C):</strong> pane termistor jääkuubikute ja vee segusse, oota paar minutit, kirjuta üles analogRead.</li>
+        <li><strong>Punkt 2 – toas:</strong> pane termistor termomeetri kõrvale, oota pool minutit, kirjuta üles analogRead ja termomeetri näit.</li>
+        <li><strong>Kirjuta need neli arvu koodi:</strong></li>
       </ol>
-      <span class="formula">R = √( R<sub>NTC</sub>(T<sub>min</sub>) · R<sub>NTC</sub>(T<sub>max</sub>) )</span>
-      <ol start="4">
-        <li><strong>Vali lähim standardtakisti</strong> (E12-rida: 1,0 · 1,2 · 1,5 · 1,8 · 2,2 · 2,7 · 3,3 · 3,9 · 4,7 · 5,6 · 6,8 · 8,2).</li>
-        <li><strong>Kontrolli isekuumenemist</strong> (järgmine osa): väga väike takisti soojendab termistorit ja näit läheb valeks.</li>
-      </ol>
+      <span class="formula" style="font-family:Consolas,'Courier New',monospace;font-size:0.95rem">temp = map(lugem, lugem1, lugem2, temp1, temp2);</span>
       <p>
-        <strong>Rusikareegel:</strong> kui mõõdad toatemperatuuri ümbruses, vali takisti, mis on võrdne termistori R₀-ga
-        (10 kΩ termistor → 10 kΩ takisti). Nii soovitab ka tutorial 03.
+        <code>map()</code> tõmbab kahe punkti vahele <strong>sirge joone</strong>. Termistori kõver pole aga päris sirge,
+        seega on tulemus täpne kalibreerimispunktide vahel ja läheb seda ebatäpsemaks, mida kaugemale neist lähed.
+        <em>Muuda kalibreerimispunkte ja liiguta temperatuuri – vaata, kui suur on viga.</em>
       </p>
     </div>
 
     <div class="scroll-wrap">
       <div class="panel">
         <div class="section">
-          <div class="section-title">Takisti kalkulaator</div>
-          <div class="calc">
-            <label>
-              Mida mõõdad?
-              <select id="calc-preset">
-                <option value="15,30">Toaõhk (15…30 °C)</option>
-                <option value="0,40">Õues (0…40 °C)</option>
-                <option value="20,80" selected>Elektrimootor (20…80 °C)</option>
-                <option value="10,60">Aku (10…60 °C)</option>
-                <option value="0,100">Vesi (0…100 °C)</option>
-                <option value="custom">Oma vahemik…</option>
-              </select>
-            </label>
-            <label id="calc-custom" hidden>
-              <span>T<sub>min</sub> … T<sub>max</sub> (°C)</span>
-              <span style="display:flex;gap:6px">
-                <input type="number" id="calc-min" value="20" style="width:50%" aria-label="Madalaim temperatuur" />
-                <input type="number" id="calc-max" value="80" style="width:50%" aria-label="Kõrgeim temperatuur" />
-              </span>
-            </label>
+          <div class="section-title">Kalibreerimispunktid</div>
+          <div class="calc" style="width:220px">
+            <label><span>Punkt 1: temperatuur (°C)</span><input type="number" id="cal-t1" value="0" style="width:100%" /></label>
+            <label><span>Punkt 2: temperatuur (°C)</span><input type="number" id="cal-t2" value="22" style="width:100%" /></label>
           </div>
-        </div>
-        <div class="divider"></div>
-        <div class="section">
-          <div class="section-title">Arvutus</div>
-          <div class="calc-steps" id="calc-out"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════ 5. ISEKUUMENEMINE ═══════════════ -->
-    <h2 class="section-heading">Miks mitte väga väikest takistit? Isekuumenemine</h2>
-    <div class="explanation">
-      <h3>Mõõtmine ise soojendab termistorit</h3>
-      <p>
-        Pingejaguris voolab termistorist läbi vool I = 5 V / (R + R<sub>NTC</sub>) ja termistoris eraldub soojust
-        <strong>P = I² · R<sub>NTC</sub></strong>. Termistor soojeneb ümbritsevast õhust veidi kuumemaks ja
-        <strong>näitab liiga kõrget temperatuuri</strong>.
-      </p>
-      <p>
-        Kui palju, ütleb andmelehel <strong>hajumistegur δ</strong> (<em>dissipation factor</em>): mitu milliwatti on vaja,
-        et termistor soojeneks 1 °C võrra. Tavalisel MF52-tüüpi NTC-l on see seisvas õhus umbes <strong>2 mW/°C</strong>.
-      </p>
-      <span class="formula">ΔT = P / δ</span>
-      <p>
-        Tabel näitab valitud termistori soojenemist eri takistitega praegusel temperatuuril. Mida väiksem takisti,
-        seda suurem vool ja seda rohkem termistor soojeneb.
-      </p>
-    </div>
-
-    <div class="scroll-wrap">
-      <div class="panel">
-        <div class="section">
-          <div class="section-title">Temperatuur</div>
+          <div class="section-hint" id="cal-meas" style="color:#2d3748;font-size:0.8rem;max-width:220px"></div>
+          <div class="section-title" style="margin-top:14px">Tegelik temperatuur</div>
           <div class="light-ctl" data-temp-ctl></div>
         </div>
         <div class="divider"></div>
         <div class="section">
-          <div class="section-title">Isekuumenemine (δ = 2 mW/°C)</div>
-          <table class="heat-table" id="heat-table"></table>
+          <div class="section-title">map() vs tegelik termistor</div>
+          <svg id="calchart" width="460" height="300" viewBox="0 0 460 300" role="img"
+            aria-label="Graafik: temperatuur analogRead funktsioonina, tegelik kõver ja map sirge"></svg>
           <div class="section-hint" style="max-width:420px">
-            🟢 alla 0,25 °C – ei märka &nbsp; 🟡 0,25…1 °C – arvesta, kalibreeri &nbsp; 🔴 üle 1 °C – vali suurem takisti või kasuta nippi allpool
+            <span style="color:#c53030">━ tegelik termistor</span> &nbsp;
+            <span style="color:#2b6cb0">╍ map() sirge</span> &nbsp; ● kalibreerimispunktid
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="explanation" style="margin-top:20px">
-      <div class="note tip" style="margin-top:0">
-        💡 <strong>Nipp:</strong> kui on vaja väikest takistit, ära toida pingejagurit 5V pinist, vaid digitaalpinist
-        (nt pin 7). Lülita see <code>digitalWrite(7, HIGH)</code> sisse ainult mõõtmise ajaks ja pärast uuesti välja.
-        Kui mõõdad kord sekundis, voolab vool vaid murdosa ajast ja termistor ei jõua soojeneda.
-      </div>
-    </div>
-
-    <!-- ═══════════════ 6. analogRead → °C ═══════════════ -->
-    <h2 class="section-heading">Kuidas Arduino arvutab temperatuuri?</h2>
-    <div class="explanation">
-      <h3>analogRead → pinge → takistus → temperatuur</h3>
-      <p>
-        Arduino teab ainult numbrit 0–1023. Temperatuuri saamiseks käime pingejaguri tee tagurpidi läbi.
-        Need neli sammu on täpselt need neli rida, mis on koodis. <em>Liiguta liugurit ja vaata, kuidas iga samm muutub.</em>
-      </p>
-    </div>
-
-    <div class="scroll-wrap">
-      <div class="panel">
-        <div class="section">
-          <div class="section-title">analogRead</div>
-          <div class="big-number" id="conv-big" style="color:#276749">–</div>
-          <div class="light-ctl">
-            <input type="range" id="conv-range" min="1" max="1022" step="1" value="512"
-              aria-label="analogRead väärtus" style="accent-color:#38a169" />
-            <button class="code-toggle-btn" id="conv-sync" style="background:#f7fafc;color:#2d3748;border-color:#cbd5e0">
-              Võta temperatuuri liugurilt
-            </button>
-          </div>
-          <div class="section-hint" id="conv-r"></div>
         </div>
         <div class="divider"></div>
         <div class="section">
-          <div class="section-title">Samm-sammult</div>
-          <div class="steps" id="conv-steps"></div>
-        </div>
-        <div class="divider"></div>
-        <div class="section">
-          <div class="section-title">Kood</div>
+          <div class="section-title">Tulemus</div>
+          <div class="cal-result" id="cal-result"></div>
           <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
-          <div class="code-block" hidden>
-            <div class="code-title">Arduino IDE · termistor</div>
-<pre id="code-pre"></pre>
+          <div class="code-block" hidden style="width:360px">
+            <div class="code-title">Arduino IDE · kalibreerimine map()-iga</div>
+<pre id="cal-code"></pre>
           </div>
         </div>
       </div>
     </div>
     <div class="explanation" style="margin-top:20px">
-      <p>
-        <strong>Lahutusvõime.</strong> Kui tundlikkus on näiteks 10 sammu/°C, vastab üks analogRead-i samm 0,1 °C-le.
-        Arduino ei näe sellest väiksemat muutust. Täpsuse kohta see aga midagi ei ütle: termistori enda
-        tolerants (±1…5%) ja takisti tolerants võivad anda vea ±1 °C ja rohkem. Seepärast tuleb andur
-        <strong>kalibreerida</strong>.
-      </p>
-    </div>
-
-    <!-- ═══════════════ 7. KATSE ═══════════════ -->
-    <h2 class="section-heading">Katse: kontrolli ja kalibreeri oma andur</h2>
-    <div class="explanation">
-      <ol>
-        <li>Ühenda termistor ja takisti nagu ülal ning lae üles näitekood. Kontrolli, et koodis on õiged R₀, B ja takisti väärtus.</li>
-        <li>
-          <strong>Toatemperatuur:</strong> pane termistor termomeetri kõrvale ja oota vähemalt pool minutit.
-          Kui palju erineb Arduino näit termomeetrist?
-        </li>
-        <li>
-          <strong>Jäävesi (0 °C):</strong> täida klaas jääkuubikute ja vähese veega, sega ja oota paar minutit.
-          Kaitse termistori jalad (vaata hoiatust allpool). Mis temperatuuri näitab Arduino?
-        </li>
-        <li>
-          <strong>Kahe punkti kalibreerimine:</strong> kahe teadaoleva temperatuuri põhjal leia parandus
-          T<sub>õige</sub> = a · T<sub>Arduino</sub> + b. Täpsemalt on see kirjas
-          <a href="https://github.com/vhkarendus/VHK_Telemeetria/blob/main/tutorialid/01%20Kalibreerimine.md">tutorialis 01</a>
-          ja <a href="https://github.com/vhkarendus/VHK_Telemeetria/blob/main/tutorialid/03%20Termistor%20Arduino%20tutorial.md">tutorialis 03</a>.
-        </li>
-        <li>
-          <strong>Isekuumenemine:</strong> asenda takisti 1 kΩ-ga (ja muuda koodi!). Kas näit tõuseb veidi? Mitu kraadi?
-        </li>
-      </ol>
-      <div class="note warn">
+      <div class="note warn" style="margin-top:0">
         ⚠️ <strong>Vesi ja elekter:</strong> ära pane paljaste jalgadega termistorit vette. Vesi juhib voolu ja näit
-        läheb valeks. Kata jalad ja jootekohad termokahaneva toru või kuumliimiga, nii et vette jääb ainult
-        termistori pea. Kuuma veega katsetades ole ettevaatlik ja kasuta alla 60 °C vett.
+        läheb valeks. Kata jalad termokahaneva toru või kuumliimiga, nii et vette jääb ainult termistori pea.
       </div>
       <div class="note tip">
-        💡 Termistor reageerib aeglaselt: andmelehe järgi kulub õhus kuni ~7 sekundit, et ta jõuaks enamiku
-        temperatuurimuutusest järele. Oota enne näidu üleskirjutamist.
+        💡 <code>map()</code> annab ainult <strong>täisarve</strong> (22, 23, 24 …). Kümnendike jaoks kirjuta temperatuurid
+        kümnega korrutatult (0 ja 220) ja jaga tulemus: <code>temp / 10.0</code>.
+      </div>
+      <div class="note tip">
+        💡 Termistor reageerib aeglaselt. Oota enne näidu üleskirjutamist, kuni analogRead enam ei muutu.
       </div>
     </div>
 
-    <!-- ═══════════════ 8. PÄRISELUS ═══════════════ -->
+    <!-- ═══════════════ 5. PÄRISELUS ═══════════════ -->
     <h2 class="section-heading">Termistor päriselus</h2>
     <div class="explanation">
       <h3>Kuidas teada, milline termistor sul on?</h3>
       <p>
-        Väikesel tilgakujulisel termistoril (MF52) tavaliselt silti pole. Mõõda tema takistus
-        <strong>multimeetriga toatemperatuuril</strong> (20–23 °C): ≈ 11–13 kΩ tähendab tõenäoliselt 10 kΩ
-        termistorit, ≈ 24–28 kΩ tähendab 22 kΩ termistorit ja ≈ 3,6–4,1 kΩ tähendab 3,3 kΩ termistorit. Termistori
-        „nimi“ R₀ kehtib 25 °C juures – toas on takistus veidi suurem. Ära hoia termistorit mõõtmise ajal sõrmede vahel, sest käsi
-        soojendab teda! B-väärtuse leiad müüja lehelt või andmelehelt.
+        Väikesel tilgakujulisel termistoril silti tavaliselt pole. Mõõda tema takistus <strong>multimeetriga toas</strong>
+        (20–23 °C): ≈ 11–13 kΩ tähendab 10 kΩ termistorit, ≈ 24–28 kΩ tähendab 22 kΩ termistorit. Toas on takistus
+        veidi suurem kui „nimi“, sest nimi kehtib 25 °C juures. Ära hoia termistorit mõõtmise ajal sõrmede vahel!
       </p>
     </div>
     <div class="scroll-wrap">
       <div class="panel" style="gap:16px">
         <div class="section">
           <div class="section-title">Termistor</div>
-          <div class="photo-slot">Foto lisandub:<br />NTC termistor (MF52)</div>
+          <div class="photo-slot">Foto lisandub:<br />NTC termistor</div>
         </div>
         <div class="section">
           <div class="section-title">Ühendus Arduino UNO-ga</div>
@@ -928,37 +840,234 @@
       </div>
     </div>
 
-    <!-- ═══════════════ 9. KÜSIMUSED ═══════════════ -->
+    <!-- ═══════════════ 6. KÜSIMUSED ═══════════════ -->
     <h2 class="section-heading">Mõtle järele</h2>
     <div class="explanation">
       <ol>
         <li>Miks ei saa termistorit ühendada ilma takistita otse 5V ja A0 vahele?</li>
-        <li>Miks muutub NTC termistori takistus külmas palju rohkem kui kuumas? Kuidas see graafikul paistab?</li>
-        <li>Miks on fototransistori puhul oht küllastuda, aga pingejaguriga termistori puhul mitte?</li>
-        <li>Mis juhtub tundlikkusega, kui kasutad 10 kΩ termistoriga 100 kΩ takistit? Millal võiks see siiski mõistlik olla?</li>
-        <li>
-          GreenPoweri auto telemeetrias on <strong>3,3 kΩ termistor (B 3977) ja 5,1 kΩ takisti</strong>. Mis temperatuuril
-          on see kõige tundlikum? Kas see sobib mootori jälgimiseks? Millise takisti sina valiksid ja miks?
-        </li>
-        <li>Sinu kood näitab toas 27 °C, termomeeter 23 °C. Nimeta vähemalt kolm võimalikku põhjust.</li>
-        <li>Miks ei tohi kood jagada nulliga, kui analogRead annab 0 või 1023? Mida see füüsiliselt tähendab (nt lahti tulnud juhe)?</li>
+        <li>Kas analogRead kasvab või väheneb, kui termistorit soojendada? Miks?</li>
+        <li>Mis juhtub, kui vahetad termistori ja takisti kohad? Kuidas see näitu muudab?</li>
+        <li>Miks on 10 kΩ termistori jaoks hea valik 10 kΩ takisti, aga mitte 100 kΩ?</li>
+        <li>Kalibreerisid 0 °C ja 22 °C juures. Kas map() näitab 80 °C juures õigesti? Miks?</li>
+        <li>Tahad mõõta kuuma vett (40–80 °C). Millistel temperatuuridel kalibreeriksid?</li>
       </ol>
     </div>
+
+    <!-- ═══════════════ SÜVENEMISEKS ═══════════════ -->
+    <details class="advanced" id="suvenemiseks">
+      <summary>🔬 Süvenemiseks: B-võrrand, takisti valimine, isekuumenemine ja täpne arvutus</summary>
+
+      <div class="thermistor-pick">
+        <label for="ntc-select">Minu termistor:</label>
+        <select id="ntc-select">
+          <option value="0" selected>10 kΩ, B 3950 (tutorial 03)</option>
+          <option value="1">22 kΩ, B 3740 (Oomipood)</option>
+          <option value="2">3,3 kΩ, B 3977 (GreenPoweri auto)</option>
+        </select>
+        <span class="pick-hint">Valik muudab kogu lehe arvutusi ja graafikuid, ka põhiosas.</span>
+      </div>
+
+      <!-- A. B-võrrand -->
+      <h2 class="section-heading">B-võrrand</h2>
+      <div class="explanation">
+        <p>Termistori kirjeldavad andmelehel kaks arvu:</p>
+        <ul>
+          <li><strong>R₀</strong> – takistus 25 °C juures (nt 10 kΩ).</li>
+          <li><strong>B-väärtus</strong> (kelvinites, nt 3950 K) – kui kiiresti takistus temperatuuriga muutub.</li>
+        </ul>
+        <p>Nende abil saab takistuse arvutada iga temperatuuri jaoks:</p>
+        <span class="formula">R<sub>NTC</sub> = R₀ · e<sup>B · (1/T − 1/T₀)</sup> &nbsp;&nbsp; (T kelvinites, T₀ = 298,15 K = 25 °C)</span>
+        <p>
+          Kõver on eksponentsiaalne. Kui panna takistuse telg logaritmilisele skaalale, muutub see peaaegu sirgeks.
+          Seda saad proovida lehe alguse graafikul:
+        </p>
+        <label class="switch" style="justify-content:center">
+          <input type="checkbox" id="rlog" />
+          <span class="track"><span class="thumb"></span></span>
+          <span>Logaritmiline skaala (graafik lehe alguses)</span>
+        </label>
+        <p style="margin-top:8px">Pingejaguri valem, millest graafikud on arvutatud:</p>
+        <span class="formula">U<sub>A0</sub> = 5 V · R / (R + R<sub>NTC</sub>)</span>
+        <div class="note tip">
+          💡 Kui vahetad termistori ja takisti kohad (5V → R → A0 → termistor → GND), kehtib
+          U<sub>A0</sub> = 5 V · R<sub>NTC</sub> / (R + R<sub>NTC</sub>) ja näit väheneb soojemaks minnes.
+        </div>
+      </div>
+
+      <!-- B. Tundlikkus -->
+      <h2 class="section-heading">Tundlikkus arvudes</h2>
+      <div class="explanation">
+        <p>
+          <strong>Tundlikkus</strong> = mitu analogRead-i sammu muutub näit 1 °C kohta. Pingejagur on kõige tundlikum
+          <strong>ligikaudu seal, kus R = R<sub>NTC</sub></strong>. Täpne tipp on mõne kraadi võrra madalamal (sinine
+          punktiirjoon vs graafiku tipp), sest külmas muutub termistori takistus kraadi kohta rohkem. Takisti vali
+          põhiosa graafiku juures.
+        </p>
+      </div>
+      <div class="scroll-wrap">
+        <div class="panel">
+          <div class="section">
+            <div class="section-title">Tundlikkus (sammu / °C)</div>
+            <svg id="schart" width="540" height="230" viewBox="0 0 540 230" role="img"
+              aria-label="Graafik: tundlikkus temperatuuri funktsioonina"></svg>
+            <div class="section-hint" style="max-width:500px">
+              Sinine ala: temperatuurid, kus see takisti on vähemalt pool nii tundlik kui oma parimas kohas.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="value-banner" id="banner-s"></div>
+
+      <!-- C. Takisti valimine -->
+      <h2 class="section-heading">Kuidas valida takistit kindla vahemiku jaoks?</h2>
+      <div class="explanation">
+        <ol>
+          <li><strong>Mõtle, mida mõõdad.</strong> Madalaim ja kõrgeim temperatuur? (Toaõhk 15…30 °C? Mootor 20…80 °C?)</li>
+          <li><strong>Leia termistori takistus</strong> mõlemas otsas: andmelehe tabelist või B-võrrandist.</li>
+          <li><strong>Arvuta geomeetriline keskmine:</strong></li>
+        </ol>
+        <span class="formula">R = √( R<sub>NTC</sub>(T<sub>min</sub>) · R<sub>NTC</sub>(T<sub>max</sub>) )</span>
+        <ol start="4">
+          <li><strong>Vali lähim standardtakisti</strong> (E12-rida: 1,0 · 1,2 · 1,5 · 1,8 · 2,2 · 2,7 · 3,3 · 3,9 · 4,7 · 5,6 · 6,8 · 8,2).</li>
+          <li><strong>Kontrolli isekuumenemist</strong> (allpool).</li>
+        </ol>
+      </div>
+      <div class="scroll-wrap">
+        <div class="panel">
+          <div class="section">
+            <div class="section-title">Takisti kalkulaator</div>
+            <div class="calc">
+              <label>
+                Mida mõõdad?
+                <select id="calc-preset">
+                  <option value="15,30">Toaõhk (15…30 °C)</option>
+                  <option value="0,40">Õues (0…40 °C)</option>
+                  <option value="20,80" selected>Elektrimootor (20…80 °C)</option>
+                  <option value="10,60">Aku (10…60 °C)</option>
+                  <option value="0,100">Vesi (0…100 °C)</option>
+                  <option value="custom">Oma vahemik…</option>
+                </select>
+              </label>
+              <label id="calc-custom" hidden>
+                <span>T<sub>min</sub> … T<sub>max</sub> (°C)</span>
+                <span style="display:flex;gap:6px">
+                  <input type="number" id="calc-min" value="20" style="width:50%" aria-label="Madalaim temperatuur" />
+                  <input type="number" id="calc-max" value="80" style="width:50%" aria-label="Kõrgeim temperatuur" />
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="section">
+            <div class="section-title">Arvutus</div>
+            <div class="calc-steps" id="calc-out"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D. Isekuumenemine -->
+      <h2 class="section-heading">Isekuumenemine</h2>
+      <div class="explanation">
+        <p>
+          Termistorist voolab läbi vool I = 5 V / (R + R<sub>NTC</sub>) ja selles eraldub soojust
+          <strong>P = I² · R<sub>NTC</sub></strong>. Termistor soojeneb ümbritsevast õhust veidi kuumemaks ja
+          <strong>näitab liiga kõrget temperatuuri</strong>. Kui palju, ütleb andmelehel <strong>hajumistegur δ</strong>:
+          tavalisel MF52-tüüpi NTC-l seisvas õhus umbes <strong>2 mW/°C</strong>.
+        </p>
+        <span class="formula">ΔT = P / δ</span>
+      </div>
+      <div class="scroll-wrap">
+        <div class="panel">
+          <div class="section">
+            <div class="section-title">Isekuumenemine (δ = 2 mW/°C)</div>
+            <table class="heat-table" id="heat-table"></table>
+            <div class="section-hint" style="max-width:440px">
+              🟢 alla 0,25 °C – ei märka &nbsp; 🟡 0,25…1 °C – arvesta, kalibreeri &nbsp; 🔴 üle 1 °C – vali suurem takisti või kasuta nippi allpool
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="explanation" style="margin-top:20px">
+        <div class="note tip" style="margin-top:0">
+          💡 <strong>Nipp:</strong> toida pingejagurit 5V pini asemel digitaalpinist (nt pin 7) ja lülita see
+          <code>digitalWrite(7, HIGH)</code> sisse ainult mõõtmise ajaks. Vool voolab vaid murdosa ajast ja termistor
+          ei jõua soojeneda.
+        </div>
+      </div>
+
+      <!-- E. Täpne arvutus -->
+      <h2 class="section-heading">Täpne arvutus ilma kalibreerimiseta</h2>
+      <div class="explanation">
+        <p>
+          map() eeldab sirget joont. Kui tead termistori R₀ ja B väärtust, saab temperatuuri arvutada kogu vahemikus
+          täpselt: käime pingejaguri tee tagurpidi läbi. Need neli sammu on täpselt need neli rida, mis on koodis.
+        </p>
+      </div>
+      <div class="scroll-wrap">
+        <div class="panel">
+          <div class="section">
+            <div class="section-title">analogRead</div>
+            <div class="big-number" id="conv-big" style="color:#276749">–</div>
+            <div class="light-ctl">
+              <input type="range" id="conv-range" min="1" max="1022" step="1" value="512"
+                aria-label="analogRead väärtus" style="accent-color:#38a169" />
+              <button class="code-toggle-btn" id="conv-sync" style="background:#f7fafc;color:#2d3748;border-color:#cbd5e0">
+                Võta temperatuuri liugurilt
+              </button>
+            </div>
+            <div class="section-hint" id="conv-r"></div>
+          </div>
+          <div class="divider"></div>
+          <div class="section">
+            <div class="section-title">Samm-sammult</div>
+            <div class="steps" id="conv-steps"></div>
+          </div>
+          <div class="divider"></div>
+          <div class="section">
+            <div class="section-title">Kood</div>
+            <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
+            <div class="code-block" hidden>
+              <div class="code-title">Arduino IDE · B-võrrand</div>
+<pre id="code-pre"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="explanation" style="margin-top:20px">
+        <p>
+          Ka B-võrrandiga tasub kalibreerida: termistori tolerants (±1…5%) ja takisti tolerants võivad anda vea ±1 °C.
+          Täpsemalt:
+          <a href="https://github.com/vhkarendus/VHK_Telemeetria/blob/main/tutorialid/01%20Kalibreerimine.md">tutorial 01</a>
+          ja <a href="https://github.com/vhkarendus/VHK_Telemeetria/blob/main/tutorialid/03%20Termistor%20Arduino%20tutorial.md">tutorial 03</a>.
+        </p>
+      </div>
+
+      <h2 class="section-heading">Mõtle järele (edasijõudnutele)</h2>
+      <div class="explanation">
+        <ol>
+          <li>Miks on tundlikkuse tipp veidi madalamal kui temperatuur, kus R = R<sub>NTC</sub>?</li>
+          <li>
+            GreenPoweri auto telemeetrias on <strong>3,3 kΩ termistor (B 3977) ja 5,1 kΩ takisti</strong>. Mis temperatuuril
+            on see kõige tundlikum? Kas see sobib mootori jälgimiseks? Millise takisti sina valiksid ja miks?
+          </li>
+          <li>Sinu kood näitab toas 27 °C, termomeeter 23 °C. Nimeta vähemalt kolm võimalikku põhjust.</li>
+          <li>Miks ei tohi kood jagada nulliga, kui analogRead annab 0 või 1023? Mida see füüsiliselt tähendab?</li>
+        </ol>
+      </div>
+    </details>
 
     <h2 class="section-heading">Sõnastik</h2>
     <div class="explanation">
       <table class="vocab">
         <tr><th>Inglise keeles</th><th>Eesti keeles</th></tr>
-        <tr><td>thermistor (NTC / PTC)</td><td>termistor (negatiivse / positiivse temperatuuriteguriga)</td></tr>
+        <tr><td>thermistor (NTC)</td><td>termistor (negatiivse temperatuuriteguriga)</td></tr>
         <tr><td>voltage divider</td><td>pingejagur</td></tr>
-        <tr><td>series resistor</td><td>jadatakisti</td></tr>
+        <tr><td>calibration</td><td>kalibreerimine</td></tr>
+        <tr><td>sensitivity</td><td>tundlikkus</td></tr>
         <tr><td>nominal resistance (R₀)</td><td>nimitakistus</td></tr>
         <tr><td>B value / beta</td><td>B-väärtus</td></tr>
-        <tr><td>sensitivity</td><td>tundlikkus</td></tr>
-        <tr><td>resolution</td><td>lahutusvõime</td></tr>
         <tr><td>self-heating</td><td>isekuumenemine</td></tr>
         <tr><td>dissipation factor</td><td>hajumistegur</td></tr>
-        <tr><td>thermal time constant</td><td>soojuslik ajakonstant</td></tr>
         <tr><td>heat shrink tubing</td><td>termokahanev toru</td></tr>
       </table>
     </div>
@@ -1135,8 +1244,8 @@
 
       /* ════════════════ GRAAFIKUD 2 ja 3: analogRead ja tundlikkus ════════════════ */
       const ac = document.getElementById("achart"), sc = document.getElementById("schart");
-      const AC = { l: 52, r: 16, t: 12, b: 36, w: 540, h: 250 };
-      const SC = { l: 52, r: 16, t: 12, b: 36, w: 540, h: 210 };
+      const AC = { l: 52, r: 16, t: 12, b: 40, w: 540, h: 280 };
+      const SC = { l: 52, r: 16, t: 12, b: 40, w: 540, h: 230 };
       const xA = (t, C) => C.l + ((t - TMIN) / (TMAX - TMIN)) * (C.w - C.l - C.r);
       const yA = (a) => AC.h - AC.b - (a / 1023) * (AC.h - AC.t - AC.b);
       let sMax = 20;
@@ -1181,7 +1290,7 @@
         let m = 0;
         allR().forEach((R) => { for (let t = TMIN; t <= TMAX; t += 2) m = Math.max(m, sens(t, R)); });
         sMax = Math.ceil(m / 5) * 5;
-        axes(ac, aStatic, AC, [0, 256, 512, 768, 1023], (v) => v, yA, "analogRead", "");
+        axes(ac, aStatic, AC, [0, 256, 512, 768, 1023], (v) => v, yA, "analogRead", "Temperatuur (°C)");
         const ticks = [];
         const st = sMax <= 10 ? 2 : sMax <= 25 ? 5 : 10;
         for (let s = 0; s <= sMax; s += st) ticks.push(s);
@@ -1198,7 +1307,7 @@
         el("path", { d: pathS(state.R), fill: "none", stroke: "#2b6cb0", "stroke-width": 3 }, sCurves);
         const tb = bestT(state.R);
         if (tb > TMIN && tb < TMAX) {
-          [[aCurves, AC], [sCurves, SC]].forEach(([g, C]) => {
+          [[sCurves, SC]].forEach(([g, C]) => {
             el("line", { x1: xA(tb, C), y1: C.t, x2: xA(tb, C), y2: C.h - C.b, stroke: "#2b6cb0", "stroke-dasharray": "2 4" }, g);
           });
           const lx = xA(tb, SC);
@@ -1207,7 +1316,8 @@
             "R = R_NTC ≈ " + dec(tb, 0) + " °C";
         }
         const [a, b] = halfBand(state.R);
-        [[aBand, AC], [sBand, SC]].forEach(([r, C]) => {
+        aBand.setAttribute("width", 0);
+        [[sBand, SC]].forEach(([r, C]) => {
           if (a === null) { r.setAttribute("width", 0); return; }
           r.setAttribute("x", xA(a, C));
           r.setAttribute("width", Math.max(0, xA(b, C) - xA(a, C)));
@@ -1361,17 +1471,12 @@
           return Math.max(0, Math.min(1023, Math.round(adcF(state.T, R)) + noise));
         }
         // takisti lahti: A0 ühendatud termistori kaudu 5V-ga, voolu pole → ≈ 5 V
-        return 1020 + Math.floor(Math.random() * 4);
+        return 1019 + Math.floor(Math.random() * 4);
       }
       function tickSerial() {
         const a = readA0();
         const R = state.ntc.R;
-        let line;
-        if (a >= 1023) line = `analogRead: ${String(a).padStart(4)}  Viga: kontrolli juhtmeid!`;
-        else {
-          const U = (a * 5) / 1023, rn = R * (5 / U - 1), t = tFromR(rn);
-          line = `analogRead: ${String(a).padStart(4)}  R_NTC: ${String(Math.round(rn)).padStart(6)} oomi  T: ${t.toFixed(1)} C`;
-        }
+        const line = `analogRead: ${a}`;
         serialLines.push(line);
         while (serialLines.length > 7) serialLines.shift();
         document.getElementById("serial-out").textContent = serialLines.join("\n");
@@ -1386,8 +1491,111 @@
         state.R = state.ntc.R;
         state.customR = null;
         serialLines.length = 0;
-        buildRButtons(); drawRChart(); drawSens(); calc(); update(); tickSerial();
+        buildRButtons(); drawRChart(); drawSens(); calc(); drawCal(); update(); tickSerial();
       });
+
+
+      /* ════════════════ KALIBREERIMINE map()-iga ════════════════ */
+      // Arduino map(): täisarvuline, jagamine lõikab murdosa ära
+      const arduinoMap = (x, a, b, c, d) => Math.trunc(((x - a) * (d - c)) / (b - a)) + c;
+      const calc_ = document.getElementById("calchart");
+      const CC = { l: 52, r: 16, t: 12, b: 40, w: 460, h: 300, tmin: -20, tmax: 100 };
+      const cx = (a) => CC.l + (a / 1023) * (CC.w - CC.l - CC.r);
+      const cy = (t) => CC.h - CC.b - ((t - CC.tmin) / (CC.tmax - CC.tmin)) * (CC.h - CC.t - CC.b);
+      const cBand = el("rect", { y: CC.t, height: CC.h - CC.t - CC.b, fill: "#c6f6d5", opacity: 0.5 }, calc_);
+      const cStatic = el("g", {}, calc_), cDyn = el("g", {}, calc_), cMark = el("g", {}, calc_);
+      (function () {
+        [0, 256, 512, 768, 1023].forEach((a) => {
+          el("line", { x1: cx(a), y1: CC.t, x2: cx(a), y2: CC.h - CC.b, stroke: "#edf2f7" }, cStatic);
+          el("text", { x: cx(a), y: CC.h - CC.b + 15, "text-anchor": "middle", "font-size": 11, fill: "#4a5568" }, cStatic).textContent = a;
+        });
+        for (let t = CC.tmin; t <= CC.tmax; t += 20) {
+          el("line", { x1: CC.l, y1: cy(t), x2: CC.w - CC.r, y2: cy(t), stroke: "#edf2f7" }, cStatic);
+          el("text", { x: CC.l - 6, y: cy(t) + 4, "text-anchor": "end", "font-size": 11, fill: "#4a5568" }, cStatic).textContent = t;
+        }
+        el("line", { x1: CC.l, y1: CC.t, x2: CC.l, y2: CC.h - CC.b, stroke: "#a0aec0" }, cStatic);
+        el("line", { x1: CC.l, y1: CC.h - CC.b, x2: CC.w - CC.r, y2: CC.h - CC.b, stroke: "#a0aec0" }, cStatic);
+        el("text", { x: (CC.l + CC.w - CC.r) / 2, y: CC.h - 6, "text-anchor": "middle", "font-size": 11.5, "font-weight": 700, fill: "#2d3748" }, cStatic).textContent = "analogRead";
+        const my = (CC.t + CC.h - CC.b) / 2;
+        el("text", { x: 13, y: my, "text-anchor": "middle", "font-size": 11.5, "font-weight": 700, fill: "#2d3748", transform: `rotate(-90 13 ${my})` }, cStatic).textContent = "Temperatuur (°C)";
+      })();
+      const calT1 = document.getElementById("cal-t1"), calT2 = document.getElementById("cal-t2");
+      [calT1, calT2].forEach((x) => x.addEventListener("input", () => { drawCal(); calUpdate(); }));
+      let cal = null;
+      function drawCal() {
+        cDyn.innerHTML = "";
+        const Rc = state.ntc.R;
+        const t1 = parseFloat(calT1.value), t2 = parseFloat(calT2.value);
+        const meas = document.getElementById("cal-meas");
+        // tegelik kõver
+        let d = "";
+        for (let t = CC.tmin; t <= CC.tmax; t += 1) d += (t === CC.tmin ? "M" : "L") + cx(adcF(t, Rc)).toFixed(1) + "," + cy(t).toFixed(1);
+        el("path", { d, fill: "none", stroke: "#c53030", "stroke-width": 3 }, cDyn);
+        if (!isFinite(t1) || !isFinite(t2) || t1 === t2 || Math.min(t1, t2) < -20 || Math.max(t1, t2) > 100 ||
+            !Number.isInteger(t1) || !Number.isInteger(t2)) {
+          meas.innerHTML = "Sisesta kaks erinevat täisarvulist temperatuuri vahemikus −20 … 100 °C.";
+          cal = null; cBand.setAttribute("width", 0); return;
+        }
+        const l1 = Math.round(adcF(t1, Rc)), l2 = Math.round(adcF(t2, Rc));
+        if (l1 === l2) { meas.textContent = "Punktid on liiga lähedal."; cal = null; return; }
+        cal = { t1, t2, l1, l2 };
+        meas.innerHTML = `Takistiga ${fmtR(Rc)} mõõtsid:<br><b>${t1} °C → analogRead ${l1}</b><br><b>${t2} °C → analogRead ${l2}</b>`;
+        // map sirge (pidev) kogu graafiku laiuses, lõigatud y-vahemikku
+        const yAt = (a) => ((a - l1) * (t2 - t1)) / (l2 - l1) + t1;
+        let p = "";
+        for (let a = 0; a <= 1023; a += 4) {
+          const y = Math.max(CC.tmin - 5, Math.min(CC.tmax + 5, yAt(a)));
+          p += (a === 0 ? "M" : "L") + cx(a).toFixed(1) + "," + cy(y).toFixed(1);
+        }
+        el("path", { d: p, fill: "none", stroke: "#2b6cb0", "stroke-width": 2.5, "stroke-dasharray": "7 5" }, cDyn);
+        const xa = cx(Math.min(l1, l2)), xb = cx(Math.max(l1, l2));
+        cBand.setAttribute("x", xa); cBand.setAttribute("width", xb - xa);
+        [[l1, t1], [l2, t2]].forEach(([l, t]) => el("circle", { cx: cx(l), cy: cy(t), r: 6, fill: "#2d3748", stroke: "#fff", "stroke-width": 2 }, cDyn));
+      }
+      function calUpdate() {
+        const out = document.getElementById("cal-result");
+        cMark.innerHTML = "";
+        if (!cal) { out.innerHTML = ""; document.getElementById("cal-code").textContent = ""; return; }
+        const Rc = state.ntc.R, T = state.T;
+        const lugem = Math.round(adcF(T, Rc));
+        const mt = arduinoMap(lugem, cal.l1, cal.l2, cal.t1, cal.t2);
+        const err = mt - T;
+        const ae = Math.abs(err);
+        const col = ae <= 1 ? "#276749" : ae <= 3 ? "#b7791f" : "#c53030";
+        const inside = lugem >= Math.min(cal.l1, cal.l2) && lugem <= Math.max(cal.l1, cal.l2);
+        out.innerHTML = `
+          <div>analogRead</div><div class="big" style="color:#276749">${lugem}</div>
+          <div>map() annab</div><div class="big" style="color:#2b6cb0">${mt} °C</div>
+          <div>Tegelik</div><div class="big" style="color:#c53030">${fmtT(T)}</div>
+          <div>Viga</div><div class="big" style="color:${col}">${err > 0 ? "+" : ""}${dec(err, 1)} °C</div>
+          <div class="cal-note">${inside ? "✓ kalibreerimispunktide vahel" : "⚠️ väljaspool kalibreerimispunkte – viga kasvab"}</div>`;
+        const yM = Math.max(CC.tmin - 5, Math.min(CC.tmax + 5, mt));
+        el("line", { x1: cx(lugem), y1: cy(T), x2: cx(lugem), y2: cy(yM), stroke: col, "stroke-width": 2 }, cMark);
+        el("circle", { cx: cx(lugem), cy: cy(T), r: 6, fill: "#c53030", stroke: "#fff", "stroke-width": 2 }, cMark);
+        el("circle", { cx: cx(lugem), cy: cy(yM), r: 5, fill: "#2b6cb0", stroke: "#fff", "stroke-width": 2 }, cMark);
+        document.getElementById("cal-code").innerHTML =
+`<span class="cm">// Sinu kalibreerimise mõõtmised:</span>
+<span class="kw">const int</span> LUGEM_1 = <span class="nb">${cal.l1}</span>;  <span class="cm">// analogRead ...</span>
+<span class="kw">const int</span> TEMP_1  = <span class="nb">${cal.t1}</span>;  <span class="cm">// ... temperatuuril ${cal.t1} °C</span>
+<span class="kw">const int</span> LUGEM_2 = <span class="nb">${cal.l2}</span>;
+<span class="kw">const int</span> TEMP_2  = <span class="nb">${cal.t2}</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="nb">9600</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> lugem = <span class="fn">analogRead</span>(A0);
+  <span class="kw">int</span> temp = <span class="fn">map</span>(lugem, LUGEM_1, LUGEM_2, TEMP_1, TEMP_2);
+
+  Serial.<span class="fn">print</span>(<span class="st">"analogRead: "</span>);
+  Serial.<span class="fn">print</span>(lugem);
+  Serial.<span class="fn">print</span>(<span class="st">"  Temperatuur: "</span>);
+  Serial.<span class="fn">print</span>(temp);
+  Serial.<span class="fn">println</span>(<span class="st">" C"</span>);
+  <span class="fn">delay</span>(<span class="nb">500</span>);
+}`;
+      }
 
       /* ════════════════ UUENDUS ════════════════ */
       function update() {
@@ -1417,12 +1625,12 @@
           const u = uA0(T, Rc);
           cU.textContent = "A0: " + fmtV(u);
           document.getElementById("banner2").innerHTML =
-            `T <span style="color:#c53030">${fmtT(T)}</span> &nbsp;|&nbsp; R<sub>NTC</sub> = ${fmtR(rn)} &nbsp;|&nbsp; ` +
-            `U<sub>A0</sub> = 5 V · ${fmtR(Rc)} / (${fmtR(Rc)} + ${fmtR(rn)}) = <span class="v">${fmtV(u)}</span> &nbsp;|&nbsp; analogRead ≈ <span class="ar">${Math.round(adcF(T, Rc))}</span>`;
+            `T <span style="color:#c53030">${fmtT(T)}</span> &nbsp;|&nbsp; termistor ${fmtR(rn)}, takisti ${fmtR(Rc)} &nbsp;|&nbsp; ` +
+            `pinge A0 = <span class="v">${fmtV(u)}</span> &nbsp;|&nbsp; analogRead ≈ <span class="ar">${Math.round(adcF(T, Rc))}</span>`;
         } else {
           cU.textContent = "A0: ≈ 5 V";
           document.getElementById("banner2").innerHTML =
-            `Takisti on lahti: voolu pole, termistoril pole pinget ja A0 näitab alati <span class="sat-flag">≈ 5 V (≈ 1021)</span> – temperatuur ei mõjuta näitu.`;
+            `Takisti on lahti: pinge ei saa jaguneda ja A0 näitab alati <span class="sat-flag">≈ 5 V (≈ 1020)</span> – temperatuur ei mõjuta näitu.`;
         }
 
         // 3
@@ -1433,13 +1641,17 @@
         el("line", { x1: xA(T, SC), y1: SC.t, x2: xA(T, SC), y2: SC.h - SC.b, stroke: "#c53030", "stroke-dasharray": "4 3" }, sMark);
         el("circle", { cx: xA(T, SC), cy: yS(s3), r: 6, fill: "#c53030", stroke: "#fff", "stroke-width": 2 }, sMark);
         const rangeTxt = ba === null ? "" : ` &nbsp;·&nbsp; hea vahemik ≈ ${dec(ba, 0)} … ${dec(bb, 0)} °C`;
+        const flat = s3 < 3 ? ` <span class="sat-flag">⚠️ joon on siin lame – andur ei märka hästi muutusi</span>` : "";
         document.getElementById("banner3").innerHTML =
+          `Takisti <span class="v">${fmtR(R)}</span> &nbsp;|&nbsp; <span style="color:#c53030">${fmtT(T)}</span> → analogRead ≈ <span class="ar">${Math.round(a3)}</span>` +
+          ` &nbsp;|&nbsp; 1 °C soojemaks → näit muutub ≈ <b>${Math.round(s3)} sammu</b>${flat}`;
+        document.getElementById("banner-s").innerHTML =
           `R = <span class="v">${fmtR(R)}</span>: R<sub>NTC</sub> = R temperatuuril ${fmtT(tb)}, tundlikkuse tipp ≈ ${fmtT(tp)}${rangeTxt}<br>` +
-          `Praegu <span style="color:#c53030">${fmtT(T)}</span> → analogRead ≈ <span class="ar">${Math.round(a3)}</span>, ` +
-          `tundlikkus <b>${dec(s3, 1)} sammu/°C</b> (üks samm ≈ ${dec(1 / Math.max(1e-6, s3), 2)} °C)`;
+          `Praegu <span style="color:#c53030">${fmtT(T)}</span>: tundlikkus <b>${dec(s3, 1)} sammu/°C</b> (üks samm ≈ ${dec(1 / Math.max(1e-6, s3), 2)} °C)`;
 
         heatTable();
         convert();
+        calUpdate();
       }
 
       function toggleCode(btn) {
@@ -1452,6 +1664,7 @@
       drawRChart();
       drawSens();
       calc();
+      drawCal();
       update();
       tickSerial();
     </script>

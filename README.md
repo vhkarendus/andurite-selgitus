@@ -17,6 +17,7 @@ Sarja esimene osa on [Potentsiomeetri selgitus](https://vhkarendus.github.io/Pot
 | Temperatuuriandur (NTC termistor) | `temperatuur/` | valmis, fotod puudu |
 
 ### Avaleht
+- **Pingejagur** (interaktiivne): R₁/R₂ liugurid, pingeriba, vool ja analogRead; potentsiomeetri režiim (R₁ + R₂ = 10 kΩ); seos potentsiomeetri, termistori ja fototransistoriga
 - Ahel *füüsikaline suurus → andur → takisti → ADC → programm*
 - Kolm andurite peret: **takistus muutub** (pingejagur), **vool muutub** (takisti GND-sse), **annab ise pinge** (otse pinile)
 - Näidete tabel
@@ -32,15 +33,14 @@ Sarja esimene osa on [Potentsiomeetri selgitus](https://vhkarendus.github.io/Pot
 8. Mõtlemisküsimused ja sõnastik.
 
 ### Temperatuuriandur
-Termistori valik lehe ülaosas (kõik arvutused järgivad seda): **10 kΩ B 3950** (tutorial 03), **22 kΩ B 3740** (Oomipood), **3,3 kΩ B 3977 + 5,1 kΩ** (GreenPoweri auto telemeetria).
-1. **Mis on termistor?** NTC/PTC, R₀ ja B, termomeeter, takistuse graafik (lineaarne / logaritmiline skaala).
-2. **Miks on takisti vaja?** Arduino skeem, takisti lüliti: ilma takistita näitab A0 alati ≈ 5 V. Serial Monitori simulatsioon.
-3. **Takisti suurus = tundlikkus.** Graafikud `analogRead` ja tundlikkus (sammu/°C) vs temperatuur, R = R_NTC joon ja tegelik tipp.
-4. **Kuidas valida takistit?** Retsept, reegel R = √(R_NTC(T_min) · R_NTC(T_max)), kalkulaator (E12, tundlikkus, isekuumenemine).
-5. **Isekuumenemine:** P = I² · R_NTC, ΔT = P / δ (δ = 2 mW/°C), tabel ja nipp toita pingejagurit digitaalpinist.
-6. **analogRead → °C samm-sammult** ja kood, mis kasutab valitud termistori ja takisti väärtusi.
-7. **Katse:** toatemperatuur, jäävesi, kahe punkti kalibreerimine (viited tutorialidele 01 ja 03).
-8. **Päriselus:** termistori tuvastamine multimeetriga (fotod lisanduvad), mõtlemisküsimused, sõnastik.
+**Põhiosa (lihtne):**
+1. **Mis on termistor?** NTC, termomeeter ja takistuse graafik (ilma valemita).
+2. **Pingejagur:** Arduino skeem, takisti lüliti (ilma takistita A0 ≈ 5 V), Serial Monitor ja lihtne kood ainult `analogRead`-iga.
+3. **Takisti mõju:** üks graafik `analogRead` vs temperatuur eri takistitega; reegel „takisti ≈ termistori takistus“.
+4. **Kalibreerimine `map()`-iga:** kaks mõõtmist (jäävesi + toas), graafik map-i sirgest vs tegelikust kõverast, viga reaalajas, kood genereeritakse valitud punktidest (Arduino täisarvuline `map`).
+5. **Päriselus** (fotod lisanduvad) ja lihtsad mõtlemisküsimused.
+
+**Süvenemiseks** (avatav plokk lehe lõpus): termistori valik (10 kΩ B 3950 / 22 kΩ B 3740 / 3,3 kΩ B 3977 + 5,1 kΩ), B-võrrand ja log-skaala, tundlikkuse graafik (sammu/°C), takisti valimine R = √(R_NTC(T_min) · R_NTC(T_max)) + kalkulaator, isekuumenemine (δ = 2 mW/°C), analogRead → °C samm-sammult ja kood B-võrrandiga, küsimused edasijõudnutele.
 
 ---
 
