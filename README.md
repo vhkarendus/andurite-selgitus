@@ -14,7 +14,7 @@ Sarja esimene osa on [Potentsiomeetri selgitus](https://vhkarendus.github.io/Pot
 |---|---|---|
 | Avaleht: mis on andur, kolm andurite peret | `index.html` | valmis |
 | Valgusandur (fototransistor) | `valgusandur/` | valmis, fotod puudu |
-| Temperatuuriandur (termistor) | `temperatuur/` | tulekul |
+| Temperatuuriandur (NTC termistor) | `temperatuur/` | valmis, fotod puudu |
 
 ### Avaleht
 - Ahel *füüsikaline suurus → andur → takisti → ADC → programm*
@@ -30,6 +30,17 @@ Sarja esimene osa on [Potentsiomeetri selgitus](https://vhkarendus.github.io/Pot
 6. **Päriselus:** kollektor/emitter (fotod lisanduvad).
 7. **Teine näide: termistor** (NTC 10 kΩ, B 3950, nagu VHK_Telemeetria tutorial 03): pingejagur, tundlikkus sammudes kraadi kohta, reegel R = √(R_NTC(T_min) · R_NTC(T_max)), kalkulaator, kood ja võrdlustabel fototransistoriga.
 8. Mõtlemisküsimused ja sõnastik.
+
+### Temperatuuriandur
+Termistori valik lehe ülaosas (kõik arvutused järgivad seda): **10 kΩ B 3950** (tutorial 03), **22 kΩ B 3740** (Oomipood), **3,3 kΩ B 3977 + 5,1 kΩ** (GreenPoweri auto telemeetria).
+1. **Mis on termistor?** NTC/PTC, R₀ ja B, termomeeter, takistuse graafik (lineaarne / logaritmiline skaala).
+2. **Miks on takisti vaja?** Arduino skeem, takisti lüliti: ilma takistita näitab A0 alati ≈ 5 V. Serial Monitori simulatsioon.
+3. **Takisti suurus = tundlikkus.** Graafikud `analogRead` ja tundlikkus (sammu/°C) vs temperatuur, R = R_NTC joon ja tegelik tipp.
+4. **Kuidas valida takistit?** Retsept, reegel R = √(R_NTC(T_min) · R_NTC(T_max)), kalkulaator (E12, tundlikkus, isekuumenemine).
+5. **Isekuumenemine:** P = I² · R_NTC, ΔT = P / δ (δ = 2 mW/°C), tabel ja nipp toita pingejagurit digitaalpinist.
+6. **analogRead → °C samm-sammult** ja kood, mis kasutab valitud termistori ja takisti väärtusi.
+7. **Katse:** toatemperatuur, jäävesi, kahe punkti kalibreerimine (viited tutorialidele 01 ja 03).
+8. **Päriselus:** termistori tuvastamine multimeetriga (fotod lisanduvad), mõtlemisküsimused, sõnastik.
 
 ---
 
@@ -58,11 +69,23 @@ Lineaarne mudel on lihtsustus. Tegelik vool sõltub valguse spektrist, eksemplar
 
 ---
 
+## Mudel ja andmed (temperatuuriandur)
+
+```
+R_NTC = R0 · exp(B · (1/T − 1/T0))      T kelvinites, T0 = 298,15 K
+U_A0  = 5 · R / (R + R_NTC)             5V → termistor → A0 → R → GND
+Takisti valik: R = √(R_NTC(T_min) · R_NTC(T_max)) → lähim E12 väärtus
+Isekuumenemine: P = I² · R_NTC, ΔT = P / δ, δ = 2 mW/°C
+```
+
+Hajumistegur δ ≥ 2 mW/°C ja ajakonstant ≤ 7 s on võetud MF52-seeria NTC andmelehelt (seisvas õhus).
+
 ## Failide struktuur
 
 ```
 index.html              # avaleht
 valgusandur/index.html  # valgusanduri leht (HTML + SVG + CSS + JS, sõltuvusi pole)
+temperatuur/index.html  # temperatuurianduri leht
 _config.yml             # GitHub Pages (theme: null)
 ```
 

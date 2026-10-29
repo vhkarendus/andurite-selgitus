@@ -1,0 +1,1459 @@
+<!doctype html>
+<html lang="et">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Temperatuuriandur – interaktiivne selgitus</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f0f4f8;
+        color: #1a202c;
+        padding: 24px 16px 56px;
+      }
+      a {
+        color: #2b6cb0;
+      }
+      h1 {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+        color: #2d3748;
+      }
+      h2.section-heading {
+        text-align: center;
+        font-size: 1.2rem;
+        margin: 36px 0 10px;
+        color: #2d3748;
+      }
+      .subtitle {
+        text-align: center;
+        color: #718096;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+      .backlink {
+        text-align: center;
+        font-size: 0.82rem;
+        margin-bottom: 20px;
+      }
+      .explanation {
+        max-width: 960px;
+        margin: 0 auto 20px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 22px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        line-height: 1.7;
+        font-size: 0.93rem;
+      }
+      .explanation h3 {
+        font-size: 0.95rem;
+        margin-bottom: 5px;
+        color: #2b6cb0;
+      }
+      .explanation p + p,
+      .explanation p + ol,
+      .explanation ol + p,
+      .explanation p + ul {
+        margin-top: 8px;
+      }
+      .explanation ol,
+      .explanation ul {
+        padding-left: 22px;
+      }
+      .formula {
+        display: block;
+        text-align: center;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #2d3748;
+        background: #f7fafc;
+        border-radius: 8px;
+        padding: 8px;
+        margin: 10px 0;
+        font-family: "Cambria Math", Cambria, Georgia, serif;
+      }
+      .note {
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin-top: 10px;
+        font-size: 0.88rem;
+        line-height: 1.6;
+      }
+      .note.warn {
+        background: #fffaf0;
+        border: 1px solid #fbd38d;
+      }
+      .note.tip {
+        background: #f0fff4;
+        border: 1px solid #9ae6b4;
+      }
+
+      .scroll-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .panel {
+        display: inline-flex;
+        min-width: 100%;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        padding: 18px 10px 14px;
+        align-items: flex-start;
+        justify-content: center;
+      }
+      .section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 4px 10px;
+        flex-shrink: 0;
+      }
+      .section-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #4a5568;
+        text-align: center;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .section-hint {
+        font-size: 0.72rem;
+        color: #a0aec0;
+        text-align: center;
+        margin-top: 4px;
+        max-width: 200px;
+      }
+      .divider {
+        width: 1px;
+        background: #e2e8f0;
+        align-self: stretch;
+        margin: 16px 0;
+        flex-shrink: 0;
+      }
+      .value-banner {
+        max-width: 960px;
+        margin: 12px auto 0;
+        text-align: center;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: #2d3748;
+        padding: 10px 20px;
+        background: #ebf8ff;
+        border-radius: 10px;
+        border: 1px solid #bee3f8;
+        line-height: 1.6;
+      }
+      .value-banner .lx {
+        color: #b7791f;
+      }
+      .value-banner .i {
+        color: #9b2c2c;
+      }
+      .value-banner .v {
+        color: #2b6cb0;
+      }
+      .value-banner .ar {
+        color: #276749;
+      }
+      .sat-flag {
+        color: #c05621;
+        font-size: 0.85rem;
+      }
+
+      /* ── light control ── */
+      .light-ctl {
+        width: 210px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .light-ctl input[type="range"] {
+        width: 100%;
+        accent-color: #d69e2e;
+      }
+      .presets {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+      }
+      .presets button,
+      .r-buttons button {
+        font-family: inherit;
+        font-size: 0.7rem;
+        padding: 3px 7px;
+        border: 1px solid #cbd5e0;
+        background: #f7fafc;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #2d3748;
+      }
+      .presets button:hover,
+      .r-buttons button:hover {
+        background: #edf2f7;
+      }
+      .r-buttons button.active {
+        background: #2b6cb0;
+        border-color: #2b6cb0;
+        color: #fff;
+      }
+      .lux-label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #b7791f;
+      }
+
+      .big-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #9b2c2c;
+        margin-top: 10px;
+      }
+      .bar {
+        width: 200px;
+        height: 12px;
+        background: #edf2f7;
+        border-radius: 6px;
+        overflow: hidden;
+        margin-top: 6px;
+      }
+      .bar > div {
+        height: 100%;
+        width: 0;
+        background: #9b2c2c;
+        transition: width 0.1s;
+      }
+      .bar.green > div {
+        background: #38a169;
+      }
+
+      /* ── switch ── */
+      .switch {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 8px;
+        font-size: 0.78rem;
+        color: #4a5568;
+        cursor: pointer;
+        user-select: none;
+      }
+      .switch input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      }
+      .switch .track {
+        width: 32px;
+        height: 17px;
+        background: #cbd5e0;
+        border-radius: 9px;
+        position: relative;
+        transition: background 0.2s;
+        flex-shrink: 0;
+      }
+      .switch .thumb {
+        width: 13px;
+        height: 13px;
+        background: #fff;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: left 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+      }
+      .switch input:checked ~ .track {
+        background: #2b6cb0;
+      }
+      .switch input:checked ~ .track .thumb {
+        left: 17px;
+      }
+      .switch input:focus-visible ~ .track {
+        outline: 2px solid #2b6cb0;
+        outline-offset: 2px;
+      }
+
+      /* ── serial monitor ── */
+      .serial {
+        width: 340px;
+        background: #1e2535;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 8px;
+        font-size: 0.7rem;
+      }
+      .serial .code-title,
+      .code-block .code-title {
+        background: #2d3748;
+        color: #a0aec0;
+        padding: 4px 10px;
+        font-size: 0.63rem;
+        letter-spacing: 0.04em;
+      }
+      .serial pre {
+        padding: 8px 10px;
+        color: #e2e8f0;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.66rem;
+        white-space: pre;
+        height: 118px;
+        overflow: hidden;
+        line-height: 1.5;
+      }
+
+      /* ── code ── */
+      .code-block {
+        background: #1e2535;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 10px;
+        width: 330px;
+        font-size: 0.68rem;
+        text-align: left;
+      }
+      .code-block pre {
+        padding: 8px 12px;
+        color: #e2e8f0;
+        line-height: 1.55;
+        white-space: pre;
+        overflow-x: auto;
+        font-family: Consolas, "Courier New", monospace;
+      }
+      .kw {
+        color: #63b3ed;
+      }
+      .fn {
+        color: #68d391;
+      }
+      .cm {
+        color: #718096;
+        font-style: italic;
+      }
+      .st {
+        color: #fbd38d;
+      }
+      .nb {
+        color: #f6ad55;
+      }
+      .code-toggle-btn {
+        margin-top: 8px;
+        padding: 5px 14px;
+        font-size: 0.72rem;
+        font-family: inherit;
+        background: #2d3748;
+        color: #a0aec0;
+        border: 1px solid #4a5568;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .code-toggle-btn:hover {
+        background: #3d4e63;
+        color: #e2e8f0;
+      }
+
+      /* ── calculator ── */
+      .calc {
+        width: 300px;
+        font-size: 0.82rem;
+        display: grid;
+        gap: 8px;
+      }
+      .calc label {
+        display: grid;
+        gap: 3px;
+        color: #4a5568;
+        font-weight: 600;
+      }
+      .calc input,
+      .calc select {
+        font-family: inherit;
+        font-size: 0.85rem;
+        padding: 5px 8px;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+      }
+      .calc-steps {
+        width: 330px;
+        font-size: 0.85rem;
+        line-height: 1.8;
+        background: #f7fafc;
+        border-radius: 10px;
+        padding: 10px 14px;
+      }
+      .calc-steps .res {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #2b6cb0;
+      }
+      .calc-steps button {
+        margin-top: 6px;
+        font-family: inherit;
+        font-size: 0.78rem;
+        padding: 5px 12px;
+        border-radius: 6px;
+        border: none;
+        background: #2b6cb0;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .photo-slot {
+        width: 280px;
+        height: 200px;
+        border: 2px dashed #cbd5e0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #a0aec0;
+        font-size: 0.8rem;
+        padding: 12px;
+      }
+      table.vocab {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.88rem;
+      }
+      table.vocab th,
+      table.vocab td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 5px 8px;
+        text-align: left;
+      }
+      table.vocab th {
+        color: #4a5568;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      svg text {
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+      .thermistor-pick {
+        max-width: 960px;
+        margin: 0 auto 16px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 8px 12px;
+        font-size: 0.88rem;
+        background: #fff5f5;
+        border: 1px solid #fed7d7;
+        border-radius: 10px;
+        padding: 10px 16px;
+      }
+      .thermistor-pick label {
+        font-weight: 700;
+        color: #9b2c2c;
+      }
+      .thermistor-pick select {
+        font-family: inherit;
+        font-size: 0.88rem;
+        padding: 4px 8px;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+      }
+      .pick-hint {
+        color: #718096;
+        font-size: 0.78rem;
+      }
+      .heat-table {
+        border-collapse: collapse;
+        font-size: 0.84rem;
+        margin: 4px 0 6px;
+        min-width: 420px;
+      }
+      .heat-table th,
+      .heat-table td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 5px 10px;
+        text-align: left;
+      }
+      .heat-table th {
+        color: #4a5568;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .heat-table tr.hl td {
+        background: #ebf8ff;
+        font-weight: 700;
+      }
+      .steps {
+        width: 400px;
+        display: grid;
+        gap: 8px;
+        font-size: 0.84rem;
+        line-height: 1.55;
+      }
+      .step {
+        display: flex;
+        gap: 10px;
+        background: #f7fafc;
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+      .step .n {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #2b6cb0;
+        color: #fff;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+      }
+      .step .v {
+        color: #2b6cb0;
+        font-weight: 700;
+      }
+      .step .res {
+        color: #c53030;
+        font-weight: 800;
+        font-size: 1.05rem;
+      }
+      .code-block {
+        width: 440px;
+      }
+      .explanation ul + p,
+      .explanation ol + p,
+      .explanation ol + .formula + ol {
+        margin-top: 8px;
+      }
+      code {
+        background: #edf2f7;
+        border-radius: 4px;
+        padding: 0 4px;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.88em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Temperatuuriandur – NTC termistor</h1>
+    <p class="subtitle">Interaktiivne õppematerjal · pingejagur · takisti valimine</p>
+    <p class="backlink"><a href="../">← Kõik andurid</a> · <a href="../valgusandur/">Valgusandur</a></p>
+
+    <div class="thermistor-pick">
+      <label for="ntc-select">Minu termistor:</label>
+      <select id="ntc-select">
+        <option value="0" selected>10 kΩ, B 3950 (tutorial 03)</option>
+        <option value="1">22 kΩ, B 3740 (Oomipood)</option>
+        <option value="2">3,3 kΩ, B 3977 (GreenPoweri auto)</option>
+      </select>
+      <span class="pick-hint">Kõik lehe arvutused ja graafikud kasutavad valitud termistorit.</span>
+    </div>
+
+    <!-- ═══════════════ 1. MIS ON TERMISTOR ═══════════════ -->
+    <div class="explanation">
+      <h3>Mis on termistor?</h3>
+      <p>
+        Termistor (<em>thermal resistor</em>) on takisti, mille <strong>takistus sõltub temperatuurist</strong>.
+        Kasutame <strong>NTC termistorit</strong> (<em>Negative Temperature Coefficient</em>):
+        <strong>mida soojem, seda väiksem takistus</strong>. On olemas ka PTC termistorid, mille takistus soojemaks
+        minnes kasvab, aga temperatuuri mõõtmiseks kasutatakse peamiselt NTC-d.
+      </p>
+      <p>Termistori kirjeldavad andmelehel kaks arvu:</p>
+      <ul>
+        <li><strong>R₀</strong> – takistus 25 °C juures (nt 10 kΩ). See on termistori „nimi“.</li>
+        <li><strong>B-väärtus</strong> (kelvinites, nt 3950 K) – kui kiiresti takistus temperatuuriga muutub.</li>
+      </ul>
+      <p>
+        Takistus ei muutu ühtlaselt: külmas muutub ta palju, kuumas vähe. See on <strong>mittelineaarne</strong>
+        seos. Seda kirjeldab B-võrrand:
+      </p>
+      <span class="formula">R<sub>NTC</sub> = R₀ · e<sup>B · (1/T − 1/T₀)</sup> &nbsp;&nbsp; (T kelvinites, T₀ = 298,15 K = 25 °C)</span>
+      <p><em>Liiguta temperatuuri liugurit ja vaata, kuidas takistus muutub. Lülita sisse logaritmiline skaala – kõver muutub peaaegu sirgeks.</em></p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Temperatuur</div>
+          <svg id="thermo" width="70" height="170" viewBox="0 0 70 170" aria-hidden="true"></svg>
+          <div class="light-ctl" data-temp-ctl></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Termistori takistus</div>
+          <div class="big-number" id="rn-big">–</div>
+          <div class="section-hint" id="rn-hint" style="max-width:220px"></div>
+          <div class="section-hint" style="margin-top:14px;color:#718096;max-width:220px">
+            NTC termistoril pole polaarsust – jalgu võib ühendada kummapidi.
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Takistus sõltuvalt temperatuurist</div>
+          <svg id="rchart" width="460" height="280" viewBox="0 0 460 280" role="img"
+            aria-label="Graafik: termistori takistus temperatuuri funktsioonina"></svg>
+          <label class="switch">
+            <input type="checkbox" id="rlog" />
+            <span class="track"><span class="thumb"></span></span>
+            <span>Logaritmiline skaala</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 2. MIKS TAKISTI ═══════════════ -->
+    <h2 class="section-heading">Miks on takisti vaja?</h2>
+    <div class="explanation">
+      <h3>Arduino mõõdab pinget, mitte takistust</h3>
+      <p>
+        <code>analogRead(A0)</code> mõõdab <strong>pinget</strong> (0–5 V → 0–1023). Termistor muudab aga
+        <strong>takistust</strong>. Kui ühendad termistori lihtsalt 5 V ja A0 vahele, ei voola sellest peaaegu
+        mingit voolu (analoogsisend praktiliselt voolu ei võta). Takistusel pole siis pinget, millega „töötada“:
+        A0 näitab alati ≈ 5 V, olgu temperatuur milline tahes.
+      </p>
+      <p>
+        Lahendus on <strong>pingejagur</strong>: termistori ja takisti R järjestikühendus. Mõlemast läbib sama vool
+        ja 5 V jaguneb nende vahel takistuste suhtes. Kumb on suurem, sellele jääb suurem osa pingest:
+      </p>
+      <span class="formula">U<sub>A0</sub> = 5 V · R / (R + R<sub>NTC</sub>)</span>
+      <p>
+        Meie ühendus: <strong>5V → termistor → A0 → R → GND</strong> (nagu tutorialis 03). Soojemaks →
+        R<sub>NTC</sub> väheneb → termistorile jääb vähem pinget → <strong>pinge A0-l kasvab</strong>.
+      </p>
+      <div class="note tip">
+        💡 Kui vahetad termistori ja takisti kohad (5V → R → A0 → termistor → GND), kehtib
+        U<sub>A0</sub> = 5 V · R<sub>NTC</sub> / (R + R<sub>NTC</sub>) ja näit hoopis <strong>väheneb</strong>
+        soojemaks minnes. Mõlemad ühendused töötavad – peaasi, et kood kasutab õiget valemit.
+      </div>
+      <p style="margin-top:8px"><em>Lülita takisti välja ja vaata, mis juhtub Serial Monitoris.</em></p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Temperatuur</div>
+          <div class="light-ctl" data-temp-ctl></div>
+          <label class="switch">
+            <input type="checkbox" id="r-on" checked />
+            <span class="track"><span class="thumb"></span></span>
+            <span id="r-on-label">Takisti ühendatud</span>
+          </label>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Ühendus Arduinoga</div>
+          <svg id="circ" width="400" height="320" viewBox="0 0 400 320" role="img"
+            aria-label="Skeem: 5V termistorisse, termistor pinile A0, A0 läbi takisti GND-sse"></svg>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Arduino näit</div>
+          <div class="big-number" id="ar-big" style="color:#276749">–</div>
+          <div class="bar green"><div id="ar-bar"></div></div>
+          <div class="serial">
+            <div class="code-title">Serial Monitor · 9600 baud</div>
+            <pre id="serial-out"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="value-banner" id="banner2"></div>
+
+    <!-- ═══════════════ 3. TUNDLIKKUS ═══════════════ -->
+    <h2 class="section-heading">Takisti suurus = tundlikkus</h2>
+    <div class="explanation">
+      <h3>Kõige tundlikum umbes seal, kus R = R<sub>NTC</sub></h3>
+      <p>
+        Fototransistori puhul võis liiga suur takisti anduri küllastada. Pingejaguriga seda ohtu pole: pinge jääb alati
+        0 ja 5 V vahele. Takisti määrab aga, <strong>millises temperatuurivahemikus andur on tundlik</strong>.
+      </p>
+      <p>
+        <strong>Tundlikkus</strong> = mitu analogRead-i sammu muutub näit, kui temperatuur muutub 1 °C võrra.
+        Mida rohkem samme kraadi kohta, seda täpsemini Arduino temperatuuri eristab. Pingejagur on
+        <strong>kõige tundlikum ligikaudu seal, kus R = R<sub>NTC</sub></strong> (pinge on siis 2,5 V). Täpne tipp
+        on mõne kraadi võrra madalamal (sinine punktiirjoon vs graafiku tipp), sest külmas muutub termistori takistus kraadi kohta rohkem.
+      </p>
+      <ul>
+        <li><strong>Liiga suur R</strong>: pinge on enamasti 5 V lähedal ja kõver lame – tundlik ainult külmas.</li>
+        <li><strong>Liiga väike R</strong>: pinge on enamasti 0 V lähedal – tundlik ainult kuumas.</li>
+      </ul>
+      <p><em>Vali eri takisteid ja vaata, kuidas tundlikkuse „küür“ alumisel graafikul nihkub.</em></p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Temperatuur</div>
+          <div class="light-ctl" data-temp-ctl></div>
+          <div class="section-title" style="margin-top:16px">Takisti R</div>
+          <div class="r-buttons presets" id="r-buttons" style="max-width:210px"></div>
+          <div class="section-hint" id="r-custom-hint"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">analogRead sõltuvalt temperatuurist</div>
+          <svg id="achart" width="540" height="250" viewBox="0 0 540 250" role="img"
+            aria-label="Graafik: analogRead temperatuuri funktsioonina eri takistitega"></svg>
+          <div class="section-title" style="margin-top:10px">Tundlikkus (sammu / °C)</div>
+          <svg id="schart" width="540" height="210" viewBox="0 0 540 210" role="img"
+            aria-label="Graafik: tundlikkus temperatuuri funktsioonina"></svg>
+          <div class="section-hint" style="max-width:500px">
+            Sinine ala: temperatuurid, kus see takisti on vähemalt pool nii tundlik kui oma parimas kohas.
+            Hallid jooned on teised takistid.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="value-banner" id="banner3"></div>
+
+    <!-- ═══════════════ 4. KUIDAS VALIDA ═══════════════ -->
+    <h2 class="section-heading">Kuidas valida õiget takistit?</h2>
+    <div class="explanation">
+      <h3>Retsept viies sammus</h3>
+      <ol>
+        <li><strong>Mõtle, mida mõõdad.</strong> Mis on madalaim ja kõrgeim temperatuur, mida andur peab eristama? (Toaõhk 15…30 °C? Mootor 20…80 °C?)</li>
+        <li><strong>Leia termistori takistus</strong> mõlemas otsas: andmelehe tabelist või B-võrrandist.</li>
+        <li><strong>Arvuta geomeetriline keskmine:</strong></li>
+      </ol>
+      <span class="formula">R = √( R<sub>NTC</sub>(T<sub>min</sub>) · R<sub>NTC</sub>(T<sub>max</sub>) )</span>
+      <ol start="4">
+        <li><strong>Vali lähim standardtakisti</strong> (E12-rida: 1,0 · 1,2 · 1,5 · 1,8 · 2,2 · 2,7 · 3,3 · 3,9 · 4,7 · 5,6 · 6,8 · 8,2).</li>
+        <li><strong>Kontrolli isekuumenemist</strong> (järgmine osa): väga väike takisti soojendab termistorit ja näit läheb valeks.</li>
+      </ol>
+      <p>
+        <strong>Rusikareegel:</strong> kui mõõdad toatemperatuuri ümbruses, vali takisti, mis on võrdne termistori R₀-ga
+        (10 kΩ termistor → 10 kΩ takisti). Nii soovitab ka tutorial 03.
+      </p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Takisti kalkulaator</div>
+          <div class="calc">
+            <label>
+              Mida mõõdad?
+              <select id="calc-preset">
+                <option value="15,30">Toaõhk (15…30 °C)</option>
+                <option value="0,40">Õues (0…40 °C)</option>
+                <option value="20,80" selected>Elektrimootor (20…80 °C)</option>
+                <option value="10,60">Aku (10…60 °C)</option>
+                <option value="0,100">Vesi (0…100 °C)</option>
+                <option value="custom">Oma vahemik…</option>
+              </select>
+            </label>
+            <label id="calc-custom" hidden>
+              <span>T<sub>min</sub> … T<sub>max</sub> (°C)</span>
+              <span style="display:flex;gap:6px">
+                <input type="number" id="calc-min" value="20" style="width:50%" aria-label="Madalaim temperatuur" />
+                <input type="number" id="calc-max" value="80" style="width:50%" aria-label="Kõrgeim temperatuur" />
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Arvutus</div>
+          <div class="calc-steps" id="calc-out"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 5. ISEKUUMENEMINE ═══════════════ -->
+    <h2 class="section-heading">Miks mitte väga väikest takistit? Isekuumenemine</h2>
+    <div class="explanation">
+      <h3>Mõõtmine ise soojendab termistorit</h3>
+      <p>
+        Pingejaguris voolab termistorist läbi vool I = 5 V / (R + R<sub>NTC</sub>) ja termistoris eraldub soojust
+        <strong>P = I² · R<sub>NTC</sub></strong>. Termistor soojeneb ümbritsevast õhust veidi kuumemaks ja
+        <strong>näitab liiga kõrget temperatuuri</strong>.
+      </p>
+      <p>
+        Kui palju, ütleb andmelehel <strong>hajumistegur δ</strong> (<em>dissipation factor</em>): mitu milliwatti on vaja,
+        et termistor soojeneks 1 °C võrra. Tavalisel MF52-tüüpi NTC-l on see seisvas õhus umbes <strong>2 mW/°C</strong>.
+      </p>
+      <span class="formula">ΔT = P / δ</span>
+      <p>
+        Tabel näitab valitud termistori soojenemist eri takistitega praegusel temperatuuril. Mida väiksem takisti,
+        seda suurem vool ja seda rohkem termistor soojeneb.
+      </p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">Temperatuur</div>
+          <div class="light-ctl" data-temp-ctl></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Isekuumenemine (δ = 2 mW/°C)</div>
+          <table class="heat-table" id="heat-table"></table>
+          <div class="section-hint" style="max-width:420px">
+            🟢 alla 0,25 °C – ei märka &nbsp; 🟡 0,25…1 °C – arvesta, kalibreeri &nbsp; 🔴 üle 1 °C – vali suurem takisti või kasuta nippi allpool
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="explanation" style="margin-top:20px">
+      <div class="note tip" style="margin-top:0">
+        💡 <strong>Nipp:</strong> kui on vaja väikest takistit, ära toida pingejagurit 5V pinist, vaid digitaalpinist
+        (nt pin 7). Lülita see <code>digitalWrite(7, HIGH)</code> sisse ainult mõõtmise ajaks ja pärast uuesti välja.
+        Kui mõõdad kord sekundis, voolab vool vaid murdosa ajast ja termistor ei jõua soojeneda.
+      </div>
+    </div>
+
+    <!-- ═══════════════ 6. analogRead → °C ═══════════════ -->
+    <h2 class="section-heading">Kuidas Arduino arvutab temperatuuri?</h2>
+    <div class="explanation">
+      <h3>analogRead → pinge → takistus → temperatuur</h3>
+      <p>
+        Arduino teab ainult numbrit 0–1023. Temperatuuri saamiseks käime pingejaguri tee tagurpidi läbi.
+        Need neli sammu on täpselt need neli rida, mis on koodis. <em>Liiguta liugurit ja vaata, kuidas iga samm muutub.</em>
+      </p>
+    </div>
+
+    <div class="scroll-wrap">
+      <div class="panel">
+        <div class="section">
+          <div class="section-title">analogRead</div>
+          <div class="big-number" id="conv-big" style="color:#276749">–</div>
+          <div class="light-ctl">
+            <input type="range" id="conv-range" min="1" max="1022" step="1" value="512"
+              aria-label="analogRead väärtus" style="accent-color:#38a169" />
+            <button class="code-toggle-btn" id="conv-sync" style="background:#f7fafc;color:#2d3748;border-color:#cbd5e0">
+              Võta temperatuuri liugurilt
+            </button>
+          </div>
+          <div class="section-hint" id="conv-r"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Samm-sammult</div>
+          <div class="steps" id="conv-steps"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section">
+          <div class="section-title">Kood</div>
+          <button class="code-toggle-btn" onclick="toggleCode(this)">Näita koodi</button>
+          <div class="code-block" hidden>
+            <div class="code-title">Arduino IDE · termistor</div>
+<pre id="code-pre"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="explanation" style="margin-top:20px">
+      <p>
+        <strong>Lahutusvõime.</strong> Kui tundlikkus on näiteks 10 sammu/°C, vastab üks analogRead-i samm 0,1 °C-le.
+        Arduino ei näe sellest väiksemat muutust. Täpsuse kohta see aga midagi ei ütle: termistori enda
+        tolerants (±1…5%) ja takisti tolerants võivad anda vea ±1 °C ja rohkem. Seepärast tuleb andur
+        <strong>kalibreerida</strong>.
+      </p>
+    </div>
+
+    <!-- ═══════════════ 7. KATSE ═══════════════ -->
+    <h2 class="section-heading">Katse: kontrolli ja kalibreeri oma andur</h2>
+    <div class="explanation">
+      <ol>
+        <li>Ühenda termistor ja takisti nagu ülal ning lae üles näitekood. Kontrolli, et koodis on õiged R₀, B ja takisti väärtus.</li>
+        <li>
+          <strong>Toatemperatuur:</strong> pane termistor termomeetri kõrvale ja oota vähemalt pool minutit.
+          Kui palju erineb Arduino näit termomeetrist?
+        </li>
+        <li>
+          <strong>Jäävesi (0 °C):</strong> täida klaas jääkuubikute ja vähese veega, sega ja oota paar minutit.
+          Kaitse termistori jalad (vaata hoiatust allpool). Mis temperatuuri näitab Arduino?
+        </li>
+        <li>
+          <strong>Kahe punkti kalibreerimine:</strong> kahe teadaoleva temperatuuri põhjal leia parandus
+          T<sub>õige</sub> = a · T<sub>Arduino</sub> + b. Täpsemalt on see kirjas
+          <a href="https://github.com/vhkarendus/VHK_Telemeetria/blob/main/tutorialid/01%20Kalibreerimine.md">tutorialis 01</a>
+          ja <a href="https://github.com/vhkarendus/VHK_Telemeetria/blob/main/tutorialid/03%20Termistor%20Arduino%20tutorial.md">tutorialis 03</a>.
+        </li>
+        <li>
+          <strong>Isekuumenemine:</strong> asenda takisti 1 kΩ-ga (ja muuda koodi!). Kas näit tõuseb veidi? Mitu kraadi?
+        </li>
+      </ol>
+      <div class="note warn">
+        ⚠️ <strong>Vesi ja elekter:</strong> ära pane paljaste jalgadega termistorit vette. Vesi juhib voolu ja näit
+        läheb valeks. Kata jalad ja jootekohad termokahaneva toru või kuumliimiga, nii et vette jääb ainult
+        termistori pea. Kuuma veega katsetades ole ettevaatlik ja kasuta alla 60 °C vett.
+      </div>
+      <div class="note tip">
+        💡 Termistor reageerib aeglaselt: andmelehe järgi kulub õhus kuni ~7 sekundit, et ta jõuaks enamiku
+        temperatuurimuutusest järele. Oota enne näidu üleskirjutamist.
+      </div>
+    </div>
+
+    <!-- ═══════════════ 8. PÄRISELUS ═══════════════ -->
+    <h2 class="section-heading">Termistor päriselus</h2>
+    <div class="explanation">
+      <h3>Kuidas teada, milline termistor sul on?</h3>
+      <p>
+        Väikesel tilgakujulisel termistoril (MF52) tavaliselt silti pole. Mõõda tema takistus
+        <strong>multimeetriga toatemperatuuril</strong> (20–23 °C): ≈ 11–13 kΩ tähendab tõenäoliselt 10 kΩ
+        termistorit, ≈ 24–28 kΩ tähendab 22 kΩ termistorit ja ≈ 3,6–4,1 kΩ tähendab 3,3 kΩ termistorit. Termistori
+        „nimi“ R₀ kehtib 25 °C juures – toas on takistus veidi suurem. Ära hoia termistorit mõõtmise ajal sõrmede vahel, sest käsi
+        soojendab teda! B-väärtuse leiad müüja lehelt või andmelehelt.
+      </p>
+    </div>
+    <div class="scroll-wrap">
+      <div class="panel" style="gap:16px">
+        <div class="section">
+          <div class="section-title">Termistor</div>
+          <div class="photo-slot">Foto lisandub:<br />NTC termistor (MF52)</div>
+        </div>
+        <div class="section">
+          <div class="section-title">Ühendus Arduino UNO-ga</div>
+          <div class="photo-slot">Foto lisandub:<br />makettplaat, termistor, 10 kΩ takisti, juhtmed 5V / A0 / GND</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ 9. KÜSIMUSED ═══════════════ -->
+    <h2 class="section-heading">Mõtle järele</h2>
+    <div class="explanation">
+      <ol>
+        <li>Miks ei saa termistorit ühendada ilma takistita otse 5V ja A0 vahele?</li>
+        <li>Miks muutub NTC termistori takistus külmas palju rohkem kui kuumas? Kuidas see graafikul paistab?</li>
+        <li>Miks on fototransistori puhul oht küllastuda, aga pingejaguriga termistori puhul mitte?</li>
+        <li>Mis juhtub tundlikkusega, kui kasutad 10 kΩ termistoriga 100 kΩ takistit? Millal võiks see siiski mõistlik olla?</li>
+        <li>
+          GreenPoweri auto telemeetrias on <strong>3,3 kΩ termistor (B 3977) ja 5,1 kΩ takisti</strong>. Mis temperatuuril
+          on see kõige tundlikum? Kas see sobib mootori jälgimiseks? Millise takisti sina valiksid ja miks?
+        </li>
+        <li>Sinu kood näitab toas 27 °C, termomeeter 23 °C. Nimeta vähemalt kolm võimalikku põhjust.</li>
+        <li>Miks ei tohi kood jagada nulliga, kui analogRead annab 0 või 1023? Mida see füüsiliselt tähendab (nt lahti tulnud juhe)?</li>
+      </ol>
+    </div>
+
+    <h2 class="section-heading">Sõnastik</h2>
+    <div class="explanation">
+      <table class="vocab">
+        <tr><th>Inglise keeles</th><th>Eesti keeles</th></tr>
+        <tr><td>thermistor (NTC / PTC)</td><td>termistor (negatiivse / positiivse temperatuuriteguriga)</td></tr>
+        <tr><td>voltage divider</td><td>pingejagur</td></tr>
+        <tr><td>series resistor</td><td>jadatakisti</td></tr>
+        <tr><td>nominal resistance (R₀)</td><td>nimitakistus</td></tr>
+        <tr><td>B value / beta</td><td>B-väärtus</td></tr>
+        <tr><td>sensitivity</td><td>tundlikkus</td></tr>
+        <tr><td>resolution</td><td>lahutusvõime</td></tr>
+        <tr><td>self-heating</td><td>isekuumenemine</td></tr>
+        <tr><td>dissipation factor</td><td>hajumistegur</td></tr>
+        <tr><td>thermal time constant</td><td>soojuslik ajakonstant</td></tr>
+        <tr><td>heat shrink tubing</td><td>termokahanev toru</td></tr>
+      </table>
+    </div>
+    <script>
+      /* ════════════════ MUDEL ════════════════
+         R_NTC = R0 · exp(B · (1/T − 1/T0))         B-võrrand
+         U_A0  = 5 · R / (R + R_NTC)                5V → NTC → A0 → R → GND
+         analogRead = round(U / 5 · 1023)
+         isekuumenemine: P = I² · R_NTC, ΔT = P / δ, δ = 2 mW/°C (MF52 andmeleht) */
+      const VCC = 5.0;
+      const T0 = 298.15;
+      const DELTA = 0.002; // W/°C
+      const NTCS = [
+        { R0: 10000, B: 3950, R: 10000, name: "10 kΩ, B 3950" },
+        { R0: 22000, B: 3740, R: 22000, name: "22 kΩ, B 3740" },
+        { R0: 3300, B: 3977, R: 5100, name: "3,3 kΩ, B 3977" },
+      ];
+      const R_LIST = [1000, 2200, 4700, 10000, 22000, 47000, 100000];
+      const TMIN = -20, TMAX = 100;
+      const state = { ntc: NTCS[0], T: 22, R: 10000, customR: null, rOn: true, rlog: false, adc: null };
+
+      const rNtc = (T) => state.ntc.R0 * Math.exp(state.ntc.B * (1 / (T + 273.15) - 1 / T0));
+      const uA0 = (T, R) => (VCC * R) / (R + rNtc(T));
+      const adcF = (T, R) => (uA0(T, R) / VCC) * 1023;
+      const sens = (T, R) => (adcF(T + 0.05, R) - adcF(T - 0.05, R)) / 0.1;
+      const bestT = (R) => 1 / (1 / T0 + Math.log(R / state.ntc.R0) / state.ntc.B) - 273.15; // kus R_NTC = R
+      function peakT(R) {
+        // tegelik tundlikkuse tipp (veidi madalamal kui R_NTC = R, sest |dR/dT| kasvab külmas)
+        let best = bestT(R), bs = -1;
+        for (let t = bestT(R) - 40; t <= bestT(R) + 10; t += 0.1) { const v = sens(t, R); if (v > bs) { bs = v; best = t; } }
+        return best;
+      }
+      const tFromR = (r) => 1 / (1 / T0 + Math.log(r / state.ntc.R0) / state.ntc.B) - 273.15;
+
+      const dec = (n, d) => n.toFixed(d).replace(".", ",");
+      const fmtT = (t) => dec(t, 1) + " °C";
+      const fmtV = (u) => dec(u, 2) + " V";
+      function fmtR(R) {
+        if (R >= 1000) {
+          const k = R / 1000;
+          const s = k >= 100 ? Math.round(k).toString() : k >= 10 ? (Math.round(k * 10) / 10).toString() : (Math.round(k * 100) / 100).toString();
+          return s.replace(".", ",") + " kΩ";
+        }
+        return Math.round(R) + " Ω";
+      }
+      function fmtP(p) {
+        return p >= 1e-3 ? dec(p * 1000, 2) + " mW" : dec(p * 1e6, 0) + " µW";
+      }
+      const NS = "http://www.w3.org/2000/svg";
+      function el(tag, attrs, parent) {
+        const e = document.createElementNS(NS, tag);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        if (parent) parent.appendChild(e);
+        return e;
+      }
+
+      /* ════════════════ TEMPERATUURI JUHTPULT (kõigis paneelides) ════════════════ */
+      const PRESETS = [["Külmik", 4], ["Õues", 10], ["Tuba", 22], ["Käes", 33], ["Mootor", 70], ["Keev vesi", 100]];
+      const ctls = [];
+      document.querySelectorAll("[data-temp-ctl]").forEach((box) => {
+        const lab = document.createElement("div");
+        lab.className = "lux-label";
+        lab.style.color = "#c53030";
+        const rng = document.createElement("input");
+        rng.type = "range"; rng.min = TMIN; rng.max = TMAX; rng.step = 0.5;
+        rng.style.accentColor = "#c53030";
+        rng.setAttribute("aria-label", "Temperatuur");
+        rng.addEventListener("input", () => { state.T = parseFloat(rng.value); update(); });
+        const pr = document.createElement("div");
+        pr.className = "presets";
+        PRESETS.forEach(([n, T]) => {
+          const b = document.createElement("button");
+          b.textContent = n; b.title = T + " °C";
+          b.onclick = () => { state.T = T; update(); };
+          pr.appendChild(b);
+        });
+        box.append(lab, rng, pr);
+        ctls.push({ lab, rng });
+      });
+
+      /* ════════════════ TERMOMEETER ════════════════ */
+      const th = document.getElementById("thermo");
+      el("rect", { x: 25, y: 10, width: 20, height: 120, rx: 10, fill: "#fff", stroke: "#2d3748", "stroke-width": 2 }, th);
+      el("circle", { cx: 35, cy: 145, r: 17, fill: "#e53e3e", stroke: "#2d3748", "stroke-width": 2 }, th);
+      const thFill = el("rect", { x: 30, width: 10, fill: "#e53e3e" }, th);
+      el("rect", { x: 30, y: 125, width: 10, height: 12, fill: "#e53e3e" }, th);
+      [-20, 0, 20, 40, 60, 80, 100].forEach((t) => {
+        const y = 125 - ((t - TMIN) / (TMAX - TMIN)) * 105;
+        el("line", { x1: 45, y1: y, x2: 51, y2: y, stroke: "#a0aec0" }, th);
+        el("text", { x: 54, y: y + 3.5, "font-size": 9, fill: "#718096" }, th).textContent = t;
+      });
+
+      /* ════════════════ GRAAFIK 1: R vs T ════════════════ */
+      const rc = document.getElementById("rchart");
+      const RC = { l: 58, r: 14, t: 14, b: 42, w: 460, h: 280 };
+      const rcX = (t) => RC.l + ((t - TMIN) / (TMAX - TMIN)) * (RC.w - RC.l - RC.r);
+      const rcStatic = el("g", {}, rc), rcDyn = el("g", {}, rc), rcMark = el("g", {}, rc);
+      let rcY = null;
+      function drawRChart() {
+        rcStatic.innerHTML = ""; rcDyn.innerHTML = "";
+        const rTop = rNtc(TMIN), rBot = rNtc(TMAX);
+        const H = RC.h - RC.t - RC.b;
+        if (state.rlog) {
+          const lo = Math.floor(Math.log10(rBot)), hi = Math.ceil(Math.log10(rTop));
+          rcY = (r) => RC.h - RC.b - ((Math.log10(r) - lo) / (hi - lo)) * H;
+          for (let d = lo; d <= hi; d++) {
+            const y = rcY(Math.pow(10, d));
+            el("line", { x1: RC.l, y1: y, x2: RC.w - RC.r, y2: y, stroke: "#edf2f7" }, rcStatic);
+            el("text", { x: RC.l - 6, y: y + 4, "text-anchor": "end", "font-size": 11, fill: "#4a5568" }, rcStatic).textContent = fmtR(Math.pow(10, d));
+          }
+        } else {
+          const step = [1000, 2000, 5000, 10000, 20000, 50000, 100000].find((s) => rTop / s <= 6);
+          const top = Math.ceil(rTop / step) * step;
+          rcY = (r) => RC.h - RC.b - (r / top) * H;
+          for (let r = 0; r <= top; r += step) {
+            const y = rcY(r);
+            el("line", { x1: RC.l, y1: y, x2: RC.w - RC.r, y2: y, stroke: "#edf2f7" }, rcStatic);
+            el("text", { x: RC.l - 6, y: y + 4, "text-anchor": "end", "font-size": 11, fill: "#4a5568" }, rcStatic).textContent = r === 0 ? "0" : fmtR(r);
+          }
+        }
+        for (let t = TMIN; t <= TMAX; t += 20) {
+          const x = rcX(t);
+          el("line", { x1: x, y1: RC.t, x2: x, y2: RC.h - RC.b, stroke: "#edf2f7" }, rcStatic);
+          el("text", { x, y: RC.h - RC.b + 16, "text-anchor": "middle", "font-size": 11, fill: "#4a5568" }, rcStatic).textContent = t;
+        }
+        el("line", { x1: RC.l, y1: RC.t, x2: RC.l, y2: RC.h - RC.b, stroke: "#a0aec0" }, rcStatic);
+        el("line", { x1: RC.l, y1: RC.h - RC.b, x2: RC.w - RC.r, y2: RC.h - RC.b, stroke: "#a0aec0" }, rcStatic);
+        el("text", { x: (RC.l + RC.w - RC.r) / 2, y: RC.h - 8, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: "#2d3748" }, rcStatic).textContent = "Temperatuur (°C)";
+        let d = "";
+        for (let t = TMIN; t <= TMAX; t += 1) d += (t === TMIN ? "M" : "L") + rcX(t).toFixed(1) + "," + rcY(rNtc(t)).toFixed(1);
+        el("path", { d, fill: "none", stroke: "#c53030", "stroke-width": 3 }, rcDyn);
+        // R0 märk
+        el("line", { x1: rcX(25), y1: rcY(state.ntc.R0), x2: RC.l, y2: rcY(state.ntc.R0), stroke: "#a0aec0", "stroke-dasharray": "3 3" }, rcDyn);
+        el("text", { x: rcX(25) + 6, y: rcY(state.ntc.R0) - 6, "font-size": 10.5, fill: "#718096" }, rcDyn).textContent = "R₀ @ 25 °C";
+      }
+      document.getElementById("rlog").addEventListener("change", (e) => { state.rlog = e.target.checked; drawRChart(); update(); });
+
+      /* ════════════════ SKEEM ════════════════ */
+      const circ = document.getElementById("circ");
+      const W = { stroke: "#2d3748", "stroke-width": 2, fill: "none" };
+      el("rect", { x: 14, y: 30, width: 112, height: 270, rx: 10, fill: "#2c7a7b", stroke: "#234e52", "stroke-width": 2 }, circ);
+      el("text", { x: 70, y: 56, "text-anchor": "middle", "font-size": 13, fill: "#fff", "font-weight": 700 }, circ).textContent = "Arduino";
+      el("text", { x: 70, y: 72, "text-anchor": "middle", "font-size": 13, fill: "#fff", "font-weight": 700 }, circ).textContent = "UNO";
+      [["5V", 90], ["A0", 190], ["GND", 280]].forEach(([n, y]) => {
+        el("rect", { x: 110, y: y - 7, width: 16, height: 14, fill: "#1a202c", rx: 2 }, circ);
+        el("text", { x: 104, y: y + 4, "text-anchor": "end", "font-size": 12, fill: "#fff", "font-weight": 700 }, circ).textContent = n;
+      });
+      const PX = 270;
+      el("polyline", { points: `126,90 ${PX},90 ${PX},110`, ...W }, circ);
+      el("text", { x: 200, y: 84, "text-anchor": "middle", "font-size": 11, fill: "#c53030" }, circ).textContent = "5 V";
+      // termistor
+      el("rect", { x: PX - 10, y: 110, width: 20, height: 50, fill: "#fff5f5", stroke: "#2d3748", "stroke-width": 2 }, circ);
+      el("polyline", { points: `${PX - 22},168 ${PX - 10},156 ${PX + 22},104`, ...W }, circ);
+      el("text", { x: PX - 26, y: 128, "text-anchor": "end", "font-size": 12, fill: "#c53030", "font-weight": 700 }, circ).textContent = "−t°";
+      el("text", { x: PX + 18, y: 124, "font-size": 10, fill: "#718096" }, circ).textContent = "NTC termistor";
+      const cRn = el("text", { x: PX + 18, y: 140, "font-size": 11.5, fill: "#2d3748", "font-weight": 700 }, circ);
+      el("line", { x1: PX, y1: 160, x2: PX, y2: 190, ...W }, circ);
+      el("line", { x1: 126, y1: 190, x2: PX, y2: 190, ...W }, circ);
+      el("circle", { cx: PX, cy: 190, r: 4, fill: "#2d3748" }, circ);
+      const cU = el("text", { x: PX + 12, y: 194, "font-size": 13, fill: "#2b6cb0", "font-weight": 700 }, circ);
+      const rGroup = el("g", {}, circ);
+      el("line", { x1: PX, y1: 190, x2: PX, y2: 206, ...W }, rGroup);
+      const rWire = el("line", { x1: PX, y1: 206, x2: PX, y2: 216, ...W }, rGroup);
+      const rBody = el("rect", { x: PX - 9, y: 216, width: 18, height: 44, fill: "#fff", stroke: "#2d3748", "stroke-width": 2 }, rGroup);
+      el("line", { x1: PX, y1: 260, x2: PX, y2: 280, ...W }, rGroup);
+      el("line", { x1: 126, y1: 280, x2: PX, y2: 280, ...W }, circ);
+      const cR = el("text", { x: PX + 16, y: 242, "font-size": 12, fill: "#2d3748", "font-weight": 700 }, circ);
+      el("text", { x: 200, y: 296, "text-anchor": "middle", "font-size": 11, fill: "#2d3748" }, circ).textContent = "GND";
+      const openMark = el("g", { visibility: "hidden" }, circ);
+      el("circle", { cx: PX, cy: 204, r: 3, fill: "#fff", stroke: "#c53030", "stroke-width": 2 }, openMark);
+      el("circle", { cx: PX, cy: 216, r: 3, fill: "#fff", stroke: "#c53030", "stroke-width": 2 }, openMark);
+      el("text", { x: PX - 14, y: 214, "text-anchor": "end", "font-size": 11, fill: "#c53030", "font-weight": 700 }, openMark).textContent = "lahti!";
+      document.getElementById("r-on").addEventListener("change", (e) => { state.rOn = e.target.checked; serialLines.length = 0; update(); tickSerial(); });
+
+      /* ════════════════ GRAAFIKUD 2 ja 3: analogRead ja tundlikkus ════════════════ */
+      const ac = document.getElementById("achart"), sc = document.getElementById("schart");
+      const AC = { l: 52, r: 16, t: 12, b: 36, w: 540, h: 250 };
+      const SC = { l: 52, r: 16, t: 12, b: 36, w: 540, h: 210 };
+      const xA = (t, C) => C.l + ((t - TMIN) / (TMAX - TMIN)) * (C.w - C.l - C.r);
+      const yA = (a) => AC.h - AC.b - (a / 1023) * (AC.h - AC.t - AC.b);
+      let sMax = 20;
+      const yS = (s) => SC.h - SC.b - (Math.min(s, sMax) / sMax) * (SC.h - SC.t - SC.b);
+      const aBand = el("rect", { y: AC.t, height: AC.h - AC.t - AC.b, fill: "#bee3f8", opacity: 0.45 }, ac);
+      const sBand = el("rect", { y: SC.t, height: SC.h - SC.t - SC.b, fill: "#bee3f8", opacity: 0.45 }, sc);
+      const aStatic = el("g", {}, ac), aCurves = el("g", {}, ac), aMark = el("g", {}, ac);
+      const sStatic = el("g", {}, sc), sCurves = el("g", {}, sc), sMark = el("g", {}, sc);
+
+      function axes(svg, g, C, yTicks, yFmt, yOf, yTitle, xTitle) {
+        g.innerHTML = "";
+        for (let t = TMIN; t <= TMAX; t += 20) {
+          const x = xA(t, C);
+          el("line", { x1: x, y1: C.t, x2: x, y2: C.h - C.b, stroke: "#edf2f7" }, g);
+          el("text", { x, y: C.h - C.b + 15, "text-anchor": "middle", "font-size": 11, fill: "#4a5568" }, g).textContent = t;
+        }
+        yTicks.forEach((v) => {
+          const y = yOf(v);
+          el("line", { x1: C.l, y1: y, x2: C.w - C.r, y2: y, stroke: "#edf2f7" }, g);
+          el("text", { x: C.l - 6, y: y + 4, "text-anchor": "end", "font-size": 11, fill: "#4a5568" }, g).textContent = yFmt(v);
+        });
+        el("line", { x1: C.l, y1: C.t, x2: C.l, y2: C.h - C.b, stroke: "#a0aec0" }, g);
+        el("line", { x1: C.l, y1: C.h - C.b, x2: C.w - C.r, y2: C.h - C.b, stroke: "#a0aec0" }, g);
+        const my = (C.t + C.h - C.b) / 2;
+        el("text", { x: 13, y: my, "text-anchor": "middle", "font-size": 11.5, "font-weight": 700, fill: "#2d3748", transform: `rotate(-90 13 ${my})` }, g).textContent = yTitle;
+        if (xTitle) el("text", { x: (C.l + C.w - C.r) / 2, y: C.h - 4, "text-anchor": "middle", "font-size": 11.5, "font-weight": 700, fill: "#2d3748" }, g).textContent = xTitle;
+      }
+
+      function allR() {
+        const a = R_LIST.slice();
+        [state.customR, state.ntc.R].forEach((r) => { if (r && !a.includes(r)) a.push(r); });
+        return a.sort((x, y) => x - y);
+      }
+      function halfBand(R) {
+        const sm = sens(peakT(R), R);
+        let a = null, b = null;
+        for (let t = TMIN; t <= TMAX; t += 0.5) if (sens(t, R) >= sm / 2) { if (a === null) a = t; b = t; }
+        return [a, b];
+      }
+      function drawSens() {
+        // tundlikkuse skaala: suurim väärtus kõigil kõveratel
+        let m = 0;
+        allR().forEach((R) => { for (let t = TMIN; t <= TMAX; t += 2) m = Math.max(m, sens(t, R)); });
+        sMax = Math.ceil(m / 5) * 5;
+        axes(ac, aStatic, AC, [0, 256, 512, 768, 1023], (v) => v, yA, "analogRead", "");
+        const ticks = [];
+        const st = sMax <= 10 ? 2 : sMax <= 25 ? 5 : 10;
+        for (let s = 0; s <= sMax; s += st) ticks.push(s);
+        axes(sc, sStatic, SC, ticks, (v) => v, yS, "sammu/°C", "Temperatuur (°C)");
+        aCurves.innerHTML = ""; sCurves.innerHTML = "";
+        const pathA = (R) => { let d = ""; for (let t = TMIN; t <= TMAX; t++) d += (t === TMIN ? "M" : "L") + xA(t, AC).toFixed(1) + "," + yA(adcF(t, R)).toFixed(1); return d; };
+        const pathS = (R) => { let d = ""; for (let t = TMIN; t <= TMAX; t++) d += (t === TMIN ? "M" : "L") + xA(t, SC).toFixed(1) + "," + yS(sens(t, R)).toFixed(1); return d; };
+        allR().forEach((R) => {
+          if (R === state.R) return;
+          el("path", { d: pathA(R), fill: "none", stroke: "#cbd5e0", "stroke-width": 1.5 }, aCurves);
+          el("path", { d: pathS(R), fill: "none", stroke: "#cbd5e0", "stroke-width": 1.5 }, sCurves);
+        });
+        el("path", { d: pathA(state.R), fill: "none", stroke: "#2b6cb0", "stroke-width": 3 }, aCurves);
+        el("path", { d: pathS(state.R), fill: "none", stroke: "#2b6cb0", "stroke-width": 3 }, sCurves);
+        const tb = bestT(state.R);
+        if (tb > TMIN && tb < TMAX) {
+          [[aCurves, AC], [sCurves, SC]].forEach(([g, C]) => {
+            el("line", { x1: xA(tb, C), y1: C.t, x2: xA(tb, C), y2: C.h - C.b, stroke: "#2b6cb0", "stroke-dasharray": "2 4" }, g);
+          });
+          const lx = xA(tb, SC);
+          const anchor = lx > SC.w - 120 ? "end" : "start";
+          el("text", { x: lx + (anchor === "end" ? -5 : 5), y: SC.t + 12, "text-anchor": anchor, "font-size": 10.5, fill: "#2b6cb0", "font-weight": 700 }, sCurves).textContent =
+            "R = R_NTC ≈ " + dec(tb, 0) + " °C";
+        }
+        const [a, b] = halfBand(state.R);
+        [[aBand, AC], [sBand, SC]].forEach(([r, C]) => {
+          if (a === null) { r.setAttribute("width", 0); return; }
+          r.setAttribute("x", xA(a, C));
+          r.setAttribute("width", Math.max(0, xA(b, C) - xA(a, C)));
+        });
+      }
+
+      const rBtnBox = document.getElementById("r-buttons");
+      function buildRButtons() {
+        rBtnBox.innerHTML = "";
+        allR().forEach((R) => {
+          const b = document.createElement("button");
+          b.textContent = fmtR(R);
+          if (R === state.R) b.classList.add("active");
+          b.onclick = () => { state.R = R; buildRButtons(); drawSens(); update(); };
+          rBtnBox.appendChild(b);
+        });
+        const hints = [];
+        if (!R_LIST.includes(state.ntc.R)) hints.push("Auto takisti: " + fmtR(state.ntc.R));
+        if (state.customR && !R_LIST.includes(state.customR) && state.customR !== state.ntc.R) hints.push("Kalkulaatorist: " + fmtR(state.customR));
+        document.getElementById("r-custom-hint").textContent = hints.join(" · ");
+      }
+
+      /* ════════════════ KALKULAATOR ════════════════ */
+      const E12 = [1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2];
+      function e12Near(R) {
+        let best = 10, bd = Infinity;
+        for (let d = 1; d <= 1e6; d *= 10)
+          for (const m of E12) {
+            const x = Math.abs(Math.log((m * d) / R));
+            if (x < bd) { bd = x; best = m * d; }
+          }
+        return Math.round(best);
+      }
+      const cPreset = document.getElementById("calc-preset");
+      function calc() {
+        const custom = cPreset.value === "custom";
+        document.getElementById("calc-custom").hidden = !custom;
+        let a, b;
+        if (custom) { a = parseFloat(document.getElementById("calc-min").value); b = parseFloat(document.getElementById("calc-max").value); }
+        else [a, b] = cPreset.value.split(",").map(Number);
+        const out = document.getElementById("calc-out");
+        if (!isFinite(a) || !isFinite(b) || a >= b || a < -40 || b > 125) {
+          out.innerHTML = "Sisesta T<sub>min</sub> &lt; T<sub>max</sub> vahemikus −40 … 125 °C.";
+          return;
+        }
+        const ra = rNtc(a), rb = rNtc(b), R = Math.sqrt(ra * rb), Rs = e12Near(R);
+        const Imax = VCC / (Rs + rNtc(b));
+        const Pmax = Math.max(...[a, b, bestT(Rs)].filter((t) => t >= a && t <= b).map((t) => { const i = VCC / (Rs + rNtc(t)); return i * i * rNtc(t); }));
+        const dT = Pmax / DELTA;
+        const sa = sens(a, Rs), sb = sens(b, Rs);
+        out.innerHTML = `
+          Termistor: <b>${state.ntc.name}</b><br>
+          1) R<sub>NTC</sub>(${a} °C) = <b>${fmtR(ra)}</b>, &nbsp; R<sub>NTC</sub>(${b} °C) = <b>${fmtR(rb)}</b><br>
+          2) R = √(${fmtR(ra)} · ${fmtR(rb)}) ≈ <b>${fmtR(R)}</b><br>
+          3) Lähim E12 väärtus: <span class="res">${fmtR(Rs)}</span><br>
+          4) Tundlikkus otstes: ${dec(sa, 1)} ja ${dec(sb, 1)} sammu/°C<br>
+          5) Isekuumenemine kuni ≈ <b>${dec(dT, 2)} °C</b> ${dT > 1 ? "🔴 – liiga palju: vali suurem takisti või toida pingejagurit digitaalpinist (vt allpool)" : dT > 0.25 ? "🟡 – kalibreerimine korvab suure osa sellest" : "🟢"}<br>
+          <button id="calc-try">Proovi seda takistit graafikul ↑</button>`;
+        document.getElementById("calc-try").onclick = () => {
+          state.customR = Rs; state.R = Rs; state.T = Math.round((a + b) / 2);
+          buildRButtons(); drawSens(); update();
+          document.getElementById("achart").scrollIntoView({ behavior: "smooth", block: "center" });
+        };
+      }
+      cPreset.addEventListener("input", calc);
+      ["calc-min", "calc-max"].forEach((id) => document.getElementById(id).addEventListener("input", calc));
+
+      /* ════════════════ ISEKUUMENEMISE TABEL ════════════════ */
+      function heatTable() {
+        const rn = rNtc(state.T);
+        let h = `<tr><th>Takisti R</th><th>Vool I</th><th>Võimsus P</th><th>Soojenemine ΔT</th></tr>`;
+        [470, 1000, 2200, 4700, 10000, 22000, 100000].forEach((R) => {
+          const I = VCC / (R + rn), P = I * I * rn, dT = P / DELTA;
+          const dot = dT > 1 ? "🔴" : dT > 0.25 ? "🟡" : "🟢";
+          const cls = R === state.R ? ' class="hl"' : "";
+          h += `<tr${cls}><td>${fmtR(R)}</td><td>${I >= 1e-3 ? dec(I * 1000, 2) + " mA" : dec(I * 1e6, 0) + " µA"}</td><td>${fmtP(P)}</td><td>${dot} ${dec(dT, 2)} °C</td></tr>`;
+        });
+        h += `<tr><td colspan="4" style="color:#718096;font-size:0.78rem">R<sub>NTC</sub> = ${fmtR(rn)} temperatuuril ${fmtT(state.T)}. Suurim soojenemine on siis, kui R = R<sub>NTC</sub>.</td></tr>`;
+        document.getElementById("heat-table").innerHTML = h;
+      }
+
+      /* ════════════════ analogRead → °C ════════════════ */
+      const convRange = document.getElementById("conv-range");
+      convRange.addEventListener("input", () => { state.adc = parseInt(convRange.value, 10); convert(); });
+      document.getElementById("conv-sync").onclick = () => { state.adc = null; convert(); };
+      function convert() {
+        const R = state.R;
+        const a = state.adc === null ? Math.max(1, Math.min(1022, Math.round(adcF(state.T, R)))) : state.adc;
+        convRange.value = a;
+        document.getElementById("conv-big").textContent = a;
+        document.getElementById("conv-r").innerHTML = `Takisti R = ${fmtR(R)}<br>(valitud ülal „Takisti suurus“ osas)`;
+        const U = (a * VCC) / 1023;
+        const rn = R * (VCC / U - 1);
+        const invT = 1 / T0 + Math.log(rn / state.ntc.R0) / state.ntc.B;
+        const Tk = 1 / invT, Tc = Tk - 273.15;
+        const step = 1 / Math.max(1e-6, sens(Tc, R));
+        document.getElementById("conv-steps").innerHTML = `
+          <div class="step"><span class="n">1</span><div><b>Pinge</b><br>U = analogRead · 5 / 1023 = ${a} · 5 / 1023 = <span class="v">${fmtV(U)}</span></div></div>
+          <div class="step"><span class="n">2</span><div><b>Termistori takistus</b> (pingejaguri valem tagurpidi)<br>R<sub>NTC</sub> = R · (5 / U − 1) = ${fmtR(R)} · (5 / ${dec(U, 3)} − 1) = <span class="v">${fmtR(rn)}</span></div></div>
+          <div class="step"><span class="n">3</span><div><b>B-võrrand</b> (kelvinites)<br>1/T = 1/T₀ + ln(R<sub>NTC</sub>/R₀) / B = 1/298,15 + ln(${dec(rn / state.ntc.R0, 3)}) / ${state.ntc.B}<br>T = <span class="v">${dec(Tk, 1)} K</span></div></div>
+          <div class="step"><span class="n">4</span><div><b>Celsiuse kraadid</b><br>T = ${dec(Tk, 1)} − 273,15 = <span class="res">${fmtT(Tc)}</span><br><span style="color:#718096">Siin vastab üks analogRead-i samm ≈ ${dec(step, 2)} °C-le.</span></div></div>`;
+        writeCode();
+      }
+      function writeCode() {
+        const n = state.ntc, R = state.R;
+        document.getElementById("code-pre").innerHTML =
+`<span class="cm">// 5V → termistor → A0 → R → GND</span>
+<span class="kw">const int</span> TERM_PIN = A0;
+<span class="kw">const float</span> R_FIXED = <span class="nb">${R}.0</span>;  <span class="cm">// takisti R (oomides)</span>
+<span class="kw">const float</span> R0 = <span class="nb">${n.R0}.0</span>;       <span class="cm">// termistor 25 °C juures</span>
+<span class="kw">const float</span> B  = <span class="nb">${n.B}.0</span>;        <span class="cm">// andmelehelt!</span>
+<span class="kw">const float</span> T0 = <span class="nb">298.15</span>;        <span class="cm">// 25 °C kelvinites</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="nb">9600</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> lugem = <span class="fn">analogRead</span>(TERM_PIN);
+  <span class="kw">if</span> (lugem &lt;= <span class="nb">0</span> || lugem &gt;= <span class="nb">1023</span>) {
+    Serial.<span class="fn">println</span>(<span class="st">"Viga: kontrolli juhtmeid!"</span>);
+    <span class="fn">delay</span>(<span class="nb">500</span>);
+    <span class="kw">return</span>;
+  }
+  <span class="cm">// 1) pinge</span>
+  <span class="kw">float</span> pinge = lugem * (<span class="nb">5.0</span> / <span class="nb">1023.0</span>);
+  <span class="cm">// 2) termistori takistus</span>
+  <span class="kw">float</span> r_ntc = R_FIXED * (<span class="nb">5.0</span> / pinge - <span class="nb">1.0</span>);
+  <span class="cm">// 3) B-võrrand, tulemus kelvinites</span>
+  <span class="kw">float</span> t_k = <span class="nb">1.0</span> / (<span class="nb">1.0</span> / T0 + <span class="fn">log</span>(r_ntc / R0) / B);
+  <span class="cm">// 4) Celsiuse kraadid</span>
+  <span class="kw">float</span> t_c = t_k - <span class="nb">273.15</span>;
+
+  Serial.<span class="fn">print</span>(<span class="st">"analogRead: "</span>);
+  Serial.<span class="fn">print</span>(lugem);
+  Serial.<span class="fn">print</span>(<span class="st">"  R_NTC: "</span>);
+  Serial.<span class="fn">print</span>(r_ntc, <span class="nb">0</span>);
+  Serial.<span class="fn">print</span>(<span class="st">" oomi  T: "</span>);
+  Serial.<span class="fn">print</span>(t_c, <span class="nb">1</span>);
+  Serial.<span class="fn">println</span>(<span class="st">" C"</span>);
+  <span class="fn">delay</span>(<span class="nb">500</span>);
+}`;
+      }
+
+      /* ════════════════ SERIAL MONITOR ════════════════ */
+      const serialLines = [];
+      function readA0() {
+        const R = state.ntc.R; // skeemis on alati termistori "oma" takisti
+        if (state.rOn) {
+          const noise = Math.round((Math.random() - 0.5) * 3);
+          return Math.max(0, Math.min(1023, Math.round(adcF(state.T, R)) + noise));
+        }
+        // takisti lahti: A0 ühendatud termistori kaudu 5V-ga, voolu pole → ≈ 5 V
+        return 1020 + Math.floor(Math.random() * 4);
+      }
+      function tickSerial() {
+        const a = readA0();
+        const R = state.ntc.R;
+        let line;
+        if (a >= 1023) line = `analogRead: ${String(a).padStart(4)}  Viga: kontrolli juhtmeid!`;
+        else {
+          const U = (a * 5) / 1023, rn = R * (5 / U - 1), t = tFromR(rn);
+          line = `analogRead: ${String(a).padStart(4)}  R_NTC: ${String(Math.round(rn)).padStart(6)} oomi  T: ${t.toFixed(1)} C`;
+        }
+        serialLines.push(line);
+        while (serialLines.length > 7) serialLines.shift();
+        document.getElementById("serial-out").textContent = serialLines.join("\n");
+        document.getElementById("ar-big").textContent = a;
+        document.getElementById("ar-bar").style.width = (a / 1023) * 100 + "%";
+      }
+      setInterval(tickSerial, 500);
+
+      /* ════════════════ TERMISTORI VALIK ════════════════ */
+      document.getElementById("ntc-select").addEventListener("change", (e) => {
+        state.ntc = NTCS[parseInt(e.target.value, 10)];
+        state.R = state.ntc.R;
+        state.customR = null;
+        serialLines.length = 0;
+        buildRButtons(); drawRChart(); drawSens(); calc(); update(); tickSerial();
+      });
+
+      /* ════════════════ UUENDUS ════════════════ */
+      function update() {
+        const T = state.T, rn = rNtc(T);
+        ctls.forEach(({ lab, rng }) => { rng.value = T; lab.textContent = "🌡 " + fmtT(T); });
+        const h = ((T - TMIN) / (TMAX - TMIN)) * 105;
+        thFill.setAttribute("y", 125 - h); thFill.setAttribute("height", h + 1);
+
+        // 1
+        document.getElementById("rn-big").textContent = fmtR(rn);
+        const r1 = rNtc(T + 1);
+        document.getElementById("rn-hint").innerHTML =
+          `1 °C soojemaks → takistus väheneb ${fmtR(rn - r1)} (${dec(((rn - r1) / rn) * 100, 1)} %)`;
+        rcMark.innerHTML = "";
+        el("line", { x1: rcX(T), y1: RC.t, x2: rcX(T), y2: RC.h - RC.b, stroke: "#c53030", "stroke-dasharray": "4 3" }, rcMark);
+        el("circle", { cx: rcX(T), cy: rcY(rn), r: 6, fill: "#c53030", stroke: "#fff", "stroke-width": 2 }, rcMark);
+
+        // 2
+        const Rc = state.ntc.R;
+        cRn.textContent = "R_NTC = " + fmtR(rn);
+        cR.textContent = "R = " + fmtR(Rc);
+        document.getElementById("r-on-label").textContent = "Takisti " + fmtR(Rc) + " ühendatud";
+        rWire.setAttribute("visibility", state.rOn ? "visible" : "hidden");
+        openMark.setAttribute("visibility", state.rOn ? "hidden" : "visible");
+        rBody.setAttribute("stroke", state.rOn ? "#2d3748" : "#cbd5e0");
+        if (state.rOn) {
+          const u = uA0(T, Rc);
+          cU.textContent = "A0: " + fmtV(u);
+          document.getElementById("banner2").innerHTML =
+            `T <span style="color:#c53030">${fmtT(T)}</span> &nbsp;|&nbsp; R<sub>NTC</sub> = ${fmtR(rn)} &nbsp;|&nbsp; ` +
+            `U<sub>A0</sub> = 5 V · ${fmtR(Rc)} / (${fmtR(Rc)} + ${fmtR(rn)}) = <span class="v">${fmtV(u)}</span> &nbsp;|&nbsp; analogRead ≈ <span class="ar">${Math.round(adcF(T, Rc))}</span>`;
+        } else {
+          cU.textContent = "A0: ≈ 5 V";
+          document.getElementById("banner2").innerHTML =
+            `Takisti on lahti: voolu pole, termistoril pole pinget ja A0 näitab alati <span class="sat-flag">≈ 5 V (≈ 1021)</span> – temperatuur ei mõjuta näitu.`;
+        }
+
+        // 3
+        const R = state.R, a3 = adcF(T, R), s3 = sens(T, R), tb = bestT(R), tp = peakT(R), [ba, bb] = halfBand(R);
+        aMark.innerHTML = ""; sMark.innerHTML = "";
+        el("line", { x1: xA(T, AC), y1: AC.t, x2: xA(T, AC), y2: AC.h - AC.b, stroke: "#c53030", "stroke-dasharray": "4 3" }, aMark);
+        el("circle", { cx: xA(T, AC), cy: yA(a3), r: 6, fill: "#c53030", stroke: "#fff", "stroke-width": 2 }, aMark);
+        el("line", { x1: xA(T, SC), y1: SC.t, x2: xA(T, SC), y2: SC.h - SC.b, stroke: "#c53030", "stroke-dasharray": "4 3" }, sMark);
+        el("circle", { cx: xA(T, SC), cy: yS(s3), r: 6, fill: "#c53030", stroke: "#fff", "stroke-width": 2 }, sMark);
+        const rangeTxt = ba === null ? "" : ` &nbsp;·&nbsp; hea vahemik ≈ ${dec(ba, 0)} … ${dec(bb, 0)} °C`;
+        document.getElementById("banner3").innerHTML =
+          `R = <span class="v">${fmtR(R)}</span>: R<sub>NTC</sub> = R temperatuuril ${fmtT(tb)}, tundlikkuse tipp ≈ ${fmtT(tp)}${rangeTxt}<br>` +
+          `Praegu <span style="color:#c53030">${fmtT(T)}</span> → analogRead ≈ <span class="ar">${Math.round(a3)}</span>, ` +
+          `tundlikkus <b>${dec(s3, 1)} sammu/°C</b> (üks samm ≈ ${dec(1 / Math.max(1e-6, s3), 2)} °C)`;
+
+        heatTable();
+        convert();
+      }
+
+      function toggleCode(btn) {
+        const block = btn.nextElementSibling;
+        block.hidden = !block.hidden;
+        btn.textContent = block.hidden ? "Näita koodi" : "Peida kood";
+      }
+
+      buildRButtons();
+      drawRChart();
+      drawSens();
+      calc();
+      update();
+      tickSerial();
+    </script>
+  </body>
+</html>
